@@ -1,5 +1,7 @@
 ## Диаграмма потоков данных (Mermaid)
 
+**Структура:** Сверху вниз — External → Bot → Async (RabbitMQ, Celery) → Core Services. Нижний ярус (стоки данных): слева **Data** (PostgreSQL, Redis, S3), справа **Metrics** (Prometheus). Компоненты отдают метрики в Prometheus; всё общение сервисов — через RabbitMQ.
+
 ```mermaid
 flowchart TB
     subgraph External
@@ -8,6 +10,11 @@ flowchart TB
 
     subgraph BotLayer
         Bot[Bot Service<br/>aiogram 3.x]
+    end
+
+    subgraph Async
+        MQ[RabbitMQ]
+        Celery[Celery Workers]
     end
 
     subgraph CoreServices
@@ -24,17 +31,21 @@ flowchart TB
         S3[(S3 Storage)]
     end
 
-    subgraph Async
-        MQ[RabbitMQ]
-        Celery[Celery Workers]
+    subgraph Metrics
+        Prometheus[Prometheus]
     end
 
     TG <-->|Webhook| Bot
-    Bot -->|HTTP/gRPC| User
-    Bot -->|HTTP/gRPC| Profile
-    Bot -->|HTTP/gRPC| Rank
-    Bot -->|HTTP/gRPC| Interact
-    Bot -->|HTTP/gRPC| Chat
+    Bot <-->|publish / consume| MQ
+    MQ <-->|commands & responses| User
+    MQ <-->|commands & responses| Profile
+    MQ <-->|commands & responses| Rank
+    MQ <-->|commands & responses| Interact
+    MQ <-->|commands & responses| Chat
+
+    Interact -->|events| MQ
+    MQ -->|consume| Celery
+    Celery --> Rank
 
     User --> DB
     Profile --> DB
@@ -42,10 +53,17 @@ flowchart TB
     Rank --> DB
     Rank --> Redis
     Interact --> DB
-    Interact -->|publish| MQ
-    MQ -->|consume| Celery
-    Celery --> Rank
     Chat --> DB
+
+    Bot -->|/metrics| Prometheus
+    User -->|/metrics| Prometheus
+    Profile -->|/metrics| Prometheus
+    Rank -->|/metrics| Prometheus
+    Interact -->|/metrics| Prometheus
+    Chat -->|/metrics| Prometheus
+    Celery -->|/metrics| Prometheus
+
+    Data ~~~ Metrics
 ```
 
 ## Сценарии использования
@@ -352,7 +370,7 @@ CELERY_CONFIG = {
 | Компонент | Стратегия | Примечание |
 |-----------|-----------|------------|
 | **Bot Service** | Горизонтальное (N инстансов) | FSM в Redis, webhook через load balancer |
-| **Сервисы** | Горизонтальное (контейнеры) | Stateless, общение через HTTP/gRPC |
+| **Сервисы** | Горизонтальное (контейнеры) | Stateless, общение через RabbitMQ |
 | **PostgreSQL** | Репликация (1 мастер, N реплик) | Реплики для чтения (Ranking, Profile) |
 | **Redis** | Кластер (3 мастера, 3 реплики) | Шардирование по ключам |
 | **RabbitMQ** | Кластер (3 узла) | Queue mirroring для отказоустойчивости |
