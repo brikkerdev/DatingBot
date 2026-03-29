@@ -79,11 +79,16 @@ def _recalc_rating(session: Session, user_id: int) -> None:
 
     primary = 0.0
     if profile:
-        if profile.name: primary += 10
-        if profile.birth_date: primary += 5
-        if profile.gender: primary += 5
-        if profile.city: primary += 10
-        if profile.bio: primary += 15
+        if profile.name:
+            primary += 10
+        if profile.birth_date:
+            primary += 5
+        if profile.gender:
+            primary += 5
+        if profile.city:
+            primary += 10
+        if profile.bio:
+            primary += 15
         interests = profile.interests or []
         primary += min(len(interests), 5) * 3
         photo_count = session.execute(
@@ -95,15 +100,23 @@ def _recalc_rating(session: Session, user_id: int) -> None:
             primary += 10 + min(photo_count - 1, 5) * 2.5
         if profile.age_min_pref is not None and profile.age_max_pref is not None:
             primary += 5
-        if profile.preferred_gender: primary += 5
-        if profile.preferred_city: primary += 5
+        if profile.preferred_gender:
+            primary += 5
+        if profile.preferred_city:
+            primary += 5
     primary = min(primary, 100.0)
 
-    likes = session.execute(select(sa_func.count()).select_from(Like).where(Like.to_user_id == user_id)).scalar() or 0
-    passes = session.execute(select(sa_func.count()).select_from(Pass).where(Pass.to_user_id == user_id)).scalar() or 0
-    matches = session.execute(select(sa_func.count()).select_from(Match).where(
-        (Match.user1_id == user_id) | (Match.user2_id == user_id)
-    )).scalar() or 0
+    likes = session.execute(
+        select(sa_func.count()).select_from(Like).where(Like.to_user_id == user_id)
+    ).scalar() or 0
+    passes = session.execute(
+        select(sa_func.count()).select_from(Pass).where(Pass.to_user_id == user_id)
+    ).scalar() or 0
+    matches = session.execute(
+        select(sa_func.count()).select_from(Match).where(
+            (Match.user1_id == user_id) | (Match.user2_id == user_id)
+        )
+    ).scalar() or 0
 
     behavioral = min(likes * 2, 30)
     total = likes + passes
@@ -120,21 +133,25 @@ def _recalc_rating(session: Session, user_id: int) -> None:
             select(Message.match_id, sa_func.min(Message.created_at).label("t"))
             .where(Message.match_id.in_(match_ids)).group_by(Message.match_id)
         ).all()
-        initiated = sum(
-            1 for mid, t in first_msgs
-            if (fm := session.execute(
+        initiated = 0
+        for mid, t in first_msgs:
+            fm = session.execute(
                 select(Message).where(Message.match_id == mid, Message.created_at == t)
-            ).scalar_one_or_none()) and fm.from_user_id == user_id
-        )
+            ).scalar_one_or_none()
+            if fm and fm.from_user_id == user_id:
+                initiated += 1
         behavioral += min(initiated * 5, 15)
 
     user = session.execute(select(User).where(User.id == user_id)).scalar_one_or_none()
     if user:
         now = datetime.now(timezone.utc)
         delta = now - user.last_active_at.replace(tzinfo=timezone.utc)
-        if delta < timedelta(hours=24): behavioral += 15
-        elif delta < timedelta(days=7): behavioral += 10
-        elif delta < timedelta(days=30): behavioral += 5
+        if delta < timedelta(hours=24):
+            behavioral += 15
+        elif delta < timedelta(days=7):
+            behavioral += 10
+        elif delta < timedelta(days=30):
+            behavioral += 5
     behavioral = min(behavioral, 100.0)
 
     ref_count = session.execute(

@@ -9,7 +9,7 @@ import json
 import logging
 import time
 
-from sqlalchemy import and_, create_engine, func as sa_func, or_, select
+from sqlalchemy import create_engine, func as sa_func, select
 from sqlalchemy.orm import Session
 
 from src.config import settings
@@ -43,11 +43,16 @@ def _recalc_one(session: Session, uid: int) -> None:
     # Primary
     primary = 0.0
     if profile:
-        if profile.name: primary += 10
-        if profile.birth_date: primary += 5
-        if profile.gender: primary += 5
-        if profile.city: primary += 10
-        if profile.bio: primary += 15
+        if profile.name:
+            primary += 10
+        if profile.birth_date:
+            primary += 5
+        if profile.gender:
+            primary += 5
+        if profile.city:
+            primary += 10
+        if profile.bio:
+            primary += 15
         interests = profile.interests or []
         primary += min(len(interests), 5) * 3
         photo_count = session.execute(
@@ -59,8 +64,10 @@ def _recalc_one(session: Session, uid: int) -> None:
             primary += 10 + min(photo_count - 1, 5) * 2.5
         if profile.age_min_pref is not None and profile.age_max_pref is not None:
             primary += 5
-        if profile.preferred_gender: primary += 5
-        if profile.preferred_city: primary += 5
+        if profile.preferred_gender:
+            primary += 5
+        if profile.preferred_city:
+            primary += 5
     primary = min(primary, 100.0)
 
     # Behavioral
@@ -107,9 +114,12 @@ def _recalc_one(session: Session, uid: int) -> None:
     if user:
         now = datetime.now(timezone.utc)
         delta = now - user.last_active_at.replace(tzinfo=timezone.utc)
-        if delta < timedelta(hours=24): behavioral += 15
-        elif delta < timedelta(days=7): behavioral += 10
-        elif delta < timedelta(days=30): behavioral += 5
+        if delta < timedelta(hours=24):
+            behavioral += 15
+        elif delta < timedelta(days=7):
+            behavioral += 10
+        elif delta < timedelta(days=30):
+            behavioral += 5
     behavioral = min(behavioral, 100.0)
 
     # Referral bonus
