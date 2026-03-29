@@ -124,6 +124,20 @@ CREATE TABLE user_ratings (
 );
 
 -- -----------------------------------------------
+-- Рефералы
+-- -----------------------------------------------
+CREATE TABLE referrals (
+    id              BIGSERIAL PRIMARY KEY,
+    referrer_id     BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    referred_id     BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (referred_id),
+    CHECK (referrer_id != referred_id)
+);
+
+CREATE INDEX idx_referrals_referrer ON referrals (referrer_id);
+
+-- -----------------------------------------------
 -- Триггер: обновление updated_at у profiles
 -- -----------------------------------------------
 CREATE OR REPLACE FUNCTION set_updated_at()

@@ -9,3 +9,13 @@ class RegistrationState(StatesGroup):
     waiting_for_bio = State()
     waiting_for_photo = State()
     confirm = State()
+
+
+class EditProfileState(StatesGroup):
+    choosing_field = State()
+    editing_name = State()
+    editing_age = State()
+    editing_gender = State()
+    editing_city = State()
+    editing_bio = State()
+    editing_photo = State()

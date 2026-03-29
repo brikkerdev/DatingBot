@@ -47,4 +47,25 @@ def main_menu_keyboard() -> ReplyKeyboardMarkup:
     )
 
 
+def profile_actions_keyboard() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="Редактировать анкету")],
+            [KeyboardButton(text="Удалить анкету"), KeyboardButton(text="Назад в меню")],
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True,
+    )
+
+
+def confirm_delete_keyboard() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="Да, удалить анкету"), KeyboardButton(text="Отмена")],
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True,
+    )
+
+
 remove_keyboard = ReplyKeyboardRemove()

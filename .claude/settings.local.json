@@ -8,7 +8,12 @@
       "Bash(.venv/Scripts/python -c \"\nimport asyncio\nasyncio.set_event_loop_policy\\(asyncio.WindowsSelectorEventLoopPolicy\\(\\)\\)\nasync def test\\(\\):\n    import asyncpg\n    conn = await asyncpg.connect\\('postgresql://postgres:postgres@localhost:5432/dating_bot'\\)\n    val = await conn.fetchval\\('SELECT 1'\\)\n    print\\('Connection OK, result:', val\\)\n    await conn.close\\(\\)\nasyncio.run\\(test\\(\\)\\)\n\")",
       "Bash(.venv/Scripts/python -c \"\nimport asyncio\nasync def test\\(\\):\n    import asyncpg\n    conn = await asyncpg.connect\\(host='127.0.0.1', port=5432, user='postgres', password='postgres', database='dating_bot'\\)\n    val = await conn.fetchval\\('SELECT 1'\\)\n    print\\('Connection OK, result:', val\\)\n    await conn.close\\(\\)\nasyncio.run\\(test\\(\\)\\)\n\")",
       "Bash(.venv/Scripts/python -c \"\nimport socket\ns = socket.create_connection\\(\\('127.0.0.1', 5432\\), timeout=5\\)\nprint\\('TCP connection OK'\\)\ns.close\\(\\)\n\")",
-      "Bash(.venv/Scripts/python -c \"\nimport asyncio\nasync def test\\(\\):\n    import asyncpg\n    conn = await asyncpg.connect\\(host='127.0.0.1', port=5432, user='postgres', password='postgres', database='dating_bot', ssl=False\\)\n    val = await conn.fetchval\\('SELECT 1'\\)\n    print\\('Connection OK, result:', val\\)\n    await conn.close\\(\\)\nasyncio.run\\(test\\(\\)\\)\n\")"
+      "Bash(.venv/Scripts/python -c \"\nimport asyncio\nasync def test\\(\\):\n    import asyncpg\n    conn = await asyncpg.connect\\(host='127.0.0.1', port=5432, user='postgres', password='postgres', database='dating_bot', ssl=False\\)\n    val = await conn.fetchval\\('SELECT 1'\\)\n    print\\('Connection OK, result:', val\\)\n    await conn.close\\(\\)\nasyncio.run\\(test\\(\\)\\)\n\")",
+      "Bash(.venv/Scripts/python -c \"from src.bot.handlers import router; print\\(''OK, routers:'', len\\(router.sub_routers\\)\\)\")",
+      "Bash(.venv/Scripts/python -c \"from src.services.ranking import recalculate_all_ratings; print\\(''Ranking service OK''\\)\")",
+      "Bash(.venv/Scripts/python -c \"from src.bot.__main__ import main; print\\(''All imports OK''\\)\")",
+      "Bash(.venv/Scripts/pip install:*)",
+      "Bash(.venv/Scripts/python -c \"from src.worker.celery_app import app; print\\(''Celery app OK:'', app.main\\)\")"
     ]
   }
 }

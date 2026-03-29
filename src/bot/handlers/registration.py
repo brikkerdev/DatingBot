@@ -1,6 +1,7 @@
+import logging
 from datetime import date
 
-from aiogram import F, Router
+from aiogram import Bot, F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,6 +16,9 @@ from src.bot.keyboards.reply import (
 )
 from src.bot.states.registration import RegistrationState
 from src.services.profile import add_photo, create_profile
+from src.services.storage import ensure_bucket, upload_photo
+
+logger = logging.getLogger(__name__)
 
 router = Router()
 
@@ -120,7 +124,7 @@ async def process_bio(message: Message, state: FSMContext) -> None:
 # --- Photos ---
 
 @router.message(RegistrationState.waiting_for_photo, F.photo)
-async def process_photo(message: Message, state: FSMContext) -> None:
+async def process_photo(message: Message, state: FSMContext, bot: Bot) -> None:
     data = await state.get_data()
     photos: list[str] = data.get("photos", [])
 
@@ -128,8 +132,18 @@ async def process_photo(message: Message, state: FSMContext) -> None:
         await message.answer(f'Максимум {MAX_PHOTOS} фото. Нажмите "Готово".')
         return
 
+    # Download from Telegram and upload to S3 (Minio)
     file_id = message.photo[-1].file_id
-    photos.append(file_id)
+    try:
+        await ensure_bucket()
+        file = await bot.get_file(file_id)
+        file_bytes = await bot.download_file(file.file_path)
+        s3_key = await upload_photo(file_bytes.read())
+        photos.append(s3_key)
+    except Exception:
+        logger.warning("S3 upload failed, falling back to file_id")
+        photos.append(file_id)
+
     await state.update_data(photos=photos)
     await message.answer(f"Фото добавлено ({len(photos)}/{MAX_PHOTOS}).")
 

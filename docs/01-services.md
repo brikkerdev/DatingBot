@@ -1,199 +1,204 @@
-## Обзор системы
+# Описание сервисов
 
-Dating Bot — телеграм-бот для знакомств. Пользователи заполняют анкету, просматривают других пользователей (лайк/пас), при взаимном лайке получают мэтч и возможность общения.
+## Обзор
 
----
+Dating Bot — Telegram-бот для знакомств. Пользователи заполняют анкету, просматривают других (лайк/пас), при взаимном лайке получают мэтч и чат.
 
-## 1. Сервис бота (Bot Service)
+Система состоит из 6 сервисов + шины событий:
 
-**Назначение:** Единственная точка входа пользователя в систему.
-
-**Функции:**
-- Интеграция с Telegram Bot API (получение обновлений, отправка сообщений)
-- Обработка команд: `/start`, `/help`, навигация по меню
-- Оркестрация сценариев: регистрация, заполнение анкеты, редактирование анкеты, просмотр анкет (свайпы), чат после мэтча
-- Отправка уведомлений (новый мэтч, новое сообщение)
-- Валидация ввода и перевод пользователя между состояниями (FSM)
-
-**FSM (основные состояния):**
-| Состояние | Триггер | Следующее |
-|-----------|---------|-----------|
-| `Registration` | `/start` | `ProfileCreation` |
-| `ProfileCreation` | Пошаговый ввод (имя, возраст, пол, город, bio, интересы, фото) | `MainMenu` |
-| `ProfileEdit` | Редактирование полей | `MainMenu` |
-| `Browsing` | Просмотр анкет, лайк/пас | `Browsing` |
-| `ChatSelect` | Выбор мэтча для чата | `Chatting` |
-| `Chatting` | Отправка сообщения | `Chatting` |
-
-**Вызовы к другим сервисам:**
-- `UserService.get_or_create(telegram_id)` → user_id, is_new
-- `ProfileService.get(user_id)`, `ProfileService.create/update(...)`, `ProfileService.upload_photo(...)`
-- `RankingService.get_next(user_id, count)` → список profile_id
-- `InteractionService.like(from_user, to_user)`, `InteractionService.pass(from_user, to_user)` → match_created
-- `ChatService.get_matches(user_id)`, `ChatService.get_messages(match_id)`, `ChatService.send(user_id, match_id, text)`
-
-**Входы:** Webhook от Telegram.
-**Выходы:** Запросы к User, Profile, Ranking, Interaction, Chat.
-
-**Конфигурация:** `BOT_TOKEN`, `WEBHOOK_URL`, `REDIS_URL` (FSM storage), URL сервисов.
-
-**Технологии:** Python (aiogram 3.x), асинхронная обработка.
+```
+Bot Service ──→ User / Profile / Interaction / Chat (прямые вызовы)
+                    │
+                    ▼ publish events
+              RabbitMQ (dating_events)
+                    │
+        ┌───────────┴───────────┐
+        ▼                       ▼
+  Ranking Service      Notification Service
+  (пересчёт рейтингов)  (уведомления о мэтчах)
+```
 
 ---
 
-## 2. Сервис пользователей (User Service)
+## 1. Bot Service (`src/bot/`)
 
-**Назначение:** Учёт пользователей и аутентификация.
+**Назначение:** Точка входа пользователя — Telegram Bot API.
 
-**Функции:**
-- Регистрация по Telegram ID (при первом `/start`)
-- Хранение привязки Telegram ID ↔ внутренний user_id
-- Базовые данные: дата регистрации, последняя активность, статус (активен/заблокирован)
-- Предоставление данных пользователя другим сервисам по user_id
+**Реализация:** aiogram 3.x, polling mode (опционально webhook).
 
-**API (внутренние вызовы):**
-| Метод | Вход | Выход | Примечание |
-|-------|------|-------|------------|
-| `get_or_create(telegram_id)` | telegram_id | `{user_id, is_new}` | Идемпотентно |
-| `get(user_id)` | user_id | `{user_id, telegram_id, last_active_at, is_active}` | — |
-| `update_last_active(user_id)` | user_id | — | Вызывать при каждом действии |
+**Хэндлеры:**
+| Файл | Функциональность |
+|------|-----------------|
+| `start.py` | `/start` — регистрация, обработка реферальных ссылок (`/start ref_<id>`) |
+| `registration.py` | FSM: имя → возраст → пол → город → описание → фото → подтверждение |
+| `browse.py` | «Смотреть анкеты» — показ из Redis-кэша, лайк/пас через inline-кнопки |
+| `matches.py` | «Мэтчи» — список мэтчей с кнопками входа в чат |
+| `chat.py` | Чат — FSM `ChatState.in_chat`, история сообщений, прямая пересылка партнёру |
+| `menu.py` | «Моя анкета» — превью + действия (редактировать/удалить) |
+| `edit_profile.py` | Редактирование полей анкеты, управление фото (добавить/удалить/порядок) |
 
-**Обработка ошибок:** `UserNotFound` — при отсутствии user_id; `UserBlocked` — при is_active=false.
+**FSM-состояния:**
+```
+RegistrationState: waiting_for_name → age → gender → city → bio → photo → confirm
+EditProfileState:  choosing_field → editing_name/age/gender/city/bio/photo
+ChatState:         in_chat (match_id, partner_telegram_id, partner_name)
+```
 
-**Входы:** Запросы от Bot Service.  
-**Выходы:** user_id, флаги (новый/существующий).
+**Middlewares:**
+- `DbSessionMiddleware` — инъекция AsyncSession + обновление `last_active_at`
+- `RedisMiddleware` — инъекция Redis-клиента
+- `MetricsMiddleware` — замер времени обработки (Prometheus histogram)
 
-**Хранение:** Таблица `users`.
-
----
-
-## 3. Сервис анкет (Profile Service)
-
-**Назначение:** CRUD анкет и медиа.
-
-**Функции:**
-- Создание, чтение, обновление анкеты пользователя (имя, возраст, пол, город, описание, интересы)
-- Загрузка и привязка фотографий к анкете (хранение метаданных; файлы — в S3)
-- Проверка полноты анкеты (для первичного рейтинга)
-- Выдача анкеты по ID для отображения в боте
-
-**API:**
-| Метод | Вход | Выход |
-|-------|------|-------|
-| `get(profile_id)` | profile_id | `{name, age, gender, city, bio, interests, photos[], preferences}` |
-| `get_by_user(user_id)` | user_id | то же |
-| `create(user_id, data)` | user_id, поля анкеты | profile_id |
-| `update(profile_id, data)` | profile_id, частичные данные | — |
-| `upload_photo(profile_id, file)` | profile_id, file | photo_id, storage_path |
-| `is_complete(profile_id)` | profile_id | bool (имя, возраст, пол, город, ≥1 фото) |
-
-**Формат хранения фото:** `profiles/{user_id}/{photo_id}.{ext}` в S3; в БД — `storage_path`, `sort_order`.
-
-**Ограничения:** Минимум 1 фото, максимум 6. Валидация: возраст 18+, bio ≤ 500 символов.
-
-**Входы:** Bot Service, Ranking Service.
-**Выходы:** Объект анкеты с полями и списком photo URLs.
-
-**Хранение:** `profiles`, `profile_photos`; S3.
+**Клавиатуры:**
+- Reply: главное меню, подтверждение, выбор пола, действия с профилем
+- Inline: лайк/пас (`like:{user_id}`, `pass:{user_id}`), список мэтчей, редактирование полей, управление фото
 
 ---
 
-## 4. Сервис ранжирования (Ranking Service)
+## 2. User Service (`src/services/user.py`)
 
-**Назначение:** Выдача пользователю подходящих анкет в нужном порядке.
+**Назначение:** Регистрация и идентификация пользователей.
 
 **Функции:**
-- **Первичный рейтинг:** учёт данных анкеты (возраст, пол, интересы, город), полноты анкеты, количества фото, предпочтений по возрасту/полу/городу
-- **Поведенческий рейтинг:** учёт лайков/пасов, мэтчей, инициаций диалогов, активности по времени
-- **Комбинированный рейтинг:** весовая модель первичный + поведенческий + рефералы
-- Формирование и обновление очереди анкет для пользователя
-- Интеграция с кэшем (Redis): предзагрузка 10 анкет в кэш при старте сессии, пополнение по мере просмотра
+- `get_or_create_user(telegram_id)` → `(User, is_new)` — идемпотентно, обработка race condition через `IntegrityError`
+- `get_user_by_telegram_id(telegram_id)` → `User | None`
 
-**API:**
-| Метод | Вход | Выход | Примечание |
-|-------|------|-------|------------|
-| `get_next(user_id, count=1)` | user_id, count | `[profile_id, ...]` | — |
-| `on_like(from_user, to_user)` | event | — | Обновление поведенческого рейтинга |
-| `on_pass(from_user, to_user)` | event | — | То же |
-| `on_match(user1, user2)` | event | — | То же |
-
-**Логика кэша (Redis):**
-- Ключ: `ranking:queue:{user_id}` — список profile_id (очередь на показ)
-- Размер очереди: 10 анкет (фиксированное значение)
-- При `get_next`: если очередь пуста — пересчёт из БД (user_ratings + фильтры), загрузка 10 анкет, возврат первых count
-- Исключать: уже лайкнутые, пропущенные, самого пользователя
-- При достижении конца очереди — повторный цикл с новой выборкой
-
-**Celery-задачи:** Периодический пересчёт `user_ratings` (primary_score, behavior_score, combined_score) по расписанию (раз в час).
-
-**Входы:** user_id, события от Bot/Interaction через RabbitMQ.
-**Выходы:** Список profile_id для показа.
-
-**Хранение:** `user_ratings`, Redis.
+**Хранение:** Таблица `users` (id, telegram_id, created_at, last_active_at, is_active).
 
 ---
 
-## 5. Сервис взаимодействий (Interaction Service)
+## 3. Profile Service (`src/services/profile.py`)
 
-**Назначение:** Лайки, пасы, мэтчи.
+**Назначение:** CRUD анкет и управление фото.
 
 **Функции:**
-- Фиксация лайка/паса (кто → кого)
-- Определение мэтча (взаимный лайк)
-- Создание записи мэтча и открытие чата
-- Предоставление истории действий для сервиса ранжирования и для отображения в боте
+| Метод | Описание |
+|-------|---------|
+| `get_profile_by_user_id(user_id)` | Загрузка профиля с фото (selectinload) |
+| `create_profile(...)` | Создание при регистрации |
+| `update_profile(profile, **fields)` | Обновление полей + событие `profile.updated` + инвалидация кэша |
+| `add_photo(profile_id, storage_path, sort_order)` | Добавление фото |
+| `delete_photo(photo_id)` | Удаление одного фото |
+| `swap_photo_order(photo_id_a, photo_id_b)` | Смена порядка |
+| `delete_profile(profile_id, user_id)` | Удаление анкеты + событие `profile.deleted` + инвалидация кэша |
 
-**API:**
-| Метод | Вход | Выход |
-|-------|------|-------|
-| `like(from_user_id, to_user_id)` | user_id, user_id | `{match_created: bool}` |
-| `pass(from_user_id, to_user_id)` | user_id, user_id | — |
-| `get_matches(user_id)` | user_id | `[{match_id, partner_profile, last_message_at}]` |
-| `has_liked(from_user, to_user)` | user_id, user_id | bool |
-| `has_passed(from_user, to_user)` | user_id, user_id | bool |
+**Кэш-инвалидация:** При изменении профиля — прямой вызов `redis.delete("profile_queue:*")`. MQ не используется (дешёвая операция).
 
-**Логика мэтча:** При `like(A, B)` — проверить `likes` на наличие B→A; если есть — создать `matches` (user1_id < user2_id), вернуть `match_created=true`. Идемпотентность: повторный like — тот же результат.
-
-**Входы:** Bot Service.  
-**Выходы:** match_created, список мэтчей.
-
-**Хранение:** `likes`, `passes`, `matches`. UNIQUE (from_user_id, to_user_id) для likes/passes.
+**Хранение:** `profiles`, `profile_photos`, Minio (S3).
 
 ---
 
-## 6. Сервис чатов (Chat Service)
+## 4. Ranking Service (`src/services/ranking.py` + `src/worker/consumer.py`)
 
-**Назначение:** Сообщения между пользователями после мэтча.
+**Назначение:** 3-уровневая система рейтинга для ранжирования анкет.
+
+### Уровень 1: Первичный рейтинг (0–100)
+| Критерий | Баллы |
+|---------|-------|
+| Имя, дата рождения, пол | 5 + 5 + 5 |
+| Город | 10 |
+| Описание (bio) | 15 |
+| Интересы (до 5) | 3 × шт |
+| Фото (1 базовое + доп.) | 10 + 2.5 × шт |
+| Предпочтения (возраст, пол, город) | 5 + 5 + 5 |
+
+### Уровень 2: Поведенческий рейтинг (0–100)
+| Критерий | Баллы (макс) |
+|---------|-------------|
+| Полученные лайки | 30 (×2 за лайк) |
+| Соотношение лайков/пасов | 20 |
+| Частота мэтчей | 20 (×5 за мэтч) |
+| Инициирование диалогов (первое сообщение в мэтче) | 15 (×5 за диалог) |
+| Активность (24ч/7д/30д) | 15 / 10 / 5 |
+
+### Уровень 3: Комбинированный рейтинг
+```
+combined = 0.4 × primary + 0.5 × behavioral + 0.1 × referral_bonus
+referral_bonus = min(count_referrals × 20, 100)
+```
+
+**Пересчёт:**
+- Через MQ (event consumer) при каждом лайке/пасе/мэтче/сообщении/реферале — фоновый пересчёт (8+ SQL-запросов, тяжёлая операция)
+- Через Celery beat каждые 10 минут — полный пересчёт всех пользователей
+
+**Redis-кэш:** Очередь анкет `profile_queue:{user_id}`, 10 шт, TTL 600 сек. Заполняется из БД при первом просмотре, обновляется при исчерпании.
+
+**Хранение:** `user_ratings`.
+
+---
+
+## 5. Interaction Service (`src/services/interaction.py`)
+
+**Назначение:** Лайки, пасы, определение мэтчей.
 
 **Функции:**
-- Отправка сообщения в рамках мэтча
-- История переписки по паре пользователей
-- Уведомление о новом сообщении (для Bot Service)
+- `record_like(from_user_id, to_user_id)` → `Match | None` — записывает лайк, проверяет взаимность, создаёт мэтч. Публикует `like.created` и `match.created`.
+- `record_pass(from_user_id, to_user_id)` — записывает пас. Публикует `pass.created`.
+- `get_next_profiles(user_id, limit)` — исключает уже просмотренных, сортирует по `combined_score DESC`.
+- `get_user_matches(user_id)` — список мэтчей.
 
-**API:**
-| Метод | Вход | Выход |
-|-------|------|-------|
-| `send(match_id, from_user_id, content)` | match_id, user_id, text | message_id |
-| `get_history(match_id, limit, offset)` | match_id | `[{from_user_id, content, created_at}]` |
-| `get_dialogs(user_id)` | user_id | `[{match_id, partner, last_message, unread_count}]` |
-| `mark_read(match_id, user_id)` | match_id, user_id | — |
+**Консистентность:** `user1_id < user2_id` в matches, composite PK в likes/passes, `CHECK from != to`.
 
-**Ограничения:** Только участники мэтча могут отправлять сообщения. Проверка: `from_user_id IN (user1_id, user2_id)` для match. Лимит длины сообщения 2000 символов.
+**Хранение:** `likes`, `passes`, `matches`.
 
-**Уведомления:** При `send` — возврат `recipient_user_id`; Bot Service отправляет push в Telegram. Событие в RabbitMQ для асинхронной доставки.
+---
 
-**Входы:** Bot Service.  
-**Выходы:** Сохранённые сообщения, список диалогов.
+## 6. Chat Service (`src/services/chat.py`)
 
-**Хранение:** `matches`, `messages`. Индекс `(match_id, created_at)` для истории.
+**Назначение:** Обмен сообщениями между мэтчами.
+
+**Функции:**
+- `send_message(match_id, from_user_id, content)` — сохраняет в БД, публикует `message.created` для пересчёта рейтинга
+- `get_messages(match_id, limit=50)` — история в хронологическом порядке
+- `get_match_by_id(match_id)`, `is_user_in_match(match, user_id)` — проверки доступа
+
+**Пересылка сообщений:** Напрямую через Bot API (мгновенно), не через MQ — чат должен быть быстрым.
+
+**Хранение:** `messages`. Индекс `(match_id, created_at)`.
+
+---
+
+## 7. Event Service (`src/services/events.py`)
+
+**Назначение:** Единая точка публикации событий в RabbitMQ.
+
+**Функция:** `publish(event_type, payload)` — fire-and-forget через Celery task → RabbitMQ exchange `dating_events`.
+
+**Типы событий:**
+| Событие | Payload | Публикуется из |
+|---------|---------|---------------|
+| `like.created` | `{from_user_id, to_user_id}` | Interaction Service |
+| `pass.created` | `{from_user_id, to_user_id}` | Interaction Service |
+| `match.created` | `{match_id, user1_id, user2_id}` | Interaction Service |
+| `message.created` | `{match_id, from_user_id}` | Chat Service |
+| `profile.updated` | `{user_id}` | Profile Service |
+| `profile.deleted` | `{user_id}` | Profile Service |
+| `referral.created` | `{referrer_id, referred_id}` | Referral Service |
+
+---
+
+## 8. Referral Service (`src/services/referral.py`)
+
+**Назначение:** Реферальная система.
+
+**Функции:**
+- `create_referral(referrer_id, referred_id)` — записывает реферала, публикует `referral.created`
+- `get_referral_count(user_id)` — количество приглашённых
+
+**Команда:** `/invite` — генерирует ссылку `https://t.me/bot?start=ref_<telegram_id>`.
+
+**Бонус:** +20 к referral_bonus за каждого приглашённого (макс 100).
 
 ---
 
 ## Вспомогательные компоненты
 
-| Компонент   | Назначение                                      |
-|------------|--------------------------------------------------|
-| **Redis**  | Кэш предранжированных анкет, сессии FSM, очереди |
-| **Celery** | Отложенные задачи: пересчёт рейтингов по расписанию |
-| **RabbitMQ** | Поток событий: лайки, пасы, мэтчи — для ранжирования и аналитики |
-| **S3** | Хранение фотографий анкет                      |
+| Компонент | Назначение |
+|-----------|-----------|
+| **Redis** | Кэш очереди анкет (10 шт/юзер, TTL 10 мин) + FSM storage (aiogram) |
+| **Celery** | Периодический пересчёт рейтингов (beat 10 мин) + публикация событий в MQ |
+| **RabbitMQ** | Шина событий: ranking_service (7 событий) + notification_service (1 событие) |
+| **Minio (S3)** | Хранение фото (bucket `photos`, fallback на Telegram file_id) |
+| **Prometheus** | Метрики: handler_duration, likes/passes/matches/messages, queue hits/misses |
+| **Grafana** | Provisioned дашборд: rates, latency p50/p95, queue hit rate |
+| **structlog** | Структурированное логирование |
