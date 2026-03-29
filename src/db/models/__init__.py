@@ -7,6 +7,14 @@ from .referral import Referral
 from .user import User
 
 __all__ = [
-    "Base", "Like", "Match", "Message", "Pass",
-    "Profile", "ProfilePhoto", "Referral", "User", "UserRating",
+    "Base",
+    "Like",
+    "Match",
+    "Message",
+    "Pass",
+    "Profile",
+    "ProfilePhoto",
+    "Referral",
+    "User",
+    "UserRating",
 ]

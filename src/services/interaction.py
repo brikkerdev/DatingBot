@@ -14,7 +14,9 @@ from src.services.events import publish
 logger = logging.getLogger(__name__)
 
 
-async def record_like(session: AsyncSession, from_user_id: int, to_user_id: int) -> Match | None:
+async def record_like(
+    session: AsyncSession, from_user_id: int, to_user_id: int
+) -> Match | None:
     """Record a like. Returns Match if it's mutual, else None."""
     like = Like(from_user_id=from_user_id, to_user_id=to_user_id)
     session.add(like)
@@ -52,21 +54,30 @@ async def record_like(session: AsyncSession, from_user_id: int, to_user_id: int)
     await session.refresh(match)
 
     matches_total.inc()
-    publish("match.created", {
-        "match_id": match.id, "user1_id": u1, "user2_id": u2,
-    })
+    publish(
+        "match.created",
+        {
+            "match_id": match.id,
+            "user1_id": u1,
+            "user2_id": u2,
+        },
+    )
 
     return match
 
 
-async def record_pass(session: AsyncSession, from_user_id: int, to_user_id: int) -> None:
+async def record_pass(
+    session: AsyncSession, from_user_id: int, to_user_id: int
+) -> None:
     """Record a pass (skip)."""
     p = Pass(from_user_id=from_user_id, to_user_id=to_user_id)
     session.add(p)
     try:
         await session.commit()
         passes_total.inc()
-        publish("pass.created", {"from_user_id": from_user_id, "to_user_id": to_user_id})
+        publish(
+            "pass.created", {"from_user_id": from_user_id, "to_user_id": to_user_id}
+        )
     except IntegrityError:
         await session.rollback()
 
@@ -80,9 +91,7 @@ async def get_next_profiles(
     seen_subq = (
         select(Like.to_user_id)
         .where(Like.from_user_id == user_id)
-        .union_all(
-            select(Pass.to_user_id).where(Pass.from_user_id == user_id)
-        )
+        .union_all(select(Pass.to_user_id).where(Pass.from_user_id == user_id))
     ).subquery()
 
     query = (

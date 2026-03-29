@@ -41,15 +41,21 @@ def _format_card_from_dict(d: dict) -> str:
     )
 
 
-async def _send_card(message: Message, text: str, photo: str, target_user_id: int) -> None:
+async def _send_card(
+    message: Message, text: str, photo: str, target_user_id: int
+) -> None:
     keyboard = like_pass_keyboard(target_user_id)
     if photo:
-        await message.answer_photo(photo=await resolve_photo(photo), caption=text, reply_markup=keyboard)
+        await message.answer_photo(
+            photo=await resolve_photo(photo), caption=text, reply_markup=keyboard
+        )
     else:
         await message.answer(text, reply_markup=keyboard)
 
 
-async def _show_next(message: Message, session: AsyncSession, redis: Redis, user_id: int) -> None:
+async def _show_next(
+    message: Message, session: AsyncSession, redis: Redis, user_id: int
+) -> None:
     """Show next profile — from Redis queue, or refill from DB."""
     # Try Redis cache first
     cached = await pop_profile(redis, user_id)
@@ -65,7 +71,9 @@ async def _show_next(message: Message, session: AsyncSession, redis: Redis, user
     # Cache empty — load from DB (first call or cache expired)
     profiles = await get_next_profiles(session, user_id, limit=1)
     if not profiles:
-        await message.answer("Анкеты закончились. Загляните позже!", reply_markup=main_menu_keyboard())
+        await message.answer(
+            "Анкеты закончились. Загляните позже!", reply_markup=main_menu_keyboard()
+        )
         return
 
     profile = profiles[0]
@@ -78,7 +86,9 @@ async def _show_next(message: Message, session: AsyncSession, redis: Redis, user
 
 
 @router.message(F.text == "Смотреть анкеты")
-async def browse_profiles(message: Message, session: AsyncSession, redis: Redis) -> None:
+async def browse_profiles(
+    message: Message, session: AsyncSession, redis: Redis
+) -> None:
     user = await get_user_by_telegram_id(session, message.from_user.id)
     if not user:
         await message.answer("Используйте /start для регистрации.")
@@ -94,7 +104,10 @@ async def browse_profiles(message: Message, session: AsyncSession, redis: Redis)
 
 @router.callback_query(F.data.startswith("like:"))
 async def process_like(
-    callback: CallbackQuery, session: AsyncSession, bot: Bot, redis: Redis,
+    callback: CallbackQuery,
+    session: AsyncSession,
+    bot: Bot,
+    redis: Redis,
 ) -> None:
     target_user_id = int(callback.data.split(":")[1])
 
@@ -127,7 +140,9 @@ async def process_like(
 
 
 @router.callback_query(F.data.startswith("pass:"))
-async def process_pass(callback: CallbackQuery, session: AsyncSession, redis: Redis) -> None:
+async def process_pass(
+    callback: CallbackQuery, session: AsyncSession, redis: Redis
+) -> None:
     target_user_id = int(callback.data.split(":")[1])
 
     user = await get_user_by_telegram_id(session, callback.from_user.id)

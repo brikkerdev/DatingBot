@@ -54,12 +54,16 @@ def photo_manage_keyboard(
     for i, (photo_id, _) in enumerate(photos):
         row = []
         if i > 0:
-            row.append(InlineKeyboardButton(text="^", callback_data=f"ph_up:{photo_id}"))
+            row.append(
+                InlineKeyboardButton(text="^", callback_data=f"ph_up:{photo_id}")
+            )
         else:
             row.append(InlineKeyboardButton(text=" ", callback_data="ph_noop"))
         row.append(InlineKeyboardButton(text=f"Фото {i + 1}", callback_data="ph_noop"))
         if i < len(photos) - 1:
-            row.append(InlineKeyboardButton(text="v", callback_data=f"ph_down:{photo_id}"))
+            row.append(
+                InlineKeyboardButton(text="v", callback_data=f"ph_down:{photo_id}")
+            )
         else:
             row.append(InlineKeyboardButton(text=" ", callback_data="ph_noop"))
         row.append(InlineKeyboardButton(text="X", callback_data=f"ph_del:{photo_id}"))
@@ -67,7 +71,9 @@ def photo_manage_keyboard(
 
     bottom = []
     if len(photos) < max_photos:
-        bottom.append(InlineKeyboardButton(text="+ Добавить фото", callback_data="ph_add"))
+        bottom.append(
+            InlineKeyboardButton(text="+ Добавить фото", callback_data="ph_add")
+        )
     bottom.append(InlineKeyboardButton(text="Готово", callback_data="ph_done"))
     rows.append(bottom)
 

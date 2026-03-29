@@ -17,6 +17,7 @@ async def _invalidate_cache() -> None:
     try:
         from redis.asyncio import Redis
         from src.config import settings
+
         redis = Redis.from_url(settings.redis_url, decode_responses=True)
         keys = await redis.keys("profile_queue:*")
         if keys:
@@ -101,7 +102,9 @@ async def replace_photos(
         delete(ProfilePhoto).where(ProfilePhoto.profile_id == profile_id)
     )
     for i, path in enumerate(storage_paths):
-        session.add(ProfilePhoto(profile_id=profile_id, storage_path=path, sort_order=i))
+        session.add(
+            ProfilePhoto(profile_id=profile_id, storage_path=path, sort_order=i)
+        )
     await session.commit()
 
 
@@ -111,14 +114,16 @@ async def delete_photo(session: AsyncSession, photo_id: int) -> None:
 
 
 async def swap_photo_order(
-    session: AsyncSession, photo_id_a: int, photo_id_b: int,
+    session: AsyncSession,
+    photo_id_a: int,
+    photo_id_b: int,
 ) -> None:
-    a = (await session.execute(
-        select(ProfilePhoto).where(ProfilePhoto.id == photo_id_a)
-    )).scalar_one_or_none()
-    b = (await session.execute(
-        select(ProfilePhoto).where(ProfilePhoto.id == photo_id_b)
-    )).scalar_one_or_none()
+    a = (
+        await session.execute(select(ProfilePhoto).where(ProfilePhoto.id == photo_id_a))
+    ).scalar_one_or_none()
+    b = (
+        await session.execute(select(ProfilePhoto).where(ProfilePhoto.id == photo_id_b))
+    ).scalar_one_or_none()
     if a and b:
         a.sort_order, b.sort_order = b.sort_order, a.sort_order
         await session.commit()
@@ -131,7 +136,9 @@ async def get_photo_by_id(session: AsyncSession, photo_id: int) -> ProfilePhoto 
     return result.scalar_one_or_none()
 
 
-async def delete_profile(session: AsyncSession, profile_id: int, user_id: int = 0) -> None:
+async def delete_profile(
+    session: AsyncSession, profile_id: int, user_id: int = 0
+) -> None:
     await session.execute(delete(Profile).where(Profile.id == profile_id))
     await session.commit()
     if user_id:

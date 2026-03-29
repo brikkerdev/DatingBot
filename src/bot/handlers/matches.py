@@ -30,7 +30,9 @@ async def show_matches(message: Message, session: AsyncSession) -> None:
     for match in matches:
         partner_id = await get_match_partner_id(match, user.id)
         partner_profile = await get_profile_by_user_id(session, partner_id)
-        name = partner_profile.name if partner_profile else f"Пользователь #{partner_id}"
+        name = (
+            partner_profile.name if partner_profile else f"Пользователь #{partner_id}"
+        )
         items.append((match.id, name))
 
     await message.answer(

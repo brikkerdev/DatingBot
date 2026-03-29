@@ -26,6 +26,7 @@ class DbSessionMiddleware(BaseMiddleware):
             tg_user = data.get("event_from_user")
             if tg_user:
                 from sqlalchemy import func
+
                 await session.execute(
                     update(User)
                     .where(User.telegram_id == tg_user.id)

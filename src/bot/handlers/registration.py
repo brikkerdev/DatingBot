@@ -27,11 +27,14 @@ MAX_PHOTOS = 6
 
 # --- Name ---
 
+
 @router.message(RegistrationState.waiting_for_name, F.text)
 async def process_name(message: Message, state: FSMContext) -> None:
     name = message.text.strip()
     if not name or len(name) > 100:
-        await message.answer("Имя должно быть от 1 до 100 символов. Попробуйте ещё раз:")
+        await message.answer(
+            "Имя должно быть от 1 до 100 символов. Попробуйте ещё раз:"
+        )
         return
 
     await state.update_data(name=name)
@@ -40,6 +43,7 @@ async def process_name(message: Message, state: FSMContext) -> None:
 
 
 # --- Age ---
+
 
 @router.message(RegistrationState.waiting_for_age, F.text)
 async def process_age(message: Message, state: FSMContext) -> None:
@@ -66,7 +70,10 @@ async def process_age(message: Message, state: FSMContext) -> None:
 
 # --- Gender ---
 
-@router.message(RegistrationState.waiting_for_gender, F.text.in_({"Мужской", "Женский"}))
+
+@router.message(
+    RegistrationState.waiting_for_gender, F.text.in_({"Мужской", "Женский"})
+)
 async def process_gender(message: Message, state: FSMContext) -> None:
     gender = "male" if message.text == "Мужской" else "female"
     await state.update_data(gender=gender)
@@ -83,6 +90,7 @@ async def process_gender_invalid(message: Message) -> None:
 
 # --- City ---
 
+
 @router.message(RegistrationState.waiting_for_city, F.text)
 async def process_city(message: Message, state: FSMContext) -> None:
     city = message.text.strip()
@@ -93,13 +101,13 @@ async def process_city(message: Message, state: FSMContext) -> None:
     await state.update_data(city=city)
     await state.set_state(RegistrationState.waiting_for_bio)
     await message.answer(
-        "Расскажите о себе (до 500 символов).\n"
-        'Или нажмите "Пропустить".',
+        'Расскажите о себе (до 500 символов).\nИли нажмите "Пропустить".',
         reply_markup=skip_keyboard(),
     )
 
 
 # --- Bio ---
+
 
 @router.message(RegistrationState.waiting_for_bio, F.text)
 async def process_bio(message: Message, state: FSMContext) -> None:
@@ -108,20 +116,22 @@ async def process_bio(message: Message, state: FSMContext) -> None:
     else:
         bio = message.text.strip()
         if len(bio) > 500:
-            await message.answer("Описание не должно превышать 500 символов. Попробуйте короче:")
+            await message.answer(
+                "Описание не должно превышать 500 символов. Попробуйте короче:"
+            )
             return
         await state.update_data(bio=bio)
 
     await state.update_data(photos=[])
     await state.set_state(RegistrationState.waiting_for_photo)
     await message.answer(
-        "Отправьте хотя бы 1 фото (максимум 6).\n"
-        'Когда закончите — нажмите "Готово".',
+        'Отправьте хотя бы 1 фото (максимум 6).\nКогда закончите — нажмите "Готово".',
         reply_markup=photo_done_keyboard(),
     )
 
 
 # --- Photos ---
+
 
 @router.message(RegistrationState.waiting_for_photo, F.photo)
 async def process_photo(message: Message, state: FSMContext, bot: Bot) -> None:
@@ -181,6 +191,7 @@ async def process_photo_invalid(message: Message) -> None:
 
 
 # --- Confirm ---
+
 
 @router.message(RegistrationState.confirm, F.text == "Сохранить")
 async def process_confirm_save(

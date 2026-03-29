@@ -44,15 +44,17 @@ async def fill_queue(
     await pipe.delete(key)
 
     for p in profiles:
-        data = json.dumps({
-            "user_id": p.user_id,
-            "name": p.name,
-            "birth_date": p.birth_date.isoformat(),
-            "gender": p.gender,
-            "city": p.city or "",
-            "bio": p.bio or "",
-            "photo": p.photos[0].storage_path if p.photos else "",
-        })
+        data = json.dumps(
+            {
+                "user_id": p.user_id,
+                "name": p.name,
+                "birth_date": p.birth_date.isoformat(),
+                "gender": p.gender,
+                "city": p.city or "",
+                "bio": p.bio or "",
+                "photo": p.photos[0].storage_path if p.photos else "",
+            }
+        )
         await pipe.rpush(key, data)
 
     await pipe.expire(key, QUEUE_TTL)

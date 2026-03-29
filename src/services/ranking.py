@@ -23,11 +23,10 @@ from src.db.models.user import User
 # Level 1: Primary rating (profile-based, 0..100)
 # ---------------------------------------------------------------------------
 
+
 async def calc_primary_score(session: AsyncSession, user_id: int) -> float:
     profile = (
-        await session.execute(
-            select(Profile).where(Profile.user_id == user_id)
-        )
+        await session.execute(select(Profile).where(Profile.user_id == user_id))
     ).scalar_one_or_none()
 
     if not profile:
@@ -53,9 +52,9 @@ async def calc_primary_score(session: AsyncSession, user_id: int) -> float:
 
     photo_count = (
         await session.execute(
-            select(func.count()).select_from(ProfilePhoto).where(
-                ProfilePhoto.profile_id == profile.id
-            )
+            select(func.count())
+            .select_from(ProfilePhoto)
+            .where(ProfilePhoto.profile_id == profile.id)
         )
     ).scalar() or 0
     if photo_count >= 1:
@@ -75,6 +74,7 @@ async def calc_primary_score(session: AsyncSession, user_id: int) -> float:
 # ---------------------------------------------------------------------------
 # Level 2: Behavioral rating (interaction-based, 0..100)
 # ---------------------------------------------------------------------------
+
 
 async def calc_behavior_score(session: AsyncSession, user_id: int) -> float:
     score = 0.0
@@ -101,9 +101,9 @@ async def calc_behavior_score(session: AsyncSession, user_id: int) -> float:
     # 3) Match frequency: up to 20 pts
     matches_count = (
         await session.execute(
-            select(func.count()).select_from(Match).where(
-                (Match.user1_id == user_id) | (Match.user2_id == user_id)
-            )
+            select(func.count())
+            .select_from(Match)
+            .where((Match.user1_id == user_id) | (Match.user2_id == user_id))
         )
     ).scalar() or 0
     score += min(matches_count * 5, 20)
@@ -128,13 +128,16 @@ async def calc_behavior_score(session: AsyncSession, user_id: int) -> float:
 
     dialogs_initiated = (
         await session.execute(
-            select(func.count()).select_from(Message).join(
+            select(func.count())
+            .select_from(Message)
+            .join(
                 first_msg_subq,
                 and_(
                     Message.match_id == first_msg_subq.c.match_id,
                     Message.created_at == first_msg_subq.c.first_at,
                 ),
-            ).where(Message.from_user_id == user_id)
+            )
+            .where(Message.from_user_id == user_id)
         )
     ).scalar() or 0
     score += min(dialogs_initiated * 5, 15)
@@ -160,13 +163,14 @@ async def calc_behavior_score(session: AsyncSession, user_id: int) -> float:
 # Referral bonus (0..100 scale)
 # ---------------------------------------------------------------------------
 
+
 async def calc_referral_bonus(session: AsyncSession, user_id: int) -> float:
     """Each referral gives 20 pts, max 100."""
     count = (
         await session.execute(
-            select(func.count()).select_from(Referral).where(
-                Referral.referrer_id == user_id
-            )
+            select(func.count())
+            .select_from(Referral)
+            .where(Referral.referrer_id == user_id)
         )
     ).scalar() or 0
     return min(count * 20, 100.0)
@@ -176,7 +180,10 @@ async def calc_referral_bonus(session: AsyncSession, user_id: int) -> float:
 # Level 3: Combined rating (weighted formula)
 # ---------------------------------------------------------------------------
 
-def calc_combined_score(primary: float, behavioral: float, referral_bonus: float = 0) -> float:
+
+def calc_combined_score(
+    primary: float, behavioral: float, referral_bonus: float = 0
+) -> float:
     """
     Combined = 0.4 * primary + 0.5 * behavioral + 0.1 * referral_bonus
     All inputs on 0..100 scale.
@@ -188,6 +195,7 @@ def calc_combined_score(primary: float, behavioral: float, referral_bonus: float
 # Full recalculation for one user
 # ---------------------------------------------------------------------------
 
+
 async def recalculate_user_rating(session: AsyncSession, user_id: int) -> UserRating:
     primary = await calc_primary_score(session, user_id)
     behavioral = await calc_behavior_score(session, user_id)
@@ -195,9 +203,7 @@ async def recalculate_user_rating(session: AsyncSession, user_id: int) -> UserRa
     combined = calc_combined_score(primary, behavioral, referral)
 
     rating = (
-        await session.execute(
-            select(UserRating).where(UserRating.user_id == user_id)
-        )
+        await session.execute(select(UserRating).where(UserRating.user_id == user_id))
     ).scalar_one_or_none()
 
     if rating:
@@ -223,11 +229,10 @@ async def recalculate_user_rating(session: AsyncSession, user_id: int) -> UserRa
 # Batch recalculation (for Celery periodic task)
 # ---------------------------------------------------------------------------
 
+
 async def recalculate_all_ratings(session: AsyncSession) -> int:
     """Recalculate ratings for all active users. Returns count."""
-    result = await session.execute(
-        select(User.id).where(User.is_active.is_(True))
-    )
+    result = await session.execute(select(User.id).where(User.is_active.is_(True)))
     user_ids = list(result.scalars().all())
 
     for uid in user_ids:

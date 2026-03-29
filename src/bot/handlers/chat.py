@@ -6,7 +6,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.bot.keyboards.reply import main_menu_keyboard
 from src.bot.states.chat import ChatState
 from src.db.models.user import User
-from src.services.chat import get_match_by_id, get_messages, is_user_in_match, send_message
+from src.services.chat import (
+    get_match_by_id,
+    get_messages,
+    is_user_in_match,
+    send_message,
+)
 from src.services.profile import get_profile_by_user_id
 from src.services.user import get_user_by_telegram_id
 
@@ -21,7 +26,9 @@ def chat_keyboard() -> ReplyKeyboardMarkup:
 
 
 @router.callback_query(F.data.startswith("chat:"))
-async def enter_chat(callback: CallbackQuery, state: FSMContext, session: AsyncSession) -> None:
+async def enter_chat(
+    callback: CallbackQuery, state: FSMContext, session: AsyncSession
+) -> None:
     match_id = int(callback.data.split(":")[1])
 
     user = await get_user_by_telegram_id(session, callback.from_user.id)
@@ -72,7 +79,10 @@ async def exit_chat(message: Message, state: FSMContext) -> None:
 
 @router.message(ChatState.in_chat, F.text)
 async def chat_message(
-    message: Message, state: FSMContext, session: AsyncSession, bot: Bot,
+    message: Message,
+    state: FSMContext,
+    session: AsyncSession,
+    bot: Bot,
 ) -> None:
     data = await state.get_data()
     match_id = data["match_id"]

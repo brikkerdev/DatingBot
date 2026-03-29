@@ -37,9 +37,11 @@ async def send_profile_preview(message: Message, profile: Profile) -> None:
         media = []
         for i, photo in enumerate(profile.photos):
             resolved = await resolve_photo(photo.storage_path)
-            media.append(InputMediaPhoto(
-                media=resolved,
-                caption=text if i == 0 else None,
-                parse_mode="HTML" if i == 0 else None,
-            ))
+            media.append(
+                InputMediaPhoto(
+                    media=resolved,
+                    caption=text if i == 0 else None,
+                    parse_mode="HTML" if i == 0 else None,
+                )
+            )
         await message.answer_media_group(media=media)

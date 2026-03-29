@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 def start_metrics_server(port: int = 9090) -> None:
     """Start Prometheus metrics HTTP server in a background thread."""
     from prometheus_client import start_http_server
+
     start_http_server(port)
     logger.info("Prometheus metrics available at http://0.0.0.0:%d/metrics", port)
 
@@ -65,7 +66,9 @@ async def run_webhook() -> None:
     )
 
     app = web.Application()
-    SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, path=settings.webhook_path)
+    SimpleRequestHandler(dispatcher=dp, bot=bot).register(
+        app, path=settings.webhook_path
+    )
     setup_application(app, dp, bot=bot)
 
     runner = web.AppRunner(app)
@@ -73,7 +76,9 @@ async def run_webhook() -> None:
     site = web.TCPSite(runner, settings.webhook_host, settings.webhook_port)
     await site.start()
 
-    logger.info("Bot started (webhook) at %s:%s", settings.webhook_host, settings.webhook_port)
+    logger.info(
+        "Bot started (webhook) at %s:%s", settings.webhook_host, settings.webhook_port
+    )
     try:
         await asyncio.Event().wait()
     finally:

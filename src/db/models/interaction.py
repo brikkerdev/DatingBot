@@ -1,6 +1,13 @@
 from datetime import datetime
 
-from sqlalchemy import BigInteger, CheckConstraint, DateTime, ForeignKey, UniqueConstraint, func
+from sqlalchemy import (
+    BigInteger,
+    CheckConstraint,
+    DateTime,
+    ForeignKey,
+    UniqueConstraint,
+    func,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .base import Base
@@ -8,9 +15,7 @@ from .base import Base
 
 class Like(Base):
     __tablename__ = "likes"
-    __table_args__ = (
-        CheckConstraint("from_user_id != to_user_id"),
-    )
+    __table_args__ = (CheckConstraint("from_user_id != to_user_id"),)
 
     from_user_id: Mapped[int] = mapped_column(
         BigInteger, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
@@ -25,9 +30,7 @@ class Like(Base):
 
 class Pass(Base):
     __tablename__ = "passes"
-    __table_args__ = (
-        CheckConstraint("from_user_id != to_user_id"),
-    )
+    __table_args__ = (CheckConstraint("from_user_id != to_user_id"),)
 
     from_user_id: Mapped[int] = mapped_column(
         BigInteger, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True

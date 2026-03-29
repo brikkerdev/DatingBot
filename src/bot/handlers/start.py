@@ -14,7 +14,9 @@ router = Router()
 
 
 @router.message(CommandStart(deep_link=True))
-async def cmd_start_deep(message: Message, state: FSMContext, session: AsyncSession) -> None:
+async def cmd_start_deep(
+    message: Message, state: FSMContext, session: AsyncSession
+) -> None:
     """Handle /start ref_<telegram_id> deep links for referrals."""
     await state.clear()
     args = message.text.split(maxsplit=1)

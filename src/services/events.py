@@ -23,6 +23,7 @@ def publish(event_type: str, payload: dict) -> None:
     """Fire-and-forget event publishing via Celery → RabbitMQ."""
     try:
         from src.worker.tasks import publish_event
+
         publish_event.delay(event_type, payload)
     except Exception:
         logger.warning("Could not publish event %s (broker unavailable?)", event_type)

@@ -63,6 +63,7 @@ def get_engine():
 # Ranking Service
 # ──────────────────────────────────────────────────────
 
+
 def _recalc_rating(session: Session, user_id: int) -> None:
     """Full rating recalculation — expensive (8+ queries), that's why it's async via MQ."""
     from src.db.models.user import User
@@ -91,11 +92,14 @@ def _recalc_rating(session: Session, user_id: int) -> None:
             primary += 15
         interests = profile.interests or []
         primary += min(len(interests), 5) * 3
-        photo_count = session.execute(
-            select(sa_func.count()).select_from(ProfilePhoto).where(
-                ProfilePhoto.profile_id == profile.id
-            )
-        ).scalar() or 0
+        photo_count = (
+            session.execute(
+                select(sa_func.count())
+                .select_from(ProfilePhoto)
+                .where(ProfilePhoto.profile_id == profile.id)
+            ).scalar()
+            or 0
+        )
         if photo_count >= 1:
             primary += 10 + min(photo_count - 1, 5) * 2.5
         if profile.age_min_pref is not None and profile.age_max_pref is not None:
@@ -106,17 +110,26 @@ def _recalc_rating(session: Session, user_id: int) -> None:
             primary += 5
     primary = min(primary, 100.0)
 
-    likes = session.execute(
-        select(sa_func.count()).select_from(Like).where(Like.to_user_id == user_id)
-    ).scalar() or 0
-    passes = session.execute(
-        select(sa_func.count()).select_from(Pass).where(Pass.to_user_id == user_id)
-    ).scalar() or 0
-    matches = session.execute(
-        select(sa_func.count()).select_from(Match).where(
-            (Match.user1_id == user_id) | (Match.user2_id == user_id)
-        )
-    ).scalar() or 0
+    likes = (
+        session.execute(
+            select(sa_func.count()).select_from(Like).where(Like.to_user_id == user_id)
+        ).scalar()
+        or 0
+    )
+    passes = (
+        session.execute(
+            select(sa_func.count()).select_from(Pass).where(Pass.to_user_id == user_id)
+        ).scalar()
+        or 0
+    )
+    matches = (
+        session.execute(
+            select(sa_func.count())
+            .select_from(Match)
+            .where((Match.user1_id == user_id) | (Match.user2_id == user_id))
+        ).scalar()
+        or 0
+    )
 
     behavioral = min(likes * 2, 30)
     total = likes + passes
@@ -125,13 +138,19 @@ def _recalc_rating(session: Session, user_id: int) -> None:
     behavioral += min(matches * 5, 20)
 
     # Dialog initiation — count matches where this user sent the first message
-    match_ids = [r[0] for r in session.execute(
-        select(Match.id).where((Match.user1_id == user_id) | (Match.user2_id == user_id))
-    ).all()]
+    match_ids = [
+        r[0]
+        for r in session.execute(
+            select(Match.id).where(
+                (Match.user1_id == user_id) | (Match.user2_id == user_id)
+            )
+        ).all()
+    ]
     if match_ids:
         first_msgs = session.execute(
             select(Message.match_id, sa_func.min(Message.created_at).label("t"))
-            .where(Message.match_id.in_(match_ids)).group_by(Message.match_id)
+            .where(Message.match_id.in_(match_ids))
+            .group_by(Message.match_id)
         ).all()
         initiated = 0
         for mid, t in first_msgs:
@@ -154,21 +173,34 @@ def _recalc_rating(session: Session, user_id: int) -> None:
             behavioral += 5
     behavioral = min(behavioral, 100.0)
 
-    ref_count = session.execute(
-        select(sa_func.count()).select_from(Referral).where(Referral.referrer_id == user_id)
-    ).scalar() or 0
+    ref_count = (
+        session.execute(
+            select(sa_func.count())
+            .select_from(Referral)
+            .where(Referral.referrer_id == user_id)
+        ).scalar()
+        or 0
+    )
     referral = min(ref_count * 20, 100.0)
 
     combined = 0.4 * primary + 0.5 * behavioral + 0.1 * referral
 
-    rating = session.execute(select(UserRating).where(UserRating.user_id == user_id)).scalar_one_or_none()
+    rating = session.execute(
+        select(UserRating).where(UserRating.user_id == user_id)
+    ).scalar_one_or_none()
     if rating:
         rating.primary_score = primary
         rating.behavior_score = behavioral
         rating.combined_score = combined
     else:
-        session.add(UserRating(user_id=user_id, primary_score=primary,
-                               behavior_score=behavioral, combined_score=combined))
+        session.add(
+            UserRating(
+                user_id=user_id,
+                primary_score=primary,
+                behavior_score=behavioral,
+                combined_score=combined,
+            )
+        )
     session.commit()
 
 
@@ -188,8 +220,11 @@ def handle_ranking(event_type: str, payload: dict) -> None:
             _recalc_rating(session, payload["user_id"])
         elif event_type == "profile.deleted":
             from src.db.models.rating import UserRating
+
             session.execute(
-                UserRating.__table__.delete().where(UserRating.user_id == payload["user_id"])
+                UserRating.__table__.delete().where(
+                    UserRating.user_id == payload["user_id"]
+                )
             )
             session.commit()
     logger.info("[ranking] %s → recalculated", event_type)
@@ -198,6 +233,7 @@ def handle_ranking(event_type: str, payload: dict) -> None:
 # ──────────────────────────────────────────────────────
 # Notification Service
 # ──────────────────────────────────────────────────────
+
 
 def handle_notification(event_type: str, payload: dict) -> None:
     """Send match notifications via Telegram.
@@ -223,7 +259,10 @@ def handle_notification(event_type: str, payload: dict) -> None:
                 from src.db.models.user import User
                 from src.db.models.profile import Profile
 
-                for uid_key, partner_key in [("user1_id", "user2_id"), ("user2_id", "user1_id")]:
+                for uid_key, partner_key in [
+                    ("user1_id", "user2_id"),
+                    ("user2_id", "user1_id"),
+                ]:
                     user = session.execute(
                         select(User).where(User.id == payload[uid_key])
                     ).scalar_one_or_none()
@@ -254,9 +293,13 @@ def handle_notification(event_type: str, payload: dict) -> None:
 ROUTING = {
     "ranking_service": {
         "events": [
-            "like.created", "pass.created", "match.created",
-            "message.created", "referral.created",
-            "profile.updated", "profile.deleted",
+            "like.created",
+            "pass.created",
+            "match.created",
+            "message.created",
+            "referral.created",
+            "profile.updated",
+            "profile.deleted",
         ],
         "handler": handle_ranking,
     },
@@ -289,13 +332,19 @@ def main():
     logger.info("Starting event consumer...")
     connection = pika.BlockingConnection(pika.URLParameters(settings.rabbitmq_url))
     channel = connection.channel()
-    channel.exchange_declare(exchange="dating_events", exchange_type="topic", durable=True)
+    channel.exchange_declare(
+        exchange="dating_events", exchange_type="topic", durable=True
+    )
 
     for queue_name, cfg in ROUTING.items():
         channel.queue_declare(queue=queue_name, durable=True)
         for event in cfg["events"]:
-            channel.queue_bind(exchange="dating_events", queue=queue_name, routing_key=event)
-        channel.basic_consume(queue=queue_name, on_message_callback=make_callback(cfg["handler"]))
+            channel.queue_bind(
+                exchange="dating_events", queue=queue_name, routing_key=event
+            )
+        channel.basic_consume(
+            queue=queue_name, on_message_callback=make_callback(cfg["handler"])
+        )
         logger.info("  %s → %s", queue_name, cfg["events"])
 
     channel.basic_qos(prefetch_count=1)

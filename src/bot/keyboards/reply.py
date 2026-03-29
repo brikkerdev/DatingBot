@@ -51,7 +51,10 @@ def profile_actions_keyboard() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="Редактировать анкету")],
-            [KeyboardButton(text="Удалить анкету"), KeyboardButton(text="Назад в меню")],
+            [
+                KeyboardButton(text="Удалить анкету"),
+                KeyboardButton(text="Назад в меню"),
+            ],
         ],
         resize_keyboard=True,
         one_time_keyboard=True,

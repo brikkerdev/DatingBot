@@ -34,6 +34,7 @@ MAX_PHOTOS = 6
 
 # --- Helpers ---
 
+
 async def _get_fresh_profile(session: AsyncSession, user_id: int):
     """Expire cache and get fresh profile with photos."""
     session.expire_all()
@@ -58,7 +59,12 @@ async def _delete_old_preview(bot: Bot, chat_id: int, state: FSMContext) -> None
 
 
 async def _send_photo_editor(
-    session: AsyncSession, user_id: int, *, bot: Bot, chat_id: int, state: FSMContext,
+    session: AsyncSession,
+    user_id: int,
+    *,
+    bot: Bot,
+    chat_id: int,
+    state: FSMContext,
 ) -> None:
     """Send full photo editor: preview of profile + management keyboard."""
     # Clean up old messages
@@ -80,15 +86,18 @@ async def _send_photo_editor(
             preview_ids.append(msg.message_id)
         else:
             from aiogram.types import InputMediaPhoto
+
             media = []
             text = format_profile_text(profile)
             for i, photo in enumerate(profile.photos):
                 resolved = await resolve_photo(photo.storage_path)
-                media.append(InputMediaPhoto(
-                    media=resolved,
-                    caption=text if i == 0 else None,
-                    parse_mode="HTML" if i == 0 else None,
-                ))
+                media.append(
+                    InputMediaPhoto(
+                        media=resolved,
+                        caption=text if i == 0 else None,
+                        parse_mode="HTML" if i == 0 else None,
+                    )
+                )
             msgs = await bot.send_media_group(chat_id, media=media)
             preview_ids.extend(m.message_id for m in msgs)
     else:
@@ -99,18 +108,27 @@ async def _send_photo_editor(
     photos = [(p.id, p.sort_order) for p in profile.photos]
     count = len(photos)
     text = f"<b>Ваши фото ({count}/{MAX_PHOTOS}):</b>\n"
-    text += "Используйте кнопки для управления." if count else "Нет фото. Добавьте хотя бы одно."
+    text += (
+        "Используйте кнопки для управления."
+        if count
+        else "Нет фото. Добавьте хотя бы одно."
+    )
 
     kb = photo_manage_keyboard(photos, MAX_PHOTOS)
     sent = await bot.send_message(chat_id, text, reply_markup=kb)
 
-    await state.update_data(preview_msg_ids=preview_ids, photo_mgr_msg_id=sent.message_id)
+    await state.update_data(
+        preview_msg_ids=preview_ids, photo_mgr_msg_id=sent.message_id
+    )
 
 
 # --- Entry point ---
 
+
 @router.message(F.text == "Редактировать анкету")
-async def start_edit(message: Message, state: FSMContext, session: AsyncSession) -> None:
+async def start_edit(
+    message: Message, state: FSMContext, session: AsyncSession
+) -> None:
     user = await get_user_by_telegram_id(session, message.from_user.id)
     if not user:
         await message.answer("Используйте /start для регистрации.")
@@ -131,6 +149,7 @@ async def start_edit(message: Message, state: FSMContext, session: AsyncSession)
 
 # --- Field selection callbacks ---
 
+
 @router.callback_query(EditProfileState.choosing_field, F.data == "edit:name")
 async def edit_name_start(callback: CallbackQuery, state: FSMContext) -> None:
     await state.set_state(EditProfileState.editing_name)
@@ -142,7 +161,9 @@ async def edit_name_start(callback: CallbackQuery, state: FSMContext) -> None:
 async def edit_age_start(callback: CallbackQuery, state: FSMContext) -> None:
     await state.set_state(EditProfileState.editing_age)
     await callback.answer()
-    await callback.message.answer("Введите новый возраст:", reply_markup=remove_keyboard)
+    await callback.message.answer(
+        "Введите новый возраст:", reply_markup=remove_keyboard
+    )
 
 
 @router.callback_query(EditProfileState.choosing_field, F.data == "edit:gender")
@@ -171,14 +192,21 @@ async def edit_bio_start(callback: CallbackQuery, state: FSMContext) -> None:
 
 @router.callback_query(EditProfileState.choosing_field, F.data == "edit:photo")
 async def edit_photo_start(
-    callback: CallbackQuery, state: FSMContext, session: AsyncSession, bot: Bot,
+    callback: CallbackQuery,
+    state: FSMContext,
+    session: AsyncSession,
+    bot: Bot,
 ) -> None:
     data = await state.get_data()
     await state.set_state(EditProfileState.editing_photo)
     await state.update_data(preview_msg_ids=[], photo_mgr_msg_id=None)
     await callback.answer()
     await _send_photo_editor(
-        session, data["user_id"], bot=bot, chat_id=callback.message.chat.id, state=state,
+        session,
+        data["user_id"],
+        bot=bot,
+        chat_id=callback.message.chat.id,
+        state=state,
     )
 
 
@@ -191,8 +219,11 @@ async def edit_cancel(callback: CallbackQuery, state: FSMContext) -> None:
 
 # --- Text field editors ---
 
+
 @router.message(EditProfileState.editing_name, F.text)
-async def edit_name_save(message: Message, state: FSMContext, session: AsyncSession) -> None:
+async def edit_name_save(
+    message: Message, state: FSMContext, session: AsyncSession
+) -> None:
     name = message.text.strip()
     if not name or len(name) > 100:
         await message.answer("Имя от 1 до 100 символов:")
@@ -210,7 +241,9 @@ async def edit_name_save(message: Message, state: FSMContext, session: AsyncSess
 
 
 @router.message(EditProfileState.editing_age, F.text)
-async def edit_age_save(message: Message, state: FSMContext, session: AsyncSession) -> None:
+async def edit_age_save(
+    message: Message, state: FSMContext, session: AsyncSession
+) -> None:
     try:
         age = int(message.text.strip())
     except ValueError:
@@ -239,7 +272,9 @@ async def edit_age_save(message: Message, state: FSMContext, session: AsyncSessi
 
 
 @router.message(EditProfileState.editing_gender, F.text.in_({"Мужской", "Женский"}))
-async def edit_gender_save(message: Message, state: FSMContext, session: AsyncSession) -> None:
+async def edit_gender_save(
+    message: Message, state: FSMContext, session: AsyncSession
+) -> None:
     gender = "male" if message.text == "Мужской" else "female"
 
     data = await state.get_data()
@@ -259,7 +294,9 @@ async def edit_gender_invalid(message: Message) -> None:
 
 
 @router.message(EditProfileState.editing_city, F.text)
-async def edit_city_save(message: Message, state: FSMContext, session: AsyncSession) -> None:
+async def edit_city_save(
+    message: Message, state: FSMContext, session: AsyncSession
+) -> None:
     city = message.text.strip()
     if not city or len(city) > 100:
         await message.answer("Город от 1 до 100 символов:")
@@ -277,7 +314,9 @@ async def edit_city_save(message: Message, state: FSMContext, session: AsyncSess
 
 
 @router.message(EditProfileState.editing_bio, F.text)
-async def edit_bio_save(message: Message, state: FSMContext, session: AsyncSession) -> None:
+async def edit_bio_save(
+    message: Message, state: FSMContext, session: AsyncSession
+) -> None:
     if message.text.strip() == "Пропустить":
         bio = None
     else:
@@ -300,6 +339,7 @@ async def edit_bio_save(message: Message, state: FSMContext, session: AsyncSessi
 
 # --- Photo management ---
 
+
 @router.callback_query(EditProfileState.editing_photo, F.data == "ph_noop")
 async def photo_noop(callback: CallbackQuery) -> None:
     await callback.answer()
@@ -307,7 +347,10 @@ async def photo_noop(callback: CallbackQuery) -> None:
 
 @router.callback_query(EditProfileState.editing_photo, F.data.startswith("ph_del:"))
 async def photo_delete(
-    callback: CallbackQuery, state: FSMContext, session: AsyncSession, bot: Bot,
+    callback: CallbackQuery,
+    state: FSMContext,
+    session: AsyncSession,
+    bot: Bot,
 ) -> None:
     photo_id = int(callback.data.split(":")[1])
     data = await state.get_data()
@@ -320,13 +363,20 @@ async def photo_delete(
     await delete_photo(session, photo_id)
     await callback.answer("Фото удалено")
     await _send_photo_editor(
-        session, data["user_id"], bot=bot, chat_id=callback.message.chat.id, state=state,
+        session,
+        data["user_id"],
+        bot=bot,
+        chat_id=callback.message.chat.id,
+        state=state,
     )
 
 
 @router.callback_query(EditProfileState.editing_photo, F.data.startswith("ph_up:"))
 async def photo_move_up(
-    callback: CallbackQuery, state: FSMContext, session: AsyncSession, bot: Bot,
+    callback: CallbackQuery,
+    state: FSMContext,
+    session: AsyncSession,
+    bot: Bot,
 ) -> None:
     photo_id = int(callback.data.split(":")[1])
     data = await state.get_data()
@@ -344,13 +394,20 @@ async def photo_move_up(
 
     await callback.answer("Перемещено")
     await _send_photo_editor(
-        session, data["user_id"], bot=bot, chat_id=callback.message.chat.id, state=state,
+        session,
+        data["user_id"],
+        bot=bot,
+        chat_id=callback.message.chat.id,
+        state=state,
     )
 
 
 @router.callback_query(EditProfileState.editing_photo, F.data.startswith("ph_down:"))
 async def photo_move_down(
-    callback: CallbackQuery, state: FSMContext, session: AsyncSession, bot: Bot,
+    callback: CallbackQuery,
+    state: FSMContext,
+    session: AsyncSession,
+    bot: Bot,
 ) -> None:
     photo_id = int(callback.data.split(":")[1])
     data = await state.get_data()
@@ -368,7 +425,11 @@ async def photo_move_down(
 
     await callback.answer("Перемещено")
     await _send_photo_editor(
-        session, data["user_id"], bot=bot, chat_id=callback.message.chat.id, state=state,
+        session,
+        data["user_id"],
+        bot=bot,
+        chat_id=callback.message.chat.id,
+        state=state,
     )
 
 
@@ -380,7 +441,10 @@ async def photo_add_prompt(callback: CallbackQuery) -> None:
 
 @router.message(EditProfileState.editing_photo, F.photo)
 async def photo_add_receive(
-    message: Message, state: FSMContext, session: AsyncSession, bot: Bot,
+    message: Message,
+    state: FSMContext,
+    session: AsyncSession,
+    bot: Bot,
 ) -> None:
     data = await state.get_data()
     profile = await _get_fresh_profile(session, data["user_id"])
@@ -402,13 +466,19 @@ async def photo_add_receive(
         await add_photo(session, profile.id, storage_path=s3_key, sort_order=next_order)
     except Exception:
         logger.warning("S3 upload failed, falling back to file_id")
-        await add_photo(session, profile.id, storage_path=file_id, sort_order=next_order)
+        await add_photo(
+            session, profile.id, storage_path=file_id, sort_order=next_order
+        )
 
     await session.commit()
 
     # Update the existing management message in-place
     await _send_photo_editor(
-        session, data["user_id"], bot=bot, chat_id=message.chat.id, state=state,
+        session,
+        data["user_id"],
+        bot=bot,
+        chat_id=message.chat.id,
+        state=state,
     )
 
 
@@ -419,7 +489,8 @@ async def photo_done(callback: CallbackQuery, state: FSMContext, bot: Bot) -> No
     await state.set_state(EditProfileState.choosing_field)
     await callback.answer()
     await callback.message.answer(
-        "Что ещё изменить?", reply_markup=edit_profile_keyboard(),
+        "Что ещё изменить?",
+        reply_markup=edit_profile_keyboard(),
     )
 
 

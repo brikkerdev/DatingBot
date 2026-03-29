@@ -38,6 +38,7 @@ async def ensure_bucket() -> None:
     if not exists:
         await client.make_bucket(settings.minio_bucket)
         import json
+
         policy = {
             "Version": "2012-10-17",
             "Statement": [
@@ -50,7 +51,9 @@ async def ensure_bucket() -> None:
             ],
         }
         await client.set_bucket_policy(settings.minio_bucket, json.dumps(policy))
-        logger.info("Created bucket '%s' with public read policy", settings.minio_bucket)
+        logger.info(
+            "Created bucket '%s' with public read policy", settings.minio_bucket
+        )
 
 
 async def upload_photo(data: bytes, content_type: str = "image/jpeg") -> str:

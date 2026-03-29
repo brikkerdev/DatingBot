@@ -34,10 +34,13 @@ async def send_message(
 
     # MQ event only for ranking recalculation (dialog initiation score).
     # Message forwarding is done directly by the bot handler — chat must be instant.
-    publish("message.created", {
-        "match_id": match_id,
-        "from_user_id": from_user_id,
-    })
+    publish(
+        "message.created",
+        {
+            "match_id": match_id,
+            "from_user_id": from_user_id,
+        },
+    )
 
     return msg
 

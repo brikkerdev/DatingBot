@@ -55,11 +55,14 @@ def _recalc_one(session: Session, uid: int) -> None:
             primary += 15
         interests = profile.interests or []
         primary += min(len(interests), 5) * 3
-        photo_count = session.execute(
-            select(sa_func.count()).select_from(ProfilePhoto).where(
-                ProfilePhoto.profile_id == profile.id
-            )
-        ).scalar() or 0
+        photo_count = (
+            session.execute(
+                select(sa_func.count())
+                .select_from(ProfilePhoto)
+                .where(ProfilePhoto.profile_id == profile.id)
+            ).scalar()
+            or 0
+        )
         if photo_count >= 1:
             primary += 10 + min(photo_count - 1, 5) * 2.5
         if profile.age_min_pref is not None and profile.age_max_pref is not None:
@@ -71,17 +74,26 @@ def _recalc_one(session: Session, uid: int) -> None:
     primary = min(primary, 100.0)
 
     # Behavioral
-    likes = session.execute(
-        select(sa_func.count()).select_from(Like).where(Like.to_user_id == uid)
-    ).scalar() or 0
-    passes = session.execute(
-        select(sa_func.count()).select_from(Pass).where(Pass.to_user_id == uid)
-    ).scalar() or 0
-    matches = session.execute(
-        select(sa_func.count()).select_from(Match).where(
-            (Match.user1_id == uid) | (Match.user2_id == uid)
-        )
-    ).scalar() or 0
+    likes = (
+        session.execute(
+            select(sa_func.count()).select_from(Like).where(Like.to_user_id == uid)
+        ).scalar()
+        or 0
+    )
+    passes = (
+        session.execute(
+            select(sa_func.count()).select_from(Pass).where(Pass.to_user_id == uid)
+        ).scalar()
+        or 0
+    )
+    matches = (
+        session.execute(
+            select(sa_func.count())
+            .select_from(Match)
+            .where((Match.user1_id == uid) | (Match.user2_id == uid))
+        ).scalar()
+        or 0
+    )
 
     behavioral = min(likes * 2, 30)
     total = likes + passes
@@ -90,9 +102,12 @@ def _recalc_one(session: Session, uid: int) -> None:
     behavioral += min(matches * 5, 20)
 
     # Dialog initiation
-    match_ids = [r[0] for r in session.execute(
-        select(Match.id).where((Match.user1_id == uid) | (Match.user2_id == uid))
-    ).all()]
+    match_ids = [
+        r[0]
+        for r in session.execute(
+            select(Match.id).where((Match.user1_id == uid) | (Match.user2_id == uid))
+        ).all()
+    ]
     if match_ids:
         first_msgs = session.execute(
             select(Message.match_id, sa_func.min(Message.created_at).label("first_at"))
@@ -102,7 +117,9 @@ def _recalc_one(session: Session, uid: int) -> None:
         initiated = 0
         for mid, first_at in first_msgs:
             fm = session.execute(
-                select(Message).where(Message.match_id == mid, Message.created_at == first_at)
+                select(Message).where(
+                    Message.match_id == mid, Message.created_at == first_at
+                )
             ).scalar_one_or_none()
             if fm and fm.from_user_id == uid:
                 initiated += 1
@@ -110,6 +127,7 @@ def _recalc_one(session: Session, uid: int) -> None:
 
     # Activity recency
     from datetime import datetime, timedelta, timezone
+
     user = session.execute(select(User).where(User.id == uid)).scalar_one_or_none()
     if user:
         now = datetime.now(timezone.utc)
@@ -123,9 +141,14 @@ def _recalc_one(session: Session, uid: int) -> None:
     behavioral = min(behavioral, 100.0)
 
     # Referral bonus
-    ref_count = session.execute(
-        select(sa_func.count()).select_from(Referral).where(Referral.referrer_id == uid)
-    ).scalar() or 0
+    ref_count = (
+        session.execute(
+            select(sa_func.count())
+            .select_from(Referral)
+            .where(Referral.referrer_id == uid)
+        ).scalar()
+        or 0
+    )
     referral = min(ref_count * 20, 100.0)
 
     combined = 0.4 * primary + 0.5 * behavioral + 0.1 * referral
@@ -138,10 +161,14 @@ def _recalc_one(session: Session, uid: int) -> None:
         rating.behavior_score = behavioral
         rating.combined_score = combined
     else:
-        session.add(UserRating(
-            user_id=uid, primary_score=primary,
-            behavior_score=behavioral, combined_score=combined,
-        ))
+        session.add(
+            UserRating(
+                user_id=uid,
+                primary_score=primary,
+                behavior_score=behavioral,
+                combined_score=combined,
+            )
+        )
 
 
 @app.task(name="src.worker.tasks.recalculate_ratings")
@@ -154,9 +181,11 @@ def recalculate_ratings() -> dict:
     count = 0
 
     with Session(engine) as session:
-        user_ids = session.execute(
-            select(User.id).where(User.is_active.is_(True))
-        ).scalars().all()
+        user_ids = (
+            session.execute(select(User.id).where(User.is_active.is_(True)))
+            .scalars()
+            .all()
+        )
 
         for uid in user_ids:
             _recalc_one(session, uid)
@@ -175,11 +204,11 @@ def publish_event(event_type: str, payload: dict) -> None:
     import pika
 
     try:
-        connection = pika.BlockingConnection(
-            pika.URLParameters(settings.rabbitmq_url)
-        )
+        connection = pika.BlockingConnection(pika.URLParameters(settings.rabbitmq_url))
         channel = connection.channel()
-        channel.exchange_declare(exchange="dating_events", exchange_type="topic", durable=True)
+        channel.exchange_declare(
+            exchange="dating_events", exchange_type="topic", durable=True
+        )
         channel.basic_publish(
             exchange="dating_events",
             routing_key=event_type,
