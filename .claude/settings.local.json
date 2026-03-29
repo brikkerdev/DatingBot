@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/Daniel/Documents/Study/DatingBot -not -path */.git* -type d)",
+      "Bash(.venv/Scripts/python -c \"import asyncpg; print\\(asyncpg.__version__\\)\")",
+      "Bash(.venv/Scripts/python -c \"import sys; print\\(sys.version\\)\")",
+      "Bash(.venv/Scripts/python -c \"\nimport asyncio\nasync def test\\(\\):\n    import asyncpg\n    conn = await asyncpg.connect\\('postgresql://postgres:postgres@localhost:5432/dating_bot'\\)\n    val = await conn.fetchval\\('SELECT 1'\\)\n    print\\('Connection OK, result:', val\\)\n    await conn.close\\(\\)\nasyncio.run\\(test\\(\\)\\)\n\")",
+      "Bash(.venv/Scripts/python -c \"\nimport asyncio\nasyncio.set_event_loop_policy\\(asyncio.WindowsSelectorEventLoopPolicy\\(\\)\\)\nasync def test\\(\\):\n    import asyncpg\n    conn = await asyncpg.connect\\('postgresql://postgres:postgres@localhost:5432/dating_bot'\\)\n    val = await conn.fetchval\\('SELECT 1'\\)\n    print\\('Connection OK, result:', val\\)\n    await conn.close\\(\\)\nasyncio.run\\(test\\(\\)\\)\n\")",
+      "Bash(.venv/Scripts/python -c \"\nimport asyncio\nasync def test\\(\\):\n    import asyncpg\n    conn = await asyncpg.connect\\(host='127.0.0.1', port=5432, user='postgres', password='postgres', database='dating_bot'\\)\n    val = await conn.fetchval\\('SELECT 1'\\)\n    print\\('Connection OK, result:', val\\)\n    await conn.close\\(\\)\nasyncio.run\\(test\\(\\)\\)\n\")",
+      "Bash(.venv/Scripts/python -c \"\nimport socket\ns = socket.create_connection\\(\\('127.0.0.1', 5432\\), timeout=5\\)\nprint\\('TCP connection OK'\\)\ns.close\\(\\)\n\")",
+      "Bash(.venv/Scripts/python -c \"\nimport asyncio\nasync def test\\(\\):\n    import asyncpg\n    conn = await asyncpg.connect\\(host='127.0.0.1', port=5432, user='postgres', password='postgres', database='dating_bot', ssl=False\\)\n    val = await conn.fetchval\\('SELECT 1'\\)\n    print\\('Connection OK, result:', val\\)\n    await conn.close\\(\\)\nasyncio.run\\(test\\(\\)\\)\n\")"
+    ]
+  }
+}
