@@ -129,6 +129,78 @@ def add_product(
     print(f"[Scenario 3] Product #{product.id} added: {product.product_name} ({product.price})")
     return product
 
+def verify_no_order(session: Session, label: str) -> None:
+    """Проверяет, что после rollback заказ и позиции НЕ попали в БД."""
+    order_count = session.query(Order).count()
+    item_count = session.query(OrderItem).count()
+    print(f"  [{label}] Orders: {order_count}, OrderItems: {item_count}")
+
+
+def verify_email_unchanged(session: Session, customer_id: int, expected: str) -> None:
+    """Проверяет, что email не изменился после rollback."""
+    customer = session.get(Customer, customer_id)
+    actual = customer.email if customer else "<not found>"
+    match = "OK" if actual == expected else "MISMATCH"
+    print(f"  [Check] email = {actual} (expected {expected}) — {match}")
+
+
+def verify_product_count(session: Session, expected: int) -> None:
+    """Проверяет количество продуктов после rollback."""
+    count = session.query(Product).count()
+    match = "OK" if count == expected else "MISMATCH"
+    print(f"  [Check] products count = {count} (expected {expected}) — {match}")
+
+
+# ---------------------------------------------------------------------------
+# Демонстрации rollback (inconsistent-состояние предотвращено)
+# ---------------------------------------------------------------------------
+def demo_rollback_scenario1(session: Session) -> None:
+    """
+    Сценарий 1 — rollback: второй товар не существует (product_id=999).
+    Без транзакции заказ бы создался, но без части позиций — inconsistent.
+    С транзакцией: ничего не сохраняется.
+    """
+    print("\n--- Scenario 1: ROLLBACK demo (bad product_id) ---")
+    try:
+        place_order(
+            session,
+            customer_id=1,
+            items=[
+                {"product_id": 1, "quantity": 1},
+                {"product_id": 999, "quantity": 1},  # не существует
+            ],
+        )
+    except ValueError as e:
+        session.rollback()
+        print(f"  Transaction rolled back: {e}")
+
+
+def demo_rollback_scenario2(session: Session) -> None:
+    """
+    Сценарий 2 — rollback: обновляем email несуществующего клиента.
+    """
+    print("\n--- Scenario 2: ROLLBACK demo (bad customer_id) ---")
+    try:
+        update_customer_email(session, customer_id=999, new_email="ghost@example.com")
+    except ValueError as e:
+        session.rollback()
+        print(f"  Transaction rolled back: {e}")
+
+
+def demo_rollback_scenario3(session: Session) -> None:
+    """
+    Сценарий 3 — rollback: цена отрицательная — нарушение бизнес-правила.
+    """
+    print("\n--- Scenario 3: ROLLBACK demo (negative price) ---")
+    try:
+        if Decimal("-100") < 0:
+            raise ValueError("Price must be positive")
+        add_product(session, product_name="Bad Product", price=Decimal("-100"))
+    except ValueError as e:
+        session.rollback()
+        print(f"  Transaction rolled back: {e}")
+
+
 def main() -> None:
     engine = create_engine(DATABASE_URL, echo=False)
     wait_for_db(engine)
@@ -136,6 +208,9 @@ def main() -> None:
 
     with Session(engine) as session:
         seed(session)
+
+    # Успешные сценарии
+    print("\nSuccessful transactions:")
 
     # Сценарий 1
     with Session(engine) as session:
@@ -156,7 +231,39 @@ def main() -> None:
     with Session(engine) as session:
         add_product(session, product_name="Monitor", price=Decimal("25000.00"))
 
-    print("\nAll scenarios completed successfully.")
+    # Демонстрация rollback
+    print("\nRollback demos (inconsistency prevention):")
+
+    # Запоминаем состояние ДО rollback-демонстраций
+    with Session(engine) as session:
+        orders_before = session.query(Order).count()
+        items_before = session.query(OrderItem).count()
+        products_before = session.query(Product).count()
+
+    # Rollback сценарий 1: заказ с несуществующим товаром
+    with Session(engine) as session:
+        demo_rollback_scenario1(session)
+    with Session(engine) as session:
+        verify_no_order(session, "After rollback")
+        assert session.query(Order).count() == orders_before, "Order leaked!"
+        assert session.query(OrderItem).count() == items_before, "OrderItems leaked!"
+        print("  -> БД consistent: ни Order, ни OrderItems не утекли.")
+
+    # Rollback сценарий 2: обновление email несуществующего клиента
+    with Session(engine) as session:
+        demo_rollback_scenario2(session)
+    with Session(engine) as session:
+        verify_email_unchanged(session, customer_id=1, expected="ivan.new@example.com")
+        print("  -> БД consistent: email не изменился.")
+
+    # Rollback сценарий 3: продукт с отрицательной ценой
+    with Session(engine) as session:
+        demo_rollback_scenario3(session)
+    with Session(engine) as session:
+        verify_product_count(session, expected=products_before)
+        print("  -> БД consistent: лишний продукт не добавлен.")
+
+    print("\nAll done.")
 
 
 if __name__ == "__main__":
