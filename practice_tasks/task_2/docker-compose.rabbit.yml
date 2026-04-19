@@ -1,0 +1,52 @@
+services:
+  rabbit:
+    image: rabbitmq:3.13-management-alpine
+    hostname: rabbit
+    ports:
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+  consumer:
+    build: .
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    environment:
+      ROLE: consumer
+      BROKER_KIND: rabbit
+      BROKER_URL: amqp://guest:guest@rabbit:5672/
+      QUEUE_NAME: bench
+      RUN_ID: ${RUN_ID:-smoke}
+      DURATION_SEC: ${DURATION_SEC:-30}
+      GRACE_SEC: ${GRACE_SEC:-5}
+    volumes:
+      - ./results:/app/results
+
+  producer:
+    build: .
+    depends_on:
+      rabbit:
+        condition: service_healthy
+      consumer:
+        condition: service_started
+    environment:
+      ROLE: producer
+      BROKER_KIND: rabbit
+      BROKER_URL: amqp://guest:guest@rabbit:5672/
+      QUEUE_NAME: bench
+      RUN_ID: ${RUN_ID:-smoke}
+      MSG_SIZE: ${MSG_SIZE:-1024}
+      RATE: ${RATE:-1000}
+      DURATION_SEC: ${DURATION_SEC:-30}
+      WARMUP_SEC: ${WARMUP_SEC:-2}
+    volumes:
+      - ./results:/app/results

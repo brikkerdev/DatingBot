@@ -1,0 +1,50 @@
+services:
+  redis:
+    image: redis:7.4-alpine
+    hostname: redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+  consumer:
+    build: .
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      ROLE: consumer
+      BROKER_KIND: redis
+      BROKER_URL: redis://redis:6379/0
+      QUEUE_NAME: bench
+      RUN_ID: ${RUN_ID:-smoke}
+      DURATION_SEC: ${DURATION_SEC:-30}
+      GRACE_SEC: ${GRACE_SEC:-5}
+    volumes:
+      - ./results:/app/results
+
+  producer:
+    build: .
+    depends_on:
+      redis:
+        condition: service_healthy
+      consumer:
+        condition: service_started
+    environment:
+      ROLE: producer
+      BROKER_KIND: redis
+      BROKER_URL: redis://redis:6379/0
+      QUEUE_NAME: bench
+      RUN_ID: ${RUN_ID:-smoke}
+      MSG_SIZE: ${MSG_SIZE:-1024}
+      RATE: ${RATE:-1000}
+      DURATION_SEC: ${DURATION_SEC:-30}
+      WARMUP_SEC: ${WARMUP_SEC:-2}
+    volumes:
+      - ./results:/app/results

@@ -1,0 +1,2608 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.14kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [consumer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 2.1s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [consumer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#5 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#5 DONE 0.0s
+
+#6 [consumer internal] load build context
+#6 transferring context: 42.32kB 0.0s done
+#6 DONE 0.0s
+
+#7 [producer 3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [producer 2/5] WORKDIR /app
+#8 CACHED
+
+#9 [producer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [consumer 5/5] COPY src/ ./
+#10 DONE 0.0s
+
+#11 [consumer] exporting to image
+#11 exporting layers 0.0s done
+#11 exporting manifest sha256:153bda4a66bf952ec1325c600862d8fffc83656ce481a28944b38b987b42cfbc 0.0s done
+#11 exporting config sha256:34a67119273509e6dbcaae0219e7b46e0593a087119a0f79cf431b0c33517be1 0.0s done
+#11 exporting attestation manifest sha256:fcc200f589a8221865a52683d486d0fdeb8ae905fec725a0da3cb5294b13f035 0.0s done
+#11 exporting manifest list sha256:dc6a8d6e778b1e771f2a9bd1cea50d7f990694e8dced963c98221df3837db922 0.0s done
+#11 naming to docker.io/library/bench_rabbit-consumer:latest
+#11 naming to docker.io/library/bench_rabbit-consumer:latest done
+#11 unpacking to docker.io/library/bench_rabbit-consumer:latest 0.0s done
+#11 DONE 0.2s
+
+#12 [producer] exporting to image
+#12 exporting layers 0.0s done
+#12 exporting manifest sha256:b01bd68231f3fbbb37f15dfcb2eb0dcf9c6479f4aa61079cf9df709a2b238299 0.0s done
+#12 exporting config sha256:2432ebc89b67ae95631624eb4c0414943012e9c10254217d02a94ffc803ebaf5 0.0s done
+#12 exporting attestation manifest sha256:b429249550ecac45616c80eab1d59785ea9ee73a6b6a2ca7e84d332d3a019135 0.0s done
+#12 exporting manifest list sha256:0d4a16b2cc4dc2867291f02efb18b8efa8ea840e5e55b34b177b5d2d33573f0e 0.0s done
+#12 naming to docker.io/library/bench_rabbit-producer:latest done
+#12 unpacking to docker.io/library/bench_rabbit-producer:latest 0.0s done
+#12 DONE 0.2s
+
+#13 [consumer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [producer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_rabbit-consumer  Built
+ bench_rabbit-producer  Built
+ Network bench_rabbit_default  Creating
+ Network bench_rabbit_default  Created
+ Container bench_rabbit-rabbit-1  Creating
+ Container bench_rabbit-rabbit-1  Created
+ Container bench_rabbit-consumer-1  Creating
+ Container bench_rabbit-consumer-1  Created
+ Container bench_rabbit-producer-1  Creating
+ Container bench_rabbit-producer-1  Created
+ Container bench_rabbit-rabbit-1  Starting
+ Container bench_rabbit-rabbit-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-consumer-1  Starting
+ Container bench_rabbit-consumer-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-producer-1  Starting
+ Container bench_rabbit-producer-1  Started
+0
+consumer-1  | [consumer] run_id=rabbit_128_1000 kind=rabbit duration=30 grace=5
+consumer-1  | Waiting for broker... attempt 1/20: 
+consumer-1  | Waiting for broker... attempt 2/20: 
+consumer-1  | Broker is ready (attempt 3).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=30001 avg=2.00ms p95=14.35ms peak_backlog=0
+producer-1  | [producer] run_id=rabbit_128_1000 kind=rabbit size=128 rate=1000 duration=30
+producer-1  | Waiting for broker... attempt 1/20: 
+producer-1  | Waiting for broker... attempt 2/20: 
+producer-1  | Broker is ready (attempt 3).
+producer-1  | [producer] done: {'run_id': 'rabbit_128_1000', 'kind': 'rabbit', 'msg_size': 128, 'target_rate': 1000, 'duration': 30, 'sent': 30001, 'send_errors': 0, 'actual_rate': 1000.0285545302128, 'wall_time': 30.00014336000004}
+ Container bench_rabbit-producer-1  Stopping
+ Container bench_rabbit-producer-1  Stopped
+ Container bench_rabbit-producer-1  Removing
+ Container bench_rabbit-producer-1  Removed
+ Container bench_rabbit-consumer-1  Stopping
+ Container bench_rabbit-consumer-1  Stopped
+ Container bench_rabbit-consumer-1  Removing
+ Container bench_rabbit-consumer-1  Removed
+ Container bench_rabbit-rabbit-1  Stopping
+ Container bench_rabbit-rabbit-1  Stopped
+ Container bench_rabbit-rabbit-1  Removing
+ Container bench_rabbit-rabbit-1  Removed
+ Network bench_rabbit_default  Removing
+ Network bench_rabbit_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.14kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [producer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.2s
+
+#4 [consumer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [producer 2/5] WORKDIR /app
+#7 CACHED
+
+#8 [producer 3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [producer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [producer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [consumer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:153bda4a66bf952ec1325c600862d8fffc83656ce481a28944b38b987b42cfbc done
+#11 exporting config sha256:34a67119273509e6dbcaae0219e7b46e0593a087119a0f79cf431b0c33517be1 done
+#11 exporting attestation manifest sha256:99ada796f2299cd088e69a7f8e5599687c443f2c421269ae521020a260cfcf31 0.0s done
+#11 exporting manifest list sha256:95276699b7509d687799ebe89be2b860202529409b2dd665a5eeb32b86604251
+#11 exporting manifest list sha256:95276699b7509d687799ebe89be2b860202529409b2dd665a5eeb32b86604251 0.0s done
+#11 naming to docker.io/library/bench_rabbit-consumer:latest done
+#11 unpacking to docker.io/library/bench_rabbit-consumer:latest done
+#11 DONE 0.1s
+
+#12 [producer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:b01bd68231f3fbbb37f15dfcb2eb0dcf9c6479f4aa61079cf9df709a2b238299 done
+#12 exporting config sha256:2432ebc89b67ae95631624eb4c0414943012e9c10254217d02a94ffc803ebaf5 done
+#12 exporting attestation manifest sha256:a7eae82e891a62ce0b430cd80f0c9d5033665e4b2dfdd4e63f7fbb7a2ba4c9e2 0.0s done
+#12 exporting manifest list sha256:331a87d4e0c3d738f53e94fe7909acf6729ae9a47effc3765deac3d879f551da 0.0s done
+#12 naming to docker.io/library/bench_rabbit-producer:latest done
+#12 unpacking to docker.io/library/bench_rabbit-producer:latest done
+#12 DONE 0.1s
+
+#13 [consumer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [producer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_rabbit-producer  Built
+ bench_rabbit-consumer  Built
+ Network bench_rabbit_default  Creating
+ Network bench_rabbit_default  Created
+ Container bench_rabbit-rabbit-1  Creating
+ Container bench_rabbit-rabbit-1  Created
+ Container bench_rabbit-consumer-1  Creating
+ Container bench_rabbit-consumer-1  Created
+ Container bench_rabbit-producer-1  Creating
+ Container bench_rabbit-producer-1  Created
+ Container bench_rabbit-rabbit-1  Starting
+ Container bench_rabbit-rabbit-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-consumer-1  Starting
+ Container bench_rabbit-consumer-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-producer-1  Starting
+ Container bench_rabbit-producer-1  Started
+0
+consumer-1  | [consumer] run_id=rabbit_128_5000 kind=rabbit duration=30 grace=5
+consumer-1  | Waiting for broker... attempt 1/20: 
+consumer-1  | Waiting for broker... attempt 2/20: 
+consumer-1  | Broker is ready (attempt 3).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=150001 avg=11.58ms p95=58.97ms peak_backlog=0
+producer-1  | [producer] run_id=rabbit_128_5000 kind=rabbit size=128 rate=5000 duration=30
+producer-1  | Waiting for broker... attempt 1/20: 
+producer-1  | Broker is ready (attempt 2).
+producer-1  | [producer] done: {'run_id': 'rabbit_128_5000', 'kind': 'rabbit', 'msg_size': 128, 'target_rate': 5000, 'duration': 30, 'sent': 150001, 'send_errors': 0, 'actual_rate': 5000.010325952431, 'wall_time': 30.000138044000323}
+ Container bench_rabbit-producer-1  Stopping
+ Container bench_rabbit-producer-1  Stopped
+ Container bench_rabbit-producer-1  Removing
+ Container bench_rabbit-producer-1  Removed
+ Container bench_rabbit-consumer-1  Stopping
+ Container bench_rabbit-consumer-1  Stopped
+ Container bench_rabbit-consumer-1  Removing
+ Container bench_rabbit-consumer-1  Removed
+ Container bench_rabbit-rabbit-1  Stopping
+ Container bench_rabbit-rabbit-1  Stopped
+ Container bench_rabbit-rabbit-1  Removing
+ Container bench_rabbit-rabbit-1  Removed
+ Network bench_rabbit_default  Removing
+ Network bench_rabbit_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.14kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [consumer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.1s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [consumer 2/5] WORKDIR /app
+#7 CACHED
+
+#8 [consumer 3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [consumer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [consumer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [producer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:b01bd68231f3fbbb37f15dfcb2eb0dcf9c6479f4aa61079cf9df709a2b238299 done
+#11 exporting config sha256:2432ebc89b67ae95631624eb4c0414943012e9c10254217d02a94ffc803ebaf5 done
+#11 exporting attestation manifest sha256:da6b17604197ba0128ee828ddde0c1c1bc9be33aa76ca0b1d38323eb1f8f0a26 0.0s done
+#11 exporting manifest list sha256:0802834e477be72858a4e8ac1809aae39b14d9a835aca1bd91926d0a08f73cc2
+#11 exporting manifest list sha256:0802834e477be72858a4e8ac1809aae39b14d9a835aca1bd91926d0a08f73cc2 0.0s done
+#11 naming to docker.io/library/bench_rabbit-producer:latest done
+#11 unpacking to docker.io/library/bench_rabbit-producer:latest done
+#11 DONE 0.1s
+
+#12 [consumer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:153bda4a66bf952ec1325c600862d8fffc83656ce481a28944b38b987b42cfbc done
+#12 exporting config sha256:34a67119273509e6dbcaae0219e7b46e0593a087119a0f79cf431b0c33517be1 done
+#12 exporting attestation manifest sha256:cec2c0eb2c30ac543e785d893cce1b6dcc742cf6501c1f66d494e3089abbb95d 0.0s done
+#12 exporting manifest list sha256:4fb15c46f365b76a0995a1382b7e869cee7a9d7013f86a37e58479a04297a505 0.0s done
+#12 naming to docker.io/library/bench_rabbit-consumer:latest done
+#12 unpacking to docker.io/library/bench_rabbit-consumer:latest done
+#12 DONE 0.1s
+
+#13 [producer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [consumer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_rabbit-consumer  Built
+ bench_rabbit-producer  Built
+ Network bench_rabbit_default  Creating
+ Network bench_rabbit_default  Created
+ Container bench_rabbit-rabbit-1  Creating
+ Container bench_rabbit-rabbit-1  Created
+ Container bench_rabbit-consumer-1  Creating
+ Container bench_rabbit-consumer-1  Created
+ Container bench_rabbit-producer-1  Creating
+ Container bench_rabbit-producer-1  Created
+ Container bench_rabbit-rabbit-1  Starting
+ Container bench_rabbit-rabbit-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-consumer-1  Starting
+ Container bench_rabbit-consumer-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-producer-1  Starting
+ Container bench_rabbit-producer-1  Started
+0
+consumer-1  | [consumer] run_id=rabbit_128_10000 kind=rabbit duration=30 grace=5
+consumer-1  | Waiting for broker... attempt 1/20: 
+consumer-1  | Waiting for broker... attempt 2/20: 
+consumer-1  | Broker is ready (attempt 3).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=300001 avg=132.28ms p95=529.62ms peak_backlog=118
+producer-1  | [producer] run_id=rabbit_128_10000 kind=rabbit size=128 rate=10000 duration=30
+producer-1  | Waiting for broker... attempt 1/20: 
+producer-1  | Broker is ready (attempt 2).
+producer-1  | [producer] done: {'run_id': 'rabbit_128_10000', 'kind': 'rabbit', 'msg_size': 128, 'target_rate': 10000, 'duration': 30, 'sent': 300001, 'send_errors': 0, 'actual_rate': 9999.99433302209, 'wall_time': 30.000117001000035}
+ Container bench_rabbit-producer-1  Stopping
+ Container bench_rabbit-producer-1  Stopped
+ Container bench_rabbit-producer-1  Removing
+ Container bench_rabbit-producer-1  Removed
+ Container bench_rabbit-consumer-1  Stopping
+ Container bench_rabbit-consumer-1  Stopped
+ Container bench_rabbit-consumer-1  Removing
+ Container bench_rabbit-consumer-1  Removed
+ Container bench_rabbit-rabbit-1  Stopping
+ Container bench_rabbit-rabbit-1  Stopped
+ Container bench_rabbit-rabbit-1  Removing
+ Container bench_rabbit-rabbit-1  Removed
+ Network bench_rabbit_default  Removing
+ Network bench_rabbit_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.14kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [producer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.0s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [consumer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [consumer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [consumer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#7 CACHED
+
+#8 [consumer 2/5] WORKDIR /app
+#8 CACHED
+
+#9 [consumer 3/5] COPY requirements.txt .
+#9 CACHED
+
+#10 [consumer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [consumer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:153bda4a66bf952ec1325c600862d8fffc83656ce481a28944b38b987b42cfbc done
+#11 exporting config sha256:34a67119273509e6dbcaae0219e7b46e0593a087119a0f79cf431b0c33517be1 done
+#11 exporting attestation manifest sha256:80c2c1d6879cebfff3be45bd595ab1a19bca939b5dbb75994863ebfead5ce101 0.0s done
+#11 exporting manifest list sha256:1dda1a28e26713069fd3a1c5446b1e9644af4dd1dc02a622d0a602588d3fae3a
+#11 exporting manifest list sha256:1dda1a28e26713069fd3a1c5446b1e9644af4dd1dc02a622d0a602588d3fae3a 0.0s done
+#11 naming to docker.io/library/bench_rabbit-consumer:latest done
+#11 unpacking to docker.io/library/bench_rabbit-consumer:latest done
+#11 DONE 0.1s
+
+#12 [producer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:b01bd68231f3fbbb37f15dfcb2eb0dcf9c6479f4aa61079cf9df709a2b238299 done
+#12 exporting config sha256:2432ebc89b67ae95631624eb4c0414943012e9c10254217d02a94ffc803ebaf5 done
+#12 exporting attestation manifest sha256:ea0201a6d514b81d0b1eca029ee2fa17c9fcf134efd07727f2549ac8751379be 0.0s done
+#12 exporting manifest list sha256:42857ce331558890933574caf380cb4098f362663a50d44d644ac9aaf5bcf25c 0.0s done
+#12 naming to docker.io/library/bench_rabbit-producer:latest done
+#12 unpacking to docker.io/library/bench_rabbit-producer:latest done
+#12 DONE 0.1s
+
+#13 [consumer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [producer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_rabbit-consumer  Built
+ bench_rabbit-producer  Built
+ Network bench_rabbit_default  Creating
+ Network bench_rabbit_default  Created
+ Container bench_rabbit-rabbit-1  Creating
+ Container bench_rabbit-rabbit-1  Created
+ Container bench_rabbit-consumer-1  Creating
+ Container bench_rabbit-consumer-1  Created
+ Container bench_rabbit-producer-1  Creating
+ Container bench_rabbit-producer-1  Created
+ Container bench_rabbit-rabbit-1  Starting
+ Container bench_rabbit-rabbit-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-consumer-1  Starting
+ Container bench_rabbit-consumer-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-producer-1  Starting
+ Container bench_rabbit-producer-1  Started
+0
+consumer-1  | [consumer] run_id=rabbit_1024_1000 kind=rabbit duration=30 grace=5
+consumer-1  | Waiting for broker... attempt 1/20: 
+consumer-1  | Waiting for broker... attempt 2/20: 
+consumer-1  | Broker is ready (attempt 3).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=30001 avg=2.31ms p95=19.08ms peak_backlog=0
+producer-1  | [producer] run_id=rabbit_1024_1000 kind=rabbit size=1024 rate=1000 duration=30
+producer-1  | Waiting for broker... attempt 1/20: 
+producer-1  | Broker is ready (attempt 2).
+producer-1  | [producer] done: {'run_id': 'rabbit_1024_1000', 'kind': 'rabbit', 'msg_size': 1024, 'target_rate': 1000, 'duration': 30, 'sent': 30001, 'send_errors': 0, 'actual_rate': 1000.0270064291368, 'wall_time': 30.000189802000023}
+ Container bench_rabbit-producer-1  Stopping
+ Container bench_rabbit-producer-1  Stopped
+ Container bench_rabbit-producer-1  Removing
+ Container bench_rabbit-producer-1  Removed
+ Container bench_rabbit-consumer-1  Stopping
+ Container bench_rabbit-consumer-1  Stopped
+ Container bench_rabbit-consumer-1  Removing
+ Container bench_rabbit-consumer-1  Removed
+ Container bench_rabbit-rabbit-1  Stopping
+ Container bench_rabbit-rabbit-1  Stopped
+ Container bench_rabbit-rabbit-1  Removing
+ Container bench_rabbit-rabbit-1  Removed
+ Network bench_rabbit_default  Removing
+ Network bench_rabbit_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.14kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [producer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.0s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [producer 3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [producer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [producer 2/5] WORKDIR /app
+#9 CACHED
+
+#10 [producer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [consumer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:153bda4a66bf952ec1325c600862d8fffc83656ce481a28944b38b987b42cfbc done
+#11 exporting config sha256:34a67119273509e6dbcaae0219e7b46e0593a087119a0f79cf431b0c33517be1 done
+#11 exporting attestation manifest sha256:99312353beeae5c841d51221200b572587e2babeab4d6163a594efd6da84e1cc 0.0s done
+#11 exporting manifest list sha256:5c811538fb651c16baac12eabc33440ee90efaf37c13ed32cd1a3e97b99356e5
+#11 exporting manifest list sha256:5c811538fb651c16baac12eabc33440ee90efaf37c13ed32cd1a3e97b99356e5 0.0s done
+#11 naming to docker.io/library/bench_rabbit-consumer:latest done
+#11 unpacking to docker.io/library/bench_rabbit-consumer:latest done
+#11 DONE 0.1s
+
+#12 [producer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:b01bd68231f3fbbb37f15dfcb2eb0dcf9c6479f4aa61079cf9df709a2b238299 done
+#12 exporting config sha256:2432ebc89b67ae95631624eb4c0414943012e9c10254217d02a94ffc803ebaf5 done
+#12 exporting attestation manifest sha256:6fdaa56ca378a48c3df1275aedfd2a229bbd13f64e8c3168e364d808d98ab2f8 0.0s done
+#12 exporting manifest list sha256:755e874db5d6e4e028f1e7299e7d6250b836acd6437bfed4a26778dae0a7e17f 0.0s done
+#12 naming to docker.io/library/bench_rabbit-producer:latest done
+#12 unpacking to docker.io/library/bench_rabbit-producer:latest done
+#12 DONE 0.1s
+
+#13 [consumer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [producer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_rabbit-consumer  Built
+ bench_rabbit-producer  Built
+ Network bench_rabbit_default  Creating
+ Network bench_rabbit_default  Created
+ Container bench_rabbit-rabbit-1  Creating
+ Container bench_rabbit-rabbit-1  Created
+ Container bench_rabbit-consumer-1  Creating
+ Container bench_rabbit-consumer-1  Created
+ Container bench_rabbit-producer-1  Creating
+ Container bench_rabbit-producer-1  Created
+ Container bench_rabbit-rabbit-1  Starting
+ Container bench_rabbit-rabbit-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-consumer-1  Starting
+ Container bench_rabbit-consumer-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-producer-1  Starting
+ Container bench_rabbit-producer-1  Started
+0
+consumer-1  | [consumer] run_id=rabbit_1024_5000 kind=rabbit duration=30 grace=5
+consumer-1  | Waiting for broker... attempt 1/20: 
+consumer-1  | Waiting for broker... attempt 2/20: 
+consumer-1  | Broker is ready (attempt 3).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=150001 avg=21.07ms p95=118.68ms peak_backlog=0
+producer-1  | [producer] run_id=rabbit_1024_5000 kind=rabbit size=1024 rate=5000 duration=30
+producer-1  | Waiting for broker... attempt 1/20: 
+producer-1  | Broker is ready (attempt 2).
+producer-1  | [producer] done: {'run_id': 'rabbit_1024_5000', 'kind': 'rabbit', 'msg_size': 1024, 'target_rate': 5000, 'duration': 30, 'sent': 150001, 'send_errors': 0, 'actual_rate': 5000.01325344676, 'wall_time': 30.00012047900009}
+ Container bench_rabbit-producer-1  Stopping
+ Container bench_rabbit-producer-1  Stopped
+ Container bench_rabbit-producer-1  Removing
+ Container bench_rabbit-producer-1  Removed
+ Container bench_rabbit-consumer-1  Stopping
+ Container bench_rabbit-consumer-1  Stopped
+ Container bench_rabbit-consumer-1  Removing
+ Container bench_rabbit-consumer-1  Removed
+ Container bench_rabbit-rabbit-1  Stopping
+ Container bench_rabbit-rabbit-1  Stopped
+ Container bench_rabbit-rabbit-1  Removing
+ Container bench_rabbit-rabbit-1  Removed
+ Network bench_rabbit_default  Removing
+ Network bench_rabbit_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.14kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [producer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.0s
+
+#4 [consumer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [consumer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [consumer 3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [consumer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [consumer 2/5] WORKDIR /app
+#9 CACHED
+
+#10 [consumer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [consumer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:153bda4a66bf952ec1325c600862d8fffc83656ce481a28944b38b987b42cfbc done
+#11 exporting config sha256:34a67119273509e6dbcaae0219e7b46e0593a087119a0f79cf431b0c33517be1 done
+#11 exporting attestation manifest sha256:2c101a641d3286be2e7e4087fe38d74cfbad08d63bed5a3dbaf03d99e5e0c278 0.0s done
+#11 exporting manifest list sha256:6dff9e77b9971df97980a55a7cbd60d6f05142590def476a1998d6d3ba5650b8
+#11 exporting manifest list sha256:6dff9e77b9971df97980a55a7cbd60d6f05142590def476a1998d6d3ba5650b8 0.0s done
+#11 naming to docker.io/library/bench_rabbit-consumer:latest done
+#11 unpacking to docker.io/library/bench_rabbit-consumer:latest done
+#11 DONE 0.1s
+
+#12 [producer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:b01bd68231f3fbbb37f15dfcb2eb0dcf9c6479f4aa61079cf9df709a2b238299 done
+#12 exporting config sha256:2432ebc89b67ae95631624eb4c0414943012e9c10254217d02a94ffc803ebaf5 done
+#12 exporting attestation manifest sha256:f3ba950a70e68551ad5566fbacde78d214530bda3e7058312e24a80abdcd2c68 0.0s done
+#12 exporting manifest list sha256:7f330905da6d26b20fb8d19a48a5d7824c62fdb0084a9343dc809c9ed09f1d38 0.0s done
+#12 naming to docker.io/library/bench_rabbit-producer:latest done
+#12 unpacking to docker.io/library/bench_rabbit-producer:latest done
+#12 DONE 0.1s
+
+#13 [consumer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [producer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_rabbit-consumer  Built
+ bench_rabbit-producer  Built
+ Network bench_rabbit_default  Creating
+ Network bench_rabbit_default  Created
+ Container bench_rabbit-rabbit-1  Creating
+ Container bench_rabbit-rabbit-1  Created
+ Container bench_rabbit-consumer-1  Creating
+ Container bench_rabbit-consumer-1  Created
+ Container bench_rabbit-producer-1  Creating
+ Container bench_rabbit-producer-1  Created
+ Container bench_rabbit-rabbit-1  Starting
+ Container bench_rabbit-rabbit-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-consumer-1  Starting
+ Container bench_rabbit-consumer-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-producer-1  Starting
+ Container bench_rabbit-producer-1  Started
+0
+consumer-1  | [consumer] run_id=rabbit_1024_10000 kind=rabbit duration=30 grace=5
+consumer-1  | Waiting for broker... attempt 1/20: 
+consumer-1  | Waiting for broker... attempt 2/20: 
+consumer-1  | Broker is ready (attempt 3).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=300001 avg=187.99ms p95=683.33ms peak_backlog=311
+producer-1  | [producer] run_id=rabbit_1024_10000 kind=rabbit size=1024 rate=10000 duration=30
+producer-1  | Waiting for broker... attempt 1/20: 
+producer-1  | Broker is ready (attempt 2).
+producer-1  | [producer] done: {'run_id': 'rabbit_1024_10000', 'kind': 'rabbit', 'msg_size': 1024, 'target_rate': 10000, 'duration': 30, 'sent': 300001, 'send_errors': 0, 'actual_rate': 9999.999796000804, 'wall_time': 30.000100611999642}
+ Container bench_rabbit-producer-1  Stopping
+ Container bench_rabbit-producer-1  Stopped
+ Container bench_rabbit-producer-1  Removing
+ Container bench_rabbit-producer-1  Removed
+ Container bench_rabbit-consumer-1  Stopping
+ Container bench_rabbit-consumer-1  Stopped
+ Container bench_rabbit-consumer-1  Removing
+ Container bench_rabbit-consumer-1  Removed
+ Container bench_rabbit-rabbit-1  Stopping
+ Container bench_rabbit-rabbit-1  Stopped
+ Container bench_rabbit-rabbit-1  Removing
+ Container bench_rabbit-rabbit-1  Removed
+ Network bench_rabbit_default  Removing
+ Network bench_rabbit_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.14kB 0.0s done
+#1 DONE 0.0s
+
+#2 [producer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [consumer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.8s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [producer 2/5] WORKDIR /app
+#7 CACHED
+
+#8 [producer 3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [producer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [producer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [producer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:b01bd68231f3fbbb37f15dfcb2eb0dcf9c6479f4aa61079cf9df709a2b238299 done
+#11 exporting config sha256:2432ebc89b67ae95631624eb4c0414943012e9c10254217d02a94ffc803ebaf5 done
+#11 exporting attestation manifest sha256:9ddec0ee3c293be596e8bf4019f6375b3a5aa9a6e1b5122da8bf61b54ebff250 0.0s done
+#11 exporting manifest list sha256:1bf41ef6ba2ce9f887136c0356f8c86388a1728828baf2fa9dc28c9b5b3ed0a6
+#11 exporting manifest list sha256:1bf41ef6ba2ce9f887136c0356f8c86388a1728828baf2fa9dc28c9b5b3ed0a6 0.0s done
+#11 naming to docker.io/library/bench_rabbit-producer:latest done
+#11 unpacking to docker.io/library/bench_rabbit-producer:latest done
+#11 DONE 0.1s
+
+#12 [consumer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:153bda4a66bf952ec1325c600862d8fffc83656ce481a28944b38b987b42cfbc done
+#12 exporting config sha256:34a67119273509e6dbcaae0219e7b46e0593a087119a0f79cf431b0c33517be1 done
+#12 exporting attestation manifest sha256:0843982b4b8db44db474fd1a31e5bb865280194eb75472e5f47dbfd0b422548a 0.0s done
+#12 exporting manifest list sha256:42451c2a6dca69c3cef26a557c69b0bd5098c00f024deae7250ab79a23141443 0.0s done
+#12 naming to docker.io/library/bench_rabbit-consumer:latest done
+#12 unpacking to docker.io/library/bench_rabbit-consumer:latest done
+#12 DONE 0.1s
+
+#13 [producer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [consumer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_rabbit-consumer  Built
+ bench_rabbit-producer  Built
+ Network bench_rabbit_default  Creating
+ Network bench_rabbit_default  Created
+ Container bench_rabbit-rabbit-1  Creating
+ Container bench_rabbit-rabbit-1  Created
+ Container bench_rabbit-consumer-1  Creating
+ Container bench_rabbit-consumer-1  Created
+ Container bench_rabbit-producer-1  Creating
+ Container bench_rabbit-producer-1  Created
+ Container bench_rabbit-rabbit-1  Starting
+ Container bench_rabbit-rabbit-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-consumer-1  Starting
+ Container bench_rabbit-consumer-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-producer-1  Starting
+ Container bench_rabbit-producer-1  Started
+0
+consumer-1  | [consumer] run_id=rabbit_10240_1000 kind=rabbit duration=30 grace=5
+consumer-1  | Waiting for broker... attempt 1/20: 
+consumer-1  | Waiting for broker... attempt 2/20: 
+consumer-1  | Broker is ready (attempt 3).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=30001 avg=4.62ms p95=36.54ms peak_backlog=0
+producer-1  | [producer] run_id=rabbit_10240_1000 kind=rabbit size=10240 rate=1000 duration=30
+producer-1  | Waiting for broker... attempt 1/20: 
+producer-1  | Broker is ready (attempt 2).
+producer-1  | [producer] done: {'run_id': 'rabbit_10240_1000', 'kind': 'rabbit', 'msg_size': 10240, 'target_rate': 1000, 'duration': 30, 'sent': 30001, 'send_errors': 0, 'actual_rate': 1000.0275866081412, 'wall_time': 30.000172396999915}
+ Container bench_rabbit-producer-1  Stopping
+ Container bench_rabbit-producer-1  Stopped
+ Container bench_rabbit-producer-1  Removing
+ Container bench_rabbit-producer-1  Removed
+ Container bench_rabbit-consumer-1  Stopping
+ Container bench_rabbit-consumer-1  Stopped
+ Container bench_rabbit-consumer-1  Removing
+ Container bench_rabbit-consumer-1  Removed
+ Container bench_rabbit-rabbit-1  Stopping
+ Container bench_rabbit-rabbit-1  Stopped
+ Container bench_rabbit-rabbit-1  Removing
+ Container bench_rabbit-rabbit-1  Removed
+ Network bench_rabbit_default  Removing
+ Network bench_rabbit_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.14kB 0.0s done
+#1 DONE 0.0s
+
+#2 [producer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [producer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.2s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [producer 2/5] WORKDIR /app
+#7 CACHED
+
+#8 [producer 3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [producer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [consumer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [consumer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:153bda4a66bf952ec1325c600862d8fffc83656ce481a28944b38b987b42cfbc done
+#11 exporting config sha256:34a67119273509e6dbcaae0219e7b46e0593a087119a0f79cf431b0c33517be1 done
+#11 exporting attestation manifest sha256:8834740557db5921796a1e6aac9be908dea9ba38766cd8c37d6cb7d00b81e3be 0.0s done
+#11 exporting manifest list sha256:7c536adff1eeb37ddbdea11ddd146390c1ec95f699f23fc89c3d12a66bbf5363
+#11 exporting manifest list sha256:7c536adff1eeb37ddbdea11ddd146390c1ec95f699f23fc89c3d12a66bbf5363 0.0s done
+#11 naming to docker.io/library/bench_rabbit-consumer:latest done
+#11 unpacking to docker.io/library/bench_rabbit-consumer:latest done
+#11 DONE 0.1s
+
+#12 [producer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:b01bd68231f3fbbb37f15dfcb2eb0dcf9c6479f4aa61079cf9df709a2b238299 done
+#12 exporting config sha256:2432ebc89b67ae95631624eb4c0414943012e9c10254217d02a94ffc803ebaf5 done
+#12 exporting attestation manifest sha256:19c3f605d7aa29763f2886be2417f0826a97aa504eee46c898b5f067291db129 0.0s done
+#12 exporting manifest list sha256:e43958fc365a99fdd6bca2ab2ea871a8ac21943c6fdc7a9be230488f40fa1cb7 0.0s done
+#12 naming to docker.io/library/bench_rabbit-producer:latest done
+#12 unpacking to docker.io/library/bench_rabbit-producer:latest done
+#12 DONE 0.1s
+
+#13 [consumer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [producer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_rabbit-consumer  Built
+ bench_rabbit-producer  Built
+ Network bench_rabbit_default  Creating
+ Network bench_rabbit_default  Created
+ Container bench_rabbit-rabbit-1  Creating
+ Container bench_rabbit-rabbit-1  Created
+ Container bench_rabbit-consumer-1  Creating
+ Container bench_rabbit-consumer-1  Created
+ Container bench_rabbit-producer-1  Creating
+ Container bench_rabbit-producer-1  Created
+ Container bench_rabbit-rabbit-1  Starting
+ Container bench_rabbit-rabbit-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-consumer-1  Starting
+ Container bench_rabbit-consumer-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-producer-1  Starting
+ Container bench_rabbit-producer-1  Started
+0
+consumer-1  | [consumer] run_id=rabbit_10240_5000 kind=rabbit duration=30 grace=5
+consumer-1  | Waiting for broker... attempt 1/20: 
+consumer-1  | Waiting for broker... attempt 2/20: 
+consumer-1  | Broker is ready (attempt 3).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=150001 avg=161.58ms p95=575.51ms peak_backlog=1060
+producer-1  | [producer] run_id=rabbit_10240_5000 kind=rabbit size=10240 rate=5000 duration=30
+producer-1  | Waiting for broker... attempt 1/20: 
+producer-1  | Broker is ready (attempt 2).
+producer-1  | [producer] done: {'run_id': 'rabbit_10240_5000', 'kind': 'rabbit', 'msg_size': 10240, 'target_rate': 5000, 'duration': 30, 'sent': 150001, 'send_errors': 0, 'actual_rate': 4999.993835715304, 'wall_time': 30.000236986000345}
+ Container bench_rabbit-producer-1  Stopping
+ Container bench_rabbit-producer-1  Stopped
+ Container bench_rabbit-producer-1  Removing
+ Container bench_rabbit-producer-1  Removed
+ Container bench_rabbit-consumer-1  Stopping
+ Container bench_rabbit-consumer-1  Stopped
+ Container bench_rabbit-consumer-1  Removing
+ Container bench_rabbit-consumer-1  Removed
+ Container bench_rabbit-rabbit-1  Stopping
+ Container bench_rabbit-rabbit-1  Stopped
+ Container bench_rabbit-rabbit-1  Removing
+ Container bench_rabbit-rabbit-1  Removed
+ Network bench_rabbit_default  Removing
+ Network bench_rabbit_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.14kB 0.0s done
+#1 DONE 0.0s
+
+#2 [producer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [producer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.1s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [consumer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#7 CACHED
+
+#8 [consumer 3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [consumer 2/5] WORKDIR /app
+#9 CACHED
+
+#10 [consumer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [producer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:b01bd68231f3fbbb37f15dfcb2eb0dcf9c6479f4aa61079cf9df709a2b238299 done
+#11 exporting config sha256:2432ebc89b67ae95631624eb4c0414943012e9c10254217d02a94ffc803ebaf5 done
+#11 exporting attestation manifest sha256:b0628e9f2a3fc7309107e1c527dc5719d67c8e49f5b1199e4ff030a0396616aa 0.0s done
+#11 exporting manifest list sha256:9e657180f65ce37e9c361c7b8534f88fb62c3f18896c30fd3ec197233bef2df5
+#11 exporting manifest list sha256:9e657180f65ce37e9c361c7b8534f88fb62c3f18896c30fd3ec197233bef2df5 0.0s done
+#11 naming to docker.io/library/bench_rabbit-producer:latest done
+#11 unpacking to docker.io/library/bench_rabbit-producer:latest 0.0s done
+#11 DONE 0.1s
+
+#12 [consumer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:153bda4a66bf952ec1325c600862d8fffc83656ce481a28944b38b987b42cfbc done
+#12 exporting config sha256:34a67119273509e6dbcaae0219e7b46e0593a087119a0f79cf431b0c33517be1 done
+#12 exporting attestation manifest sha256:ac2cbb9e742d66aaf4856ed394bed3dc27b5d541aafb7a882d169d48ac67e0a6 0.0s done
+#12 exporting manifest list sha256:24608f0119848b60c9d54e1943bad31aa966a9732d8a036826149f02cd99bb77 0.0s done
+#12 naming to docker.io/library/bench_rabbit-consumer:latest done
+#12 unpacking to docker.io/library/bench_rabbit-consumer:latest 0.0s done
+#12 DONE 0.1s
+
+#13 [producer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [consumer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_rabbit-producer  Built
+ bench_rabbit-consumer  Built
+ Network bench_rabbit_default  Creating
+ Network bench_rabbit_default  Created
+ Container bench_rabbit-rabbit-1  Creating
+ Container bench_rabbit-rabbit-1  Created
+ Container bench_rabbit-consumer-1  Creating
+ Container bench_rabbit-consumer-1  Created
+ Container bench_rabbit-producer-1  Creating
+ Container bench_rabbit-producer-1  Created
+ Container bench_rabbit-rabbit-1  Starting
+ Container bench_rabbit-rabbit-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-consumer-1  Starting
+ Container bench_rabbit-consumer-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-producer-1  Starting
+ Container bench_rabbit-producer-1  Started
+0
+consumer-1  | [consumer] run_id=rabbit_10240_10000 kind=rabbit duration=30 grace=5
+consumer-1  | Waiting for broker... attempt 1/20: 
+consumer-1  | Waiting for broker... attempt 2/20: 
+consumer-1  | Broker is ready (attempt 3).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=183413 avg=2061.38ms p95=3807.68ms peak_backlog=22580
+producer-1  | [producer] run_id=rabbit_10240_10000 kind=rabbit size=10240 rate=10000 duration=30
+producer-1  | Waiting for broker... attempt 1/20: 
+producer-1  | Broker is ready (attempt 2).
+producer-1  | [producer] done: {'run_id': 'rabbit_10240_10000', 'kind': 'rabbit', 'msg_size': 10240, 'target_rate': 10000, 'duration': 30, 'sent': 183413, 'send_errors': 0, 'actual_rate': 6082.450130045654, 'wall_time': 30.154460140000083}
+ Container bench_rabbit-producer-1  Stopping
+ Container bench_rabbit-producer-1  Stopped
+ Container bench_rabbit-producer-1  Removing
+ Container bench_rabbit-producer-1  Removed
+ Container bench_rabbit-consumer-1  Stopping
+ Container bench_rabbit-consumer-1  Stopped
+ Container bench_rabbit-consumer-1  Removing
+ Container bench_rabbit-consumer-1  Removed
+ Container bench_rabbit-rabbit-1  Stopping
+ Container bench_rabbit-rabbit-1  Stopped
+ Container bench_rabbit-rabbit-1  Removing
+ Container bench_rabbit-rabbit-1  Removed
+ Network bench_rabbit_default  Removing
+ Network bench_rabbit_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.14kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [consumer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 0.9s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [consumer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [consumer 2/5] WORKDIR /app
+#7 CACHED
+
+#8 [consumer 3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [consumer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [consumer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [consumer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:153bda4a66bf952ec1325c600862d8fffc83656ce481a28944b38b987b42cfbc done
+#11 exporting config sha256:34a67119273509e6dbcaae0219e7b46e0593a087119a0f79cf431b0c33517be1 done
+#11 exporting attestation manifest sha256:40dd81607e64e4abd5c25296b4594307086bbea8b30ba2cda1dc01d3b327a03b 0.0s done
+#11 exporting manifest list sha256:86f79d7cfa7e3c473b45be0f1cd7f12f718059c19f730e67d8c75841df7f095f
+#11 exporting manifest list sha256:86f79d7cfa7e3c473b45be0f1cd7f12f718059c19f730e67d8c75841df7f095f 0.0s done
+#11 naming to docker.io/library/bench_rabbit-consumer:latest done
+#11 unpacking to docker.io/library/bench_rabbit-consumer:latest done
+#11 DONE 0.1s
+
+#12 [producer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:b01bd68231f3fbbb37f15dfcb2eb0dcf9c6479f4aa61079cf9df709a2b238299 done
+#12 exporting config sha256:2432ebc89b67ae95631624eb4c0414943012e9c10254217d02a94ffc803ebaf5 done
+#12 exporting attestation manifest sha256:a66f1f87ddda3b5149e2ae281cd3382ba8103e7cd182171b0c1468b9e41b26d6 0.0s done
+#12 exporting manifest list sha256:68dee4d7e6794ae2f67b438ce807be12e79432a01461580dd5987a100495f0f6 0.0s done
+#12 naming to docker.io/library/bench_rabbit-producer:latest done
+#12 unpacking to docker.io/library/bench_rabbit-producer:latest done
+#12 DONE 0.1s
+
+#13 [consumer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [producer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_rabbit-consumer  Built
+ bench_rabbit-producer  Built
+ Network bench_rabbit_default  Creating
+ Network bench_rabbit_default  Created
+ Container bench_rabbit-rabbit-1  Creating
+ Container bench_rabbit-rabbit-1  Created
+ Container bench_rabbit-consumer-1  Creating
+ Container bench_rabbit-consumer-1  Created
+ Container bench_rabbit-producer-1  Creating
+ Container bench_rabbit-producer-1  Created
+ Container bench_rabbit-rabbit-1  Starting
+ Container bench_rabbit-rabbit-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-consumer-1  Starting
+ Container bench_rabbit-consumer-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-producer-1  Starting
+ Container bench_rabbit-producer-1  Started
+0
+consumer-1  | [consumer] run_id=rabbit_102400_1000 kind=rabbit duration=30 grace=5
+consumer-1  | Waiting for broker... attempt 1/20: 
+consumer-1  | Waiting for broker... attempt 2/20: 
+consumer-1  | Broker is ready (attempt 3).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=30001 avg=43.64ms p95=276.49ms peak_backlog=146
+producer-1  | [producer] run_id=rabbit_102400_1000 kind=rabbit size=102400 rate=1000 duration=30
+producer-1  | Waiting for broker... attempt 1/20: 
+producer-1  | Broker is ready (attempt 2).
+producer-1  | [producer] done: {'run_id': 'rabbit_102400_1000', 'kind': 'rabbit', 'msg_size': 102400, 'target_rate': 1000, 'duration': 30, 'sent': 30001, 'send_errors': 0, 'actual_rate': 1000.0244089488385, 'wall_time': 30.000267724999958}
+ Container bench_rabbit-producer-1  Stopping
+ Container bench_rabbit-producer-1  Stopped
+ Container bench_rabbit-producer-1  Removing
+ Container bench_rabbit-producer-1  Removed
+ Container bench_rabbit-consumer-1  Stopping
+ Container bench_rabbit-consumer-1  Stopped
+ Container bench_rabbit-consumer-1  Removing
+ Container bench_rabbit-consumer-1  Removed
+ Container bench_rabbit-rabbit-1  Stopping
+ Container bench_rabbit-rabbit-1  Stopped
+ Container bench_rabbit-rabbit-1  Removing
+ Container bench_rabbit-rabbit-1  Removed
+ Network bench_rabbit_default  Removing
+ Network bench_rabbit_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.14kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [producer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.0s
+
+#4 [consumer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [consumer 3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [consumer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [consumer 2/5] WORKDIR /app
+#9 CACHED
+
+#10 [consumer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [producer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:b01bd68231f3fbbb37f15dfcb2eb0dcf9c6479f4aa61079cf9df709a2b238299 done
+#11 exporting config sha256:2432ebc89b67ae95631624eb4c0414943012e9c10254217d02a94ffc803ebaf5 done
+#11 exporting attestation manifest sha256:1103ee0767e8f9aab759c5fa5aa31d7ca3e21b4031005273a83c12e03b81b987 0.0s done
+#11 exporting manifest list sha256:1f70a3ae684a03c7ab3343b65cf6c3d31880e1c47be9f9ab7e9285c04db9b5e8 0.0s done
+#11 naming to docker.io/library/bench_rabbit-producer:latest
+#11 naming to docker.io/library/bench_rabbit-producer:latest done
+#11 unpacking to docker.io/library/bench_rabbit-producer:latest done
+#11 DONE 0.1s
+
+#12 [consumer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:153bda4a66bf952ec1325c600862d8fffc83656ce481a28944b38b987b42cfbc done
+#12 exporting config sha256:34a67119273509e6dbcaae0219e7b46e0593a087119a0f79cf431b0c33517be1 done
+#12 exporting attestation manifest sha256:6b9c35cc64dddb8927c1bfcdebf2b4937f402b5e50bf44e43accd62195f6bd7b 0.0s done
+#12 exporting manifest list sha256:44f9ecdbf4361691d95c99875d93166daf17d8890762cc838a0ed4ffcf8e208b 0.0s done
+#12 naming to docker.io/library/bench_rabbit-consumer:latest done
+#12 unpacking to docker.io/library/bench_rabbit-consumer:latest done
+#12 DONE 0.1s
+
+#13 [producer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [consumer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_rabbit-consumer  Built
+ bench_rabbit-producer  Built
+ Network bench_rabbit_default  Creating
+ Network bench_rabbit_default  Created
+ Container bench_rabbit-rabbit-1  Creating
+ Container bench_rabbit-rabbit-1  Created
+ Container bench_rabbit-consumer-1  Creating
+ Container bench_rabbit-consumer-1  Created
+ Container bench_rabbit-producer-1  Creating
+ Container bench_rabbit-producer-1  Created
+ Container bench_rabbit-rabbit-1  Starting
+ Container bench_rabbit-rabbit-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-consumer-1  Starting
+ Container bench_rabbit-consumer-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-producer-1  Starting
+ Container bench_rabbit-producer-1  Started
+0
+consumer-1  | [consumer] run_id=rabbit_102400_5000 kind=rabbit duration=30 grace=5
+consumer-1  | Waiting for broker... attempt 1/20: 
+consumer-1  | Waiting for broker... attempt 2/20: 
+consumer-1  | Broker is ready (attempt 3).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=46060 avg=1060.85ms p95=1820.03ms peak_backlog=2563
+producer-1  | [producer] run_id=rabbit_102400_5000 kind=rabbit size=102400 rate=5000 duration=30
+producer-1  | Waiting for broker... attempt 1/20: 
+producer-1  | Broker is ready (attempt 2).
+producer-1  | [producer] done: {'run_id': 'rabbit_102400_5000', 'kind': 'rabbit', 'msg_size': 102400, 'target_rate': 5000, 'duration': 30, 'sent': 46060, 'send_errors': 0, 'actual_rate': 1508.359237097793, 'wall_time': 30.53649214799998}
+ Container bench_rabbit-producer-1  Stopping
+ Container bench_rabbit-producer-1  Stopped
+ Container bench_rabbit-producer-1  Removing
+ Container bench_rabbit-producer-1  Removed
+ Container bench_rabbit-consumer-1  Stopping
+ Container bench_rabbit-consumer-1  Stopped
+ Container bench_rabbit-consumer-1  Removing
+ Container bench_rabbit-consumer-1  Removed
+ Container bench_rabbit-rabbit-1  Stopping
+ Container bench_rabbit-rabbit-1  Stopped
+ Container bench_rabbit-rabbit-1  Removing
+ Container bench_rabbit-rabbit-1  Removed
+ Network bench_rabbit_default  Removing
+ Network bench_rabbit_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.14kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [producer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.1s
+
+#4 [consumer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [consumer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [consumer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [consumer 3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [consumer 2/5] WORKDIR /app
+#8 CACHED
+
+#9 [consumer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [producer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [producer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:b01bd68231f3fbbb37f15dfcb2eb0dcf9c6479f4aa61079cf9df709a2b238299 done
+#11 exporting config sha256:2432ebc89b67ae95631624eb4c0414943012e9c10254217d02a94ffc803ebaf5 done
+#11 exporting attestation manifest sha256:536b35b5f2ba241f313d753437b2fe7974b1b725af740d8fd06c9aeebdefd3a1 0.0s done
+#11 exporting manifest list sha256:8f85e5c8df014ac500fc439fd5bf8b713807b5ec81f813d389e46122d3c30672
+#11 exporting manifest list sha256:8f85e5c8df014ac500fc439fd5bf8b713807b5ec81f813d389e46122d3c30672 0.0s done
+#11 naming to docker.io/library/bench_rabbit-producer:latest done
+#11 unpacking to docker.io/library/bench_rabbit-producer:latest done
+#11 DONE 0.1s
+
+#12 [consumer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:153bda4a66bf952ec1325c600862d8fffc83656ce481a28944b38b987b42cfbc done
+#12 exporting config sha256:34a67119273509e6dbcaae0219e7b46e0593a087119a0f79cf431b0c33517be1 done
+#12 exporting attestation manifest sha256:b9a8277f12d42a0199e99017a50df4bee4c5bb85f451a2cb3b06bae5fb30fe41 0.0s done
+#12 exporting manifest list sha256:3834be712c1b2120e2ba17413cde14366ed56676e315e6757485eaafd27f25bc 0.0s done
+#12 naming to docker.io/library/bench_rabbit-consumer:latest done
+#12 unpacking to docker.io/library/bench_rabbit-consumer:latest done
+#12 DONE 0.1s
+
+#13 [producer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [consumer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_rabbit-producer  Built
+ bench_rabbit-consumer  Built
+ Network bench_rabbit_default  Creating
+ Network bench_rabbit_default  Created
+ Container bench_rabbit-rabbit-1  Creating
+ Container bench_rabbit-rabbit-1  Created
+ Container bench_rabbit-consumer-1  Creating
+ Container bench_rabbit-consumer-1  Created
+ Container bench_rabbit-producer-1  Creating
+ Container bench_rabbit-producer-1  Created
+ Container bench_rabbit-rabbit-1  Starting
+ Container bench_rabbit-rabbit-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-consumer-1  Starting
+ Container bench_rabbit-consumer-1  Started
+ Container bench_rabbit-rabbit-1  Waiting
+ Container bench_rabbit-rabbit-1  Healthy
+ Container bench_rabbit-producer-1  Starting
+ Container bench_rabbit-producer-1  Started
+0
+consumer-1  | [consumer] run_id=rabbit_102400_10000 kind=rabbit duration=30 grace=5
+consumer-1  | Waiting for broker... attempt 1/20: 
+consumer-1  | Waiting for broker... attempt 2/20: 
+consumer-1  | Broker is ready (attempt 3).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=46655 avg=1138.89ms p95=2374.16ms peak_backlog=2577
+producer-1  | [producer] run_id=rabbit_102400_10000 kind=rabbit size=102400 rate=10000 duration=30
+producer-1  | Waiting for broker... attempt 1/20: 
+producer-1  | Broker is ready (attempt 2).
+producer-1  | [producer] done: {'run_id': 'rabbit_102400_10000', 'kind': 'rabbit', 'msg_size': 102400, 'target_rate': 10000, 'duration': 30, 'sent': 46655, 'send_errors': 0, 'actual_rate': 1496.3959697414118, 'wall_time': 31.178244892000293}
+ Container bench_rabbit-producer-1  Stopping
+ Container bench_rabbit-producer-1  Stopped
+ Container bench_rabbit-producer-1  Removing
+ Container bench_rabbit-producer-1  Removed
+ Container bench_rabbit-consumer-1  Stopping
+ Container bench_rabbit-consumer-1  Stopped
+ Container bench_rabbit-consumer-1  Removing
+ Container bench_rabbit-consumer-1  Removed
+ Container bench_rabbit-rabbit-1  Stopping
+ Container bench_rabbit-rabbit-1  Stopped
+ Container bench_rabbit-rabbit-1  Removing
+ Container bench_rabbit-rabbit-1  Removed
+ Network bench_rabbit_default  Removing
+ Network bench_rabbit_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [consumer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 6.7s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [consumer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [producer 3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [producer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [producer 2/5] WORKDIR /app
+#9 CACHED
+
+#10 [producer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [producer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:0689b3ccb580d658609a5f13baebd18aacf36c4524ef5cf5f18404b96566518a 0.0s done
+#11 exporting config sha256:4bcc621b11b49767fe0d08d77c6b1d0f8b637cfd86048a748ba38702a58ce47c 0.0s done
+#11 exporting attestation manifest sha256:1cdb40f12e78404d55f918a9620952d5bf267bf7e5540f752b7c683759da2bcb
+#11 exporting attestation manifest sha256:1cdb40f12e78404d55f918a9620952d5bf267bf7e5540f752b7c683759da2bcb 0.0s done
+#11 exporting manifest list sha256:9aaeac82d830a57eec1e7bfba260ee0e61aa76fb40de7e8895b858a339c4dde8 0.0s done
+#11 naming to docker.io/library/bench_redis-producer:latest done
+#11 unpacking to docker.io/library/bench_redis-producer:latest done
+#11 DONE 0.1s
+
+#12 [consumer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:0a9fa94c0fe4115095c827574e6dbb730c6646a271ced85178b3991ec7991e33 0.0s done
+#12 exporting config sha256:84f4f7d7f1e9d0d5ade4832cb45ab807c81d31c87c62a318196035b53f499270 0.0s done
+#12 exporting attestation manifest sha256:754307e1c0d8feeda87e2138512aa9be3e3de50336946340a57f6ab1c89ab8a5 0.0s done
+#12 exporting manifest list sha256:46d21d402fb499cd1a428c3f0243a31bab982fa1b79d6f07e2b0c2c27aad0e2a 0.0s done
+#12 naming to docker.io/library/bench_redis-consumer:latest done
+#12 unpacking to docker.io/library/bench_redis-consumer:latest done
+#12 DONE 0.1s
+
+#13 [producer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [consumer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_redis-consumer  Built
+ bench_redis-producer  Built
+ Network bench_redis_default  Creating
+ Network bench_redis_default  Created
+ Container bench_redis-redis-1  Creating
+ Container bench_redis-redis-1  Created
+ Container bench_redis-consumer-1  Creating
+ Container bench_redis-consumer-1  Created
+ Container bench_redis-producer-1  Creating
+ Container bench_redis-producer-1  Created
+ Container bench_redis-redis-1  Starting
+ Container bench_redis-redis-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-consumer-1  Starting
+ Container bench_redis-consumer-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-producer-1  Starting
+ Container bench_redis-producer-1  Started
+0
+consumer-1  | [consumer] run_id=redis_128_1000 kind=redis duration=30 grace=5
+consumer-1  | Broker is ready (attempt 1).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=30001 avg=0.19ms p95=0.34ms peak_backlog=0
+producer-1  | [producer] run_id=redis_128_1000 kind=redis size=128 rate=1000 duration=30
+producer-1  | Broker is ready (attempt 1).
+producer-1  | [producer] done: {'run_id': 'redis_128_1000', 'kind': 'redis', 'msg_size': 128, 'target_rate': 1000, 'duration': 30, 'sent': 30001, 'send_errors': 0, 'actual_rate': 1000.0257842720184, 'wall_time': 30.000226466000186}
+ Container bench_redis-producer-1  Stopping
+ Container bench_redis-producer-1  Stopped
+ Container bench_redis-producer-1  Removing
+ Container bench_redis-producer-1  Removed
+ Container bench_redis-consumer-1  Stopping
+ Container bench_redis-consumer-1  Stopped
+ Container bench_redis-consumer-1  Removing
+ Container bench_redis-consumer-1  Removed
+ Container bench_redis-redis-1  Stopping
+ Container bench_redis-redis-1  Stopped
+ Container bench_redis-redis-1  Removing
+ Container bench_redis-redis-1  Removed
+ Network bench_redis_default  Removing
+ Network bench_redis_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB 0.0s done
+#1 DONE 0.0s
+
+#2 [producer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [producer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.0s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [consumer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [consumer 3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [consumer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [consumer 2/5] WORKDIR /app
+#9 CACHED
+
+#10 [consumer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [producer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:0689b3ccb580d658609a5f13baebd18aacf36c4524ef5cf5f18404b96566518a done
+#11 exporting config sha256:4bcc621b11b49767fe0d08d77c6b1d0f8b637cfd86048a748ba38702a58ce47c done
+#11 exporting attestation manifest sha256:3b58d31a7f04a14e043aaf2298ad566871c1c80e57250dcaacab61fe684f70aa 0.0s done
+#11 exporting manifest list sha256:6c213103a3b2a0cba3c23c0e6e99d46af2a39756a1133d5f63cd4ae3227d7e01
+#11 exporting manifest list sha256:6c213103a3b2a0cba3c23c0e6e99d46af2a39756a1133d5f63cd4ae3227d7e01 0.0s done
+#11 naming to docker.io/library/bench_redis-producer:latest done
+#11 unpacking to docker.io/library/bench_redis-producer:latest done
+#11 DONE 0.1s
+
+#12 [consumer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:0a9fa94c0fe4115095c827574e6dbb730c6646a271ced85178b3991ec7991e33 done
+#12 exporting config sha256:84f4f7d7f1e9d0d5ade4832cb45ab807c81d31c87c62a318196035b53f499270 done
+#12 exporting attestation manifest sha256:14bfca538a600cf7e5b2b1638fc881cdc57f43984e0d10366bb2b7bfe99ff467 0.0s done
+#12 exporting manifest list sha256:af8ae6b243c993315a2fd792949d94f8d1f64ea715799fe002901298597b6b6a 0.0s done
+#12 naming to docker.io/library/bench_redis-consumer:latest done
+#12 unpacking to docker.io/library/bench_redis-consumer:latest done
+#12 DONE 0.1s
+
+#13 [consumer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [producer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_redis-consumer  Built
+ bench_redis-producer  Built
+ Network bench_redis_default  Creating
+ Network bench_redis_default  Created
+ Container bench_redis-redis-1  Creating
+ Container bench_redis-redis-1  Created
+ Container bench_redis-consumer-1  Creating
+ Container bench_redis-consumer-1  Created
+ Container bench_redis-producer-1  Creating
+ Container bench_redis-producer-1  Created
+ Container bench_redis-redis-1  Starting
+ Container bench_redis-redis-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-consumer-1  Starting
+ Container bench_redis-consumer-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-producer-1  Starting
+ Container bench_redis-producer-1  Started
+0
+consumer-1  | [consumer] run_id=redis_128_5000 kind=redis duration=30 grace=5
+consumer-1  | Broker is ready (attempt 1).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=150001 avg=0.21ms p95=0.22ms peak_backlog=0
+producer-1  | [producer] run_id=redis_128_5000 kind=redis size=128 rate=5000 duration=30
+producer-1  | Broker is ready (attempt 1).
+producer-1  | [producer] done: {'run_id': 'redis_128_5000', 'kind': 'redis', 'msg_size': 128, 'target_rate': 5000, 'duration': 30, 'sent': 150001, 'send_errors': 0, 'actual_rate': 4999.994604875116, 'wall_time': 30.00023237100004}
+ Container bench_redis-producer-1  Stopping
+ Container bench_redis-producer-1  Stopped
+ Container bench_redis-producer-1  Removing
+ Container bench_redis-producer-1  Removed
+ Container bench_redis-consumer-1  Stopping
+ Container bench_redis-consumer-1  Stopped
+ Container bench_redis-consumer-1  Removing
+ Container bench_redis-consumer-1  Removed
+ Container bench_redis-redis-1  Stopping
+ Container bench_redis-redis-1  Stopped
+ Container bench_redis-redis-1  Removing
+ Container bench_redis-redis-1  Removed
+ Network bench_redis_default  Removing
+ Network bench_redis_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB 0.0s done
+#1 DONE 0.0s
+
+#2 [producer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [producer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.3s
+
+#4 [consumer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [producer 3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [producer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [producer 2/5] WORKDIR /app
+#9 CACHED
+
+#10 [producer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [producer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:0689b3ccb580d658609a5f13baebd18aacf36c4524ef5cf5f18404b96566518a done
+#11 exporting config sha256:4bcc621b11b49767fe0d08d77c6b1d0f8b637cfd86048a748ba38702a58ce47c done
+#11 exporting attestation manifest sha256:c76fd4d4f9747647c4554c21a154400d7258ffa78eb68897d0b0c2db00817aa8 0.0s done
+#11 exporting manifest list sha256:07a7d74b5f5059798468fac43b2a47e407e0bf1c5c8e5c793f2d17a8dcbd2cb6
+#11 exporting manifest list sha256:07a7d74b5f5059798468fac43b2a47e407e0bf1c5c8e5c793f2d17a8dcbd2cb6 0.0s done
+#11 naming to docker.io/library/bench_redis-producer:latest done
+#11 unpacking to docker.io/library/bench_redis-producer:latest done
+#11 DONE 0.1s
+
+#12 [consumer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:0a9fa94c0fe4115095c827574e6dbb730c6646a271ced85178b3991ec7991e33 done
+#12 exporting config sha256:84f4f7d7f1e9d0d5ade4832cb45ab807c81d31c87c62a318196035b53f499270 done
+#12 exporting attestation manifest sha256:5960a372e53443f0851e1c8c5737d7e551bff28a203fcc7be0c0282f45d62aa1 0.0s done
+#12 exporting manifest list sha256:fca54eaad8f0a607ccd9a5c1da8617cb5b0fdcdae12590714a6151f8c7d0f333 0.0s done
+#12 naming to docker.io/library/bench_redis-consumer:latest done
+#12 unpacking to docker.io/library/bench_redis-consumer:latest done
+#12 DONE 0.1s
+
+#13 [consumer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [producer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_redis-consumer  Built
+ bench_redis-producer  Built
+ Network bench_redis_default  Creating
+ Network bench_redis_default  Created
+ Container bench_redis-redis-1  Creating
+ Container bench_redis-redis-1  Created
+ Container bench_redis-consumer-1  Creating
+ Container bench_redis-consumer-1  Created
+ Container bench_redis-producer-1  Creating
+ Container bench_redis-producer-1  Created
+ Container bench_redis-redis-1  Starting
+ Container bench_redis-redis-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-consumer-1  Starting
+ Container bench_redis-consumer-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-producer-1  Starting
+ Container bench_redis-producer-1  Started
+0
+consumer-1  | [consumer] run_id=redis_128_10000 kind=redis duration=30 grace=5
+consumer-1  | Broker is ready (attempt 1).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=299991 avg=12.48ms p95=50.21ms peak_backlog=659
+producer-1  | [producer] run_id=redis_128_10000 kind=redis size=128 rate=10000 duration=30
+producer-1  | Broker is ready (attempt 1).
+producer-1  | [producer] done: {'run_id': 'redis_128_10000', 'kind': 'redis', 'msg_size': 128, 'target_rate': 10000, 'duration': 30, 'sent': 299991, 'send_errors': 0, 'actual_rate': 9999.686642418726, 'wall_time': 30.00004007399957}
+ Container bench_redis-producer-1  Stopping
+ Container bench_redis-producer-1  Stopped
+ Container bench_redis-producer-1  Removing
+ Container bench_redis-producer-1  Removed
+ Container bench_redis-consumer-1  Stopping
+ Container bench_redis-consumer-1  Stopped
+ Container bench_redis-consumer-1  Removing
+ Container bench_redis-consumer-1  Removed
+ Container bench_redis-redis-1  Stopping
+ Container bench_redis-redis-1  Stopped
+ Container bench_redis-redis-1  Removing
+ Container bench_redis-redis-1  Removed
+ Network bench_redis_default  Removing
+ Network bench_redis_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB 0.0s done
+#1 DONE 0.0s
+
+#2 [producer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [producer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.1s
+
+#4 [consumer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [producer 3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [producer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [producer 2/5] WORKDIR /app
+#9 CACHED
+
+#10 [producer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [producer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:0689b3ccb580d658609a5f13baebd18aacf36c4524ef5cf5f18404b96566518a done
+#11 exporting config sha256:4bcc621b11b49767fe0d08d77c6b1d0f8b637cfd86048a748ba38702a58ce47c done
+#11 exporting attestation manifest sha256:c515b0b67a5ef7a74c8df57774899d1f1774dedb9ff26e7d77c3b8fa405f69b9 0.0s done
+#11 exporting manifest list sha256:f5a311d82c4b6118937980959718ea21a4c23523891b4c0480274feb5b271b5d
+#11 exporting manifest list sha256:f5a311d82c4b6118937980959718ea21a4c23523891b4c0480274feb5b271b5d 0.0s done
+#11 naming to docker.io/library/bench_redis-producer:latest done
+#11 unpacking to docker.io/library/bench_redis-producer:latest done
+#11 DONE 0.1s
+
+#12 [consumer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:0a9fa94c0fe4115095c827574e6dbb730c6646a271ced85178b3991ec7991e33 done
+#12 exporting config sha256:84f4f7d7f1e9d0d5ade4832cb45ab807c81d31c87c62a318196035b53f499270 done
+#12 exporting attestation manifest sha256:ab59646b16668d815384c47b942d4c2d86386db1e5556b56ba1f19d2eb7aa876 0.0s done
+#12 exporting manifest list sha256:d0a51e94ef90e7eb594d8c93704b5906532a0f3a1889ee4c59e527888ca61fd4 0.0s done
+#12 naming to docker.io/library/bench_redis-consumer:latest done
+#12 unpacking to docker.io/library/bench_redis-consumer:latest done
+#12 DONE 0.1s
+
+#13 [producer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [consumer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_redis-consumer  Built
+ bench_redis-producer  Built
+ Network bench_redis_default  Creating
+ Network bench_redis_default  Created
+ Container bench_redis-redis-1  Creating
+ Container bench_redis-redis-1  Created
+ Container bench_redis-consumer-1  Creating
+ Container bench_redis-consumer-1  Created
+ Container bench_redis-producer-1  Creating
+ Container bench_redis-producer-1  Created
+ Container bench_redis-redis-1  Starting
+ Container bench_redis-redis-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-consumer-1  Starting
+ Container bench_redis-consumer-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-producer-1  Starting
+ Container bench_redis-producer-1  Started
+0
+consumer-1  | [consumer] run_id=redis_1024_1000 kind=redis duration=30 grace=5
+consumer-1  | Broker is ready (attempt 1).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=30001 avg=0.18ms p95=0.34ms peak_backlog=0
+producer-1  | [producer] run_id=redis_1024_1000 kind=redis size=1024 rate=1000 duration=30
+producer-1  | Broker is ready (attempt 1).
+producer-1  | [producer] done: {'run_id': 'redis_1024_1000', 'kind': 'redis', 'msg_size': 1024, 'target_rate': 1000, 'duration': 30, 'sent': 30001, 'send_errors': 0, 'actual_rate': 1000.0258864739183, 'wall_time': 30.000223399999413}
+ Container bench_redis-producer-1  Stopping
+ Container bench_redis-producer-1  Stopped
+ Container bench_redis-producer-1  Removing
+ Container bench_redis-producer-1  Removed
+ Container bench_redis-consumer-1  Stopping
+ Container bench_redis-consumer-1  Stopped
+ Container bench_redis-consumer-1  Removing
+ Container bench_redis-consumer-1  Removed
+ Container bench_redis-redis-1  Stopping
+ Container bench_redis-redis-1  Stopped
+ Container bench_redis-redis-1  Removing
+ Container bench_redis-redis-1  Removed
+ Network bench_redis_default  Removing
+ Network bench_redis_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB 0.0s done
+#1 DONE 0.0s
+
+#2 [producer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [consumer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.1s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [consumer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [consumer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [producer 3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [producer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [producer 2/5] WORKDIR /app
+#9 CACHED
+
+#10 [producer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [consumer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:0a9fa94c0fe4115095c827574e6dbb730c6646a271ced85178b3991ec7991e33 done
+#11 exporting config sha256:84f4f7d7f1e9d0d5ade4832cb45ab807c81d31c87c62a318196035b53f499270 done
+#11 exporting attestation manifest sha256:13eacc86a8dc878fa6272ef182366f7036d74a6c2e206c81df1336b57dc64e5b 0.0s done
+#11 exporting manifest list sha256:8b74abdb1e4a148f8969851ae2a0fa57ef62fb2f39c912bb6a8d85d7450a6475
+#11 exporting manifest list sha256:8b74abdb1e4a148f8969851ae2a0fa57ef62fb2f39c912bb6a8d85d7450a6475 0.0s done
+#11 naming to docker.io/library/bench_redis-consumer:latest done
+#11 unpacking to docker.io/library/bench_redis-consumer:latest 0.0s done
+#11 DONE 0.2s
+
+#12 [producer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:0689b3ccb580d658609a5f13baebd18aacf36c4524ef5cf5f18404b96566518a done
+#12 exporting config sha256:4bcc621b11b49767fe0d08d77c6b1d0f8b637cfd86048a748ba38702a58ce47c done
+#12 exporting attestation manifest sha256:35348874f6e2eecab8206479e3b535d41e915e4504f462fe19d6e573dac98ad6 0.0s done
+#12 exporting manifest list sha256:b3b536883b7a492e092e3f429e65f6d8dd05040ba0d62b6cffdd378b4ee1bf39 0.0s done
+#12 naming to docker.io/library/bench_redis-producer:latest done
+#12 unpacking to docker.io/library/bench_redis-producer:latest 0.0s done
+#12 DONE 0.2s
+
+#13 [producer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [consumer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_redis-consumer  Built
+ bench_redis-producer  Built
+ Network bench_redis_default  Creating
+ Network bench_redis_default  Created
+ Container bench_redis-redis-1  Creating
+ Container bench_redis-redis-1  Created
+ Container bench_redis-consumer-1  Creating
+ Container bench_redis-consumer-1  Created
+ Container bench_redis-producer-1  Creating
+ Container bench_redis-producer-1  Created
+ Container bench_redis-redis-1  Starting
+ Container bench_redis-redis-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-consumer-1  Starting
+ Container bench_redis-consumer-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-producer-1  Starting
+ Container bench_redis-producer-1  Started
+0
+consumer-1  | [consumer] run_id=redis_1024_5000 kind=redis duration=30 grace=5
+consumer-1  | Broker is ready (attempt 1).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=150001 avg=0.25ms p95=0.22ms peak_backlog=1
+producer-1  | [producer] run_id=redis_1024_5000 kind=redis size=1024 rate=5000 duration=30
+producer-1  | Broker is ready (attempt 1).
+producer-1  | [producer] done: {'run_id': 'redis_1024_5000', 'kind': 'redis', 'msg_size': 1024, 'target_rate': 5000, 'duration': 30, 'sent': 150001, 'send_errors': 0, 'actual_rate': 4999.998616676282, 'wall_time': 30.00020829999994}
+ Container bench_redis-producer-1  Stopping
+ Container bench_redis-producer-1  Stopped
+ Container bench_redis-producer-1  Removing
+ Container bench_redis-producer-1  Removed
+ Container bench_redis-consumer-1  Stopping
+ Container bench_redis-consumer-1  Stopped
+ Container bench_redis-consumer-1  Removing
+ Container bench_redis-consumer-1  Removed
+ Container bench_redis-redis-1  Stopping
+ Container bench_redis-redis-1  Stopped
+ Container bench_redis-redis-1  Removing
+ Container bench_redis-redis-1  Removed
+ Network bench_redis_default  Removing
+ Network bench_redis_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB 0.0s done
+#1 DONE 0.0s
+
+#2 [producer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [consumer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.3s
+
+#4 [consumer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [consumer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [consumer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [consumer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#7 CACHED
+
+#8 [consumer 2/5] WORKDIR /app
+#8 CACHED
+
+#9 [consumer 3/5] COPY requirements.txt .
+#9 CACHED
+
+#10 [consumer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [producer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:0689b3ccb580d658609a5f13baebd18aacf36c4524ef5cf5f18404b96566518a done
+#11 exporting config sha256:4bcc621b11b49767fe0d08d77c6b1d0f8b637cfd86048a748ba38702a58ce47c done
+#11 exporting attestation manifest sha256:45b75822d25efab87dbe359425c224d7597040ad1b24bf5d6336712468614004 0.0s done
+#11 exporting manifest list sha256:acb7410bbf24acd63520df150963cc65cc67f06946787cab7fd72ff3b2d7430a
+#11 exporting manifest list sha256:acb7410bbf24acd63520df150963cc65cc67f06946787cab7fd72ff3b2d7430a 0.0s done
+#11 naming to docker.io/library/bench_redis-producer:latest done
+#11 unpacking to docker.io/library/bench_redis-producer:latest done
+#11 DONE 0.1s
+
+#12 [consumer] exporting to image
+#12 exporting layers 0.0s done
+#12 exporting manifest sha256:0a9fa94c0fe4115095c827574e6dbb730c6646a271ced85178b3991ec7991e33 done
+#12 exporting config sha256:84f4f7d7f1e9d0d5ade4832cb45ab807c81d31c87c62a318196035b53f499270 done
+#12 exporting attestation manifest sha256:4799bd5e94998040ac2fdef5095b7c0415313508d45c9238630ae03ce916a66a 0.0s done
+#12 exporting manifest list sha256:8700f4a775a30af3baf7f17548cca473f32b3bc9ffb44ce6f328f8304c84f514 0.0s done
+#12 naming to docker.io/library/bench_redis-consumer:latest done
+#12 unpacking to docker.io/library/bench_redis-consumer:latest done
+#12 DONE 0.1s
+
+#13 [producer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [consumer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_redis-producer  Built
+ bench_redis-consumer  Built
+ Network bench_redis_default  Creating
+ Network bench_redis_default  Created
+ Container bench_redis-redis-1  Creating
+ Container bench_redis-redis-1  Created
+ Container bench_redis-consumer-1  Creating
+ Container bench_redis-consumer-1  Created
+ Container bench_redis-producer-1  Creating
+ Container bench_redis-producer-1  Created
+ Container bench_redis-redis-1  Starting
+ Container bench_redis-redis-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-consumer-1  Starting
+ Container bench_redis-consumer-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-producer-1  Starting
+ Container bench_redis-producer-1  Started
+0
+consumer-1  | [consumer] run_id=redis_1024_10000 kind=redis duration=30 grace=5
+consumer-1  | Broker is ready (attempt 1).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=299978 avg=11.14ms p95=43.21ms peak_backlog=512
+producer-1  | [producer] run_id=redis_1024_10000 kind=redis size=1024 rate=10000 duration=30
+producer-1  | Broker is ready (attempt 1).
+producer-1  | [producer] done: {'run_id': 'redis_1024_10000', 'kind': 'redis', 'msg_size': 1024, 'target_rate': 10000, 'duration': 30, 'sent': 299978, 'send_errors': 0, 'actual_rate': 9999.243185777248, 'wall_time': 30.00007044799986}
+ Container bench_redis-producer-1  Stopping
+ Container bench_redis-producer-1  Stopped
+ Container bench_redis-producer-1  Removing
+ Container bench_redis-producer-1  Removed
+ Container bench_redis-consumer-1  Stopping
+ Container bench_redis-consumer-1  Stopped
+ Container bench_redis-consumer-1  Removing
+ Container bench_redis-consumer-1  Removed
+ Container bench_redis-redis-1  Stopping
+ Container bench_redis-redis-1  Stopped
+ Container bench_redis-redis-1  Removing
+ Container bench_redis-redis-1  Removed
+ Network bench_redis_default  Removing
+ Network bench_redis_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB 0.0s done
+#1 DONE 0.0s
+
+#2 [producer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [producer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.7s
+
+#4 [consumer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [consumer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [consumer 3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [consumer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [consumer 2/5] WORKDIR /app
+#9 CACHED
+
+#10 [consumer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [producer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:0689b3ccb580d658609a5f13baebd18aacf36c4524ef5cf5f18404b96566518a done
+#11 exporting config sha256:4bcc621b11b49767fe0d08d77c6b1d0f8b637cfd86048a748ba38702a58ce47c done
+#11 exporting attestation manifest sha256:654b2fe6d2f24c3c1064bc6d91b2b8f4885a4756a33c9cf95cc089464d29a198 0.0s done
+#11 exporting manifest list sha256:34d56593c85ee94487c5ab4f1c11fd8fd3152a970699c5fb9d4be932f53974fb
+#11 exporting manifest list sha256:34d56593c85ee94487c5ab4f1c11fd8fd3152a970699c5fb9d4be932f53974fb 0.0s done
+#11 naming to docker.io/library/bench_redis-producer:latest done
+#11 unpacking to docker.io/library/bench_redis-producer:latest done
+#11 DONE 0.1s
+
+#12 [consumer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:0a9fa94c0fe4115095c827574e6dbb730c6646a271ced85178b3991ec7991e33 done
+#12 exporting config sha256:84f4f7d7f1e9d0d5ade4832cb45ab807c81d31c87c62a318196035b53f499270 done
+#12 exporting attestation manifest sha256:5e58bc8f4ae8559ca942f2325f7f3ef432d4fa54ef7b6e81ba929c308db6815f 0.0s done
+#12 exporting manifest list sha256:a41b03a65e5dcfaf3218b4fc7cc00eda0427d02b024bfbca56b5c2ea013d483d 0.0s done
+#12 naming to docker.io/library/bench_redis-consumer:latest done
+#12 unpacking to docker.io/library/bench_redis-consumer:latest done
+#12 DONE 0.1s
+
+#13 [producer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [consumer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_redis-consumer  Built
+ bench_redis-producer  Built
+ Network bench_redis_default  Creating
+ Network bench_redis_default  Created
+ Container bench_redis-redis-1  Creating
+ Container bench_redis-redis-1  Created
+ Container bench_redis-consumer-1  Creating
+ Container bench_redis-consumer-1  Created
+ Container bench_redis-producer-1  Creating
+ Container bench_redis-producer-1  Created
+ Container bench_redis-redis-1  Starting
+ Container bench_redis-redis-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-consumer-1  Starting
+ Container bench_redis-consumer-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-producer-1  Starting
+ Container bench_redis-producer-1  Started
+0
+consumer-1  | [consumer] run_id=redis_10240_1000 kind=redis duration=30 grace=5
+consumer-1  | Broker is ready (attempt 1).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=30001 avg=0.20ms p95=0.37ms peak_backlog=0
+producer-1  | [producer] run_id=redis_10240_1000 kind=redis size=10240 rate=1000 duration=30
+producer-1  | Broker is ready (attempt 1).
+producer-1  | [producer] done: {'run_id': 'redis_10240_1000', 'kind': 'redis', 'msg_size': 10240, 'target_rate': 1000, 'duration': 30, 'sent': 30001, 'send_errors': 0, 'actual_rate': 1000.0204960702245, 'wall_time': 30.000385110000025}
+ Container bench_redis-producer-1  Stopping
+ Container bench_redis-producer-1  Stopped
+ Container bench_redis-producer-1  Removing
+ Container bench_redis-producer-1  Removed
+ Container bench_redis-consumer-1  Stopping
+ Container bench_redis-consumer-1  Stopped
+ Container bench_redis-consumer-1  Removing
+ Container bench_redis-consumer-1  Removed
+ Container bench_redis-redis-1  Stopping
+ Container bench_redis-redis-1  Stopped
+ Container bench_redis-redis-1  Removing
+ Container bench_redis-redis-1  Removed
+ Network bench_redis_default  Removing
+ Network bench_redis_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB 0.0s done
+#1 DONE 0.0s
+
+#2 [producer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [producer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 0.9s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [consumer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [producer 2/5] WORKDIR /app
+#7 CACHED
+
+#8 [producer 3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [producer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [producer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [consumer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:0a9fa94c0fe4115095c827574e6dbb730c6646a271ced85178b3991ec7991e33 done
+#11 exporting config sha256:84f4f7d7f1e9d0d5ade4832cb45ab807c81d31c87c62a318196035b53f499270 done
+#11 exporting attestation manifest sha256:99aefa7b7f3a59d9aaeb260a203ffe137d7d9de82bad930b0052f0840b354d8b 0.0s done
+#11 exporting manifest list sha256:11acbc0968faa5f61e84e21c2f9dc2be37ad65fa2a093a489581b4dcf9ef65b3
+#11 exporting manifest list sha256:11acbc0968faa5f61e84e21c2f9dc2be37ad65fa2a093a489581b4dcf9ef65b3 0.0s done
+#11 naming to docker.io/library/bench_redis-consumer:latest done
+#11 unpacking to docker.io/library/bench_redis-consumer:latest done
+#11 DONE 0.1s
+
+#12 [producer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:0689b3ccb580d658609a5f13baebd18aacf36c4524ef5cf5f18404b96566518a done
+#12 exporting config sha256:4bcc621b11b49767fe0d08d77c6b1d0f8b637cfd86048a748ba38702a58ce47c done
+#12 exporting attestation manifest sha256:04ede671d0b638c6795f053e2623bde747de2d627fed01010a53ef46826469d5 0.0s done
+#12 exporting manifest list sha256:b50a93ff94512612c63abab0c0115abc4176094d556de768241140bad86e8383 0.0s done
+#12 naming to docker.io/library/bench_redis-producer:latest done
+#12 unpacking to docker.io/library/bench_redis-producer:latest done
+#12 DONE 0.1s
+
+#13 [producer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [consumer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_redis-consumer  Built
+ bench_redis-producer  Built
+ Network bench_redis_default  Creating
+ Network bench_redis_default  Created
+ Container bench_redis-redis-1  Creating
+ Container bench_redis-redis-1  Created
+ Container bench_redis-consumer-1  Creating
+ Container bench_redis-consumer-1  Created
+ Container bench_redis-producer-1  Creating
+ Container bench_redis-producer-1  Created
+ Container bench_redis-redis-1  Starting
+ Container bench_redis-redis-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-consumer-1  Starting
+ Container bench_redis-consumer-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-producer-1  Starting
+ Container bench_redis-producer-1  Started
+0
+consumer-1  | [consumer] run_id=redis_10240_5000 kind=redis duration=30 grace=5
+consumer-1  | Broker is ready (attempt 1).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=150000 avg=0.13ms p95=0.22ms peak_backlog=1
+producer-1  | [producer] run_id=redis_10240_5000 kind=redis size=10240 rate=5000 duration=30
+producer-1  | Broker is ready (attempt 1).
+producer-1  | [producer] done: {'run_id': 'redis_10240_5000', 'kind': 'redis', 'msg_size': 10240, 'target_rate': 5000, 'duration': 30, 'sent': 150000, 'send_errors': 0, 'actual_rate': 4999.993579508159, 'wall_time': 30.000038523000512}
+ Container bench_redis-producer-1  Stopping
+ Container bench_redis-producer-1  Stopped
+ Container bench_redis-producer-1  Removing
+ Container bench_redis-producer-1  Removed
+ Container bench_redis-consumer-1  Stopping
+ Container bench_redis-consumer-1  Stopped
+ Container bench_redis-consumer-1  Removing
+ Container bench_redis-consumer-1  Removed
+ Container bench_redis-redis-1  Stopping
+ Container bench_redis-redis-1  Stopped
+ Container bench_redis-redis-1  Removing
+ Container bench_redis-redis-1  Removed
+ Network bench_redis_default  Removing
+ Network bench_redis_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [consumer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.1s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [producer 2/5] WORKDIR /app
+#7 CACHED
+
+#8 [producer 3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [producer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [producer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [consumer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:0a9fa94c0fe4115095c827574e6dbb730c6646a271ced85178b3991ec7991e33 done
+#11 exporting config sha256:84f4f7d7f1e9d0d5ade4832cb45ab807c81d31c87c62a318196035b53f499270 done
+#11 exporting attestation manifest sha256:a1321b6fedc5c5d1a7bef0f5f82c429ef7fa1412b5d3f12dad71a64788452c79 0.0s done
+#11 exporting manifest list sha256:cf1e2a9a3294db15641ae0e46f78959f5ba514947c069a879a428b903bc9e3dc
+#11 exporting manifest list sha256:cf1e2a9a3294db15641ae0e46f78959f5ba514947c069a879a428b903bc9e3dc 0.0s done
+#11 naming to docker.io/library/bench_redis-consumer:latest done
+#11 unpacking to docker.io/library/bench_redis-consumer:latest done
+#11 DONE 0.1s
+
+#12 [producer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:0689b3ccb580d658609a5f13baebd18aacf36c4524ef5cf5f18404b96566518a done
+#12 exporting config sha256:4bcc621b11b49767fe0d08d77c6b1d0f8b637cfd86048a748ba38702a58ce47c done
+#12 exporting attestation manifest sha256:2ec41912cbf8df987a5bf5dd8ac6cc76951434130a5598510514a0f0328a894f 0.0s done
+#12 exporting manifest list sha256:bfa3a0de47f888faaa634e6c5e740cb73838924e76c15c6b5e3c5cfde4b7f44e 0.0s done
+#12 naming to docker.io/library/bench_redis-producer:latest done
+#12 unpacking to docker.io/library/bench_redis-producer:latest done
+#12 DONE 0.1s
+
+#13 [consumer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [producer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_redis-producer  Built
+ bench_redis-consumer  Built
+ Network bench_redis_default  Creating
+ Network bench_redis_default  Created
+ Container bench_redis-redis-1  Creating
+ Container bench_redis-redis-1  Created
+ Container bench_redis-consumer-1  Creating
+ Container bench_redis-consumer-1  Created
+ Container bench_redis-producer-1  Creating
+ Container bench_redis-producer-1  Created
+ Container bench_redis-redis-1  Starting
+ Container bench_redis-redis-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-consumer-1  Starting
+ Container bench_redis-consumer-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-producer-1  Starting
+ Container bench_redis-producer-1  Started
+0
+consumer-1  | [consumer] run_id=redis_10240_10000 kind=redis duration=30 grace=5
+consumer-1  | Broker is ready (attempt 1).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=256977 avg=0.54ms p95=2.54ms peak_backlog=20
+producer-1  | [producer] run_id=redis_10240_10000 kind=redis size=10240 rate=10000 duration=30
+producer-1  | Broker is ready (attempt 1).
+producer-1  | [producer] done: {'run_id': 'redis_10240_10000', 'kind': 'redis', 'msg_size': 10240, 'target_rate': 10000, 'duration': 30, 'sent': 256977, 'send_errors': 0, 'actual_rate': 8565.875753146544, 'wall_time': 30.000084919000074}
+ Container bench_redis-producer-1  Stopping
+ Container bench_redis-producer-1  Stopped
+ Container bench_redis-producer-1  Removing
+ Container bench_redis-producer-1  Removed
+ Container bench_redis-consumer-1  Stopping
+ Container bench_redis-consumer-1  Stopped
+ Container bench_redis-consumer-1  Removing
+ Container bench_redis-consumer-1  Removed
+ Container bench_redis-redis-1  Stopping
+ Container bench_redis-redis-1  Stopped
+ Container bench_redis-redis-1  Removing
+ Container bench_redis-redis-1  Removed
+ Network bench_redis_default  Removing
+ Network bench_redis_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [consumer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.0s
+
+#4 [consumer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [consumer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [consumer 2/5] WORKDIR /app
+#7 CACHED
+
+#8 [consumer 3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [consumer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [consumer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [producer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:0689b3ccb580d658609a5f13baebd18aacf36c4524ef5cf5f18404b96566518a done
+#11 exporting config sha256:4bcc621b11b49767fe0d08d77c6b1d0f8b637cfd86048a748ba38702a58ce47c done
+#11 exporting attestation manifest sha256:ff6cd965eeaed92902e936228876fd65e2fca7127df2041d45865fb29fa935f6 0.0s done
+#11 exporting manifest list sha256:e73b536a4fbc211995d614b20872b7c29afc6384c67a37fc3a05cfa82ce62aef
+#11 exporting manifest list sha256:e73b536a4fbc211995d614b20872b7c29afc6384c67a37fc3a05cfa82ce62aef 0.0s done
+#11 naming to docker.io/library/bench_redis-producer:latest done
+#11 unpacking to docker.io/library/bench_redis-producer:latest done
+#11 DONE 0.1s
+
+#12 [consumer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:0a9fa94c0fe4115095c827574e6dbb730c6646a271ced85178b3991ec7991e33 done
+#12 exporting config sha256:84f4f7d7f1e9d0d5ade4832cb45ab807c81d31c87c62a318196035b53f499270 done
+#12 exporting attestation manifest sha256:e5ec7e0d4516121a9bcd308813eebf0d314e27c2b176184e37811fea8ec25a74 0.0s done
+#12 exporting manifest list sha256:6582fae3b7af78bafd1a9ab2718a2ee0bbb863436a8afcd4d45fd4fd4009d494 0.0s done
+#12 naming to docker.io/library/bench_redis-consumer:latest done
+#12 unpacking to docker.io/library/bench_redis-consumer:latest done
+#12 DONE 0.1s
+
+#13 [producer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [consumer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_redis-consumer  Built
+ bench_redis-producer  Built
+ Network bench_redis_default  Creating
+ Network bench_redis_default  Created
+ Container bench_redis-redis-1  Creating
+ Container bench_redis-redis-1  Created
+ Container bench_redis-consumer-1  Creating
+ Container bench_redis-consumer-1  Created
+ Container bench_redis-producer-1  Creating
+ Container bench_redis-producer-1  Created
+ Container bench_redis-redis-1  Starting
+ Container bench_redis-redis-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-consumer-1  Starting
+ Container bench_redis-consumer-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-producer-1  Starting
+ Container bench_redis-producer-1  Started
+0
+consumer-1  | [consumer] run_id=redis_102400_1000 kind=redis duration=30 grace=5
+consumer-1  | Broker is ready (attempt 1).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=30001 avg=0.27ms p95=0.45ms peak_backlog=0
+producer-1  | [producer] run_id=redis_102400_1000 kind=redis size=102400 rate=1000 duration=30
+producer-1  | Broker is ready (attempt 1).
+producer-1  | [producer] done: {'run_id': 'redis_102400_1000', 'kind': 'redis', 'msg_size': 102400, 'target_rate': 1000, 'duration': 30, 'sent': 30001, 'send_errors': 0, 'actual_rate': 1000.0016570474875, 'wall_time': 30.000950287000705}
+ Container bench_redis-producer-1  Stopping
+ Container bench_redis-producer-1  Stopped
+ Container bench_redis-producer-1  Removing
+ Container bench_redis-producer-1  Removed
+ Container bench_redis-consumer-1  Stopping
+ Container bench_redis-consumer-1  Stopped
+ Container bench_redis-consumer-1  Removing
+ Container bench_redis-consumer-1  Removed
+ Container bench_redis-redis-1  Stopping
+ Container bench_redis-redis-1  Stopped
+ Container bench_redis-redis-1  Removing
+ Container bench_redis-redis-1  Removed
+ Network bench_redis_default  Removing
+ Network bench_redis_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [consumer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.0s
+
+#4 [consumer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [producer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [producer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#7 CACHED
+
+#8 [producer 2/5] WORKDIR /app
+#8 CACHED
+
+#9 [producer 3/5] COPY requirements.txt .
+#9 CACHED
+
+#10 [producer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [consumer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:0a9fa94c0fe4115095c827574e6dbb730c6646a271ced85178b3991ec7991e33 done
+#11 exporting config sha256:84f4f7d7f1e9d0d5ade4832cb45ab807c81d31c87c62a318196035b53f499270 done
+#11 exporting attestation manifest sha256:72da01e52dd9bbed0829159000a68c416b27904e2fc62eab94dd189fd99dda07 0.0s done
+#11 exporting manifest list sha256:2b510d5eca26eb4278b673f370e55402e97aefeecbbed7a82465215d824cce9b
+#11 exporting manifest list sha256:2b510d5eca26eb4278b673f370e55402e97aefeecbbed7a82465215d824cce9b 0.0s done
+#11 naming to docker.io/library/bench_redis-consumer:latest done
+#11 unpacking to docker.io/library/bench_redis-consumer:latest 0.0s done
+#11 DONE 0.2s
+
+#12 [producer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:0689b3ccb580d658609a5f13baebd18aacf36c4524ef5cf5f18404b96566518a done
+#12 exporting config sha256:4bcc621b11b49767fe0d08d77c6b1d0f8b637cfd86048a748ba38702a58ce47c done
+#12 exporting attestation manifest sha256:92bd20228f98500a0cc2c8b5cc95b6bd7f8fc0fc8e270440c98ff42ce9b90cee 0.0s done
+#12 exporting manifest list sha256:38918d3f843d2b3a1461702cd649768be0918345c8231a270bb1c09c65ade4c8 0.0s done
+#12 naming to docker.io/library/bench_redis-producer:latest done
+#12 unpacking to docker.io/library/bench_redis-producer:latest 0.0s done
+#12 DONE 0.2s
+
+#13 [producer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [consumer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_redis-consumer  Built
+ bench_redis-producer  Built
+ Network bench_redis_default  Creating
+ Network bench_redis_default  Created
+ Container bench_redis-redis-1  Creating
+ Container bench_redis-redis-1  Created
+ Container bench_redis-consumer-1  Creating
+ Container bench_redis-consumer-1  Created
+ Container bench_redis-producer-1  Creating
+ Container bench_redis-producer-1  Created
+ Container bench_redis-redis-1  Starting
+ Container bench_redis-redis-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-consumer-1  Starting
+ Container bench_redis-consumer-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-producer-1  Starting
+ Container bench_redis-producer-1  Started
+0
+consumer-1  | [consumer] run_id=redis_102400_5000 kind=redis duration=30 grace=5
+consumer-1  | Broker is ready (attempt 1).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=150000 avg=3.64ms p95=19.98ms peak_backlog=438
+producer-1  | [producer] run_id=redis_102400_5000 kind=redis size=102400 rate=5000 duration=30
+producer-1  | Broker is ready (attempt 1).
+producer-1  | [producer] done: {'run_id': 'redis_102400_5000', 'kind': 'redis', 'msg_size': 102400, 'target_rate': 5000, 'duration': 30, 'sent': 150000, 'send_errors': 0, 'actual_rate': 4999.99753550113, 'wall_time': 30.00001478700051}
+ Container bench_redis-producer-1  Stopping
+ Container bench_redis-producer-1  Stopped
+ Container bench_redis-producer-1  Removing
+ Container bench_redis-producer-1  Removed
+ Container bench_redis-consumer-1  Stopping
+ Container bench_redis-consumer-1  Stopped
+ Container bench_redis-consumer-1  Removing
+ Container bench_redis-consumer-1  Removed
+ Container bench_redis-redis-1  Stopping
+ Container bench_redis-redis-1  Stopped
+ Container bench_redis-redis-1  Removing
+ Container bench_redis-redis-1  Removed
+ Network bench_redis_default  Removing
+ Network bench_redis_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.13kB 0.0s done
+#1 DONE 0.0s
+
+#2 [consumer internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [consumer internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.3s
+
+#4 [producer internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [consumer internal] load build context
+#5 transferring context: 1.05kB done
+#5 DONE 0.0s
+
+#6 [producer 1/5] FROM docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286
+#6 resolve docker.io/library/python:3.12-slim@sha256:804ddf3251a60bbf9c92e73b7566c40428d54d0e79d3428194edf40da6521286 0.0s done
+#6 DONE 0.0s
+
+#7 [producer 3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [producer 4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [producer 2/5] WORKDIR /app
+#9 CACHED
+
+#10 [producer 5/5] COPY src/ ./
+#10 CACHED
+
+#11 [consumer] exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:0a9fa94c0fe4115095c827574e6dbb730c6646a271ced85178b3991ec7991e33 done
+#11 exporting config sha256:84f4f7d7f1e9d0d5ade4832cb45ab807c81d31c87c62a318196035b53f499270 done
+#11 exporting attestation manifest sha256:6e44dfd16893354f0d0a40adec5390a79932ffbb4a6f8d12760a9cb0d59c6430 0.0s done
+#11 exporting manifest list sha256:2a8ae95ab90c33fd2c1239caa6f86ce55b6ba5cad7713e7125faf00f13fe2c4f
+#11 exporting manifest list sha256:2a8ae95ab90c33fd2c1239caa6f86ce55b6ba5cad7713e7125faf00f13fe2c4f 0.0s done
+#11 naming to docker.io/library/bench_redis-consumer:latest done
+#11 unpacking to docker.io/library/bench_redis-consumer:latest done
+#11 DONE 0.1s
+
+#12 [producer] exporting to image
+#12 exporting layers done
+#12 exporting manifest sha256:0689b3ccb580d658609a5f13baebd18aacf36c4524ef5cf5f18404b96566518a done
+#12 exporting config sha256:4bcc621b11b49767fe0d08d77c6b1d0f8b637cfd86048a748ba38702a58ce47c done
+#12 exporting attestation manifest sha256:c03951efcab16c5cfdc2c511be4c5eefcb7289c2052dcf4adad458f577bb2afc 0.0s done
+#12 exporting manifest list sha256:913dfe6c12c6c612a03ec0499905b628a341c0d7c52a573ca63268cf29a937bb 0.0s done
+#12 naming to docker.io/library/bench_redis-producer:latest done
+#12 unpacking to docker.io/library/bench_redis-producer:latest done
+#12 DONE 0.1s
+
+#13 [consumer] resolving provenance for metadata file
+#13 DONE 0.0s
+
+#14 [producer] resolving provenance for metadata file
+#14 DONE 0.0s
+ bench_redis-consumer  Built
+ bench_redis-producer  Built
+ Network bench_redis_default  Creating
+ Network bench_redis_default  Created
+ Container bench_redis-redis-1  Creating
+ Container bench_redis-redis-1  Created
+ Container bench_redis-consumer-1  Creating
+ Container bench_redis-consumer-1  Created
+ Container bench_redis-producer-1  Creating
+ Container bench_redis-producer-1  Created
+ Container bench_redis-redis-1  Starting
+ Container bench_redis-redis-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-consumer-1  Starting
+ Container bench_redis-consumer-1  Started
+ Container bench_redis-redis-1  Waiting
+ Container bench_redis-redis-1  Healthy
+ Container bench_redis-producer-1  Starting
+ Container bench_redis-producer-1  Started
+0
+consumer-1  | [consumer] run_id=redis_102400_10000 kind=redis duration=30 grace=5
+consumer-1  | Broker is ready (attempt 1).
+consumer-1  | [consumer] idle >5.0s after receiving, stopping
+consumer-1  | [consumer] done: received=103226 avg=1414.76ms p95=7179.17ms peak_backlog=6222
+producer-1  | [producer] run_id=redis_102400_10000 kind=redis size=102400 rate=10000 duration=30
+producer-1  | Broker is ready (attempt 1).
+producer-1  | [producer] done: {'run_id': 'redis_102400_10000', 'kind': 'redis', 'msg_size': 102400, 'target_rate': 10000, 'duration': 30, 'sent': 103226, 'send_errors': 0, 'actual_rate': 3440.7626284417793, 'wall_time': 30.000907108999854}
+ Container bench_redis-producer-1  Stopping
+ Container bench_redis-producer-1  Stopped
+ Container bench_redis-producer-1  Removing
+ Container bench_redis-producer-1  Removed
+ Container bench_redis-consumer-1  Stopping
+ Container bench_redis-consumer-1  Stopped
+ Container bench_redis-consumer-1  Removing
+ Container bench_redis-consumer-1  Removed
+ Container bench_redis-redis-1  Stopping
+ Container bench_redis-redis-1  Stopped
+ Container bench_redis-redis-1  Removing
+ Container bench_redis-redis-1  Removed
+ Network bench_redis_default  Removing
+ Network bench_redis_default  Removed
+Matrix: brokers=['rabbit', 'redis'] sizes=[128, 1024, 10240, 102400] rates=[1000, 5000, 10000] duration=30s
+
+[1/24]
+
+===== run rabbit_128_1000 =====
+
+[2/24]
+
+===== run rabbit_128_5000 =====
+
+[3/24]
+
+===== run rabbit_128_10000 =====
+
+[4/24]
+
+===== run rabbit_1024_1000 =====
+
+[5/24]
+
+===== run rabbit_1024_5000 =====
+
+[6/24]
+
+===== run rabbit_1024_10000 =====
+
+[7/24]
+
+===== run rabbit_10240_1000 =====
+
+[8/24]
+
+===== run rabbit_10240_5000 =====
+
+[9/24]
+
+===== run rabbit_10240_10000 =====
+
+[10/24]
+
+===== run rabbit_102400_1000 =====
+
+[11/24]
+
+===== run rabbit_102400_5000 =====
+
+[12/24]
+
+===== run rabbit_102400_10000 =====
+
+[13/24]
+
+===== run redis_128_1000 =====
+
+[14/24]
+
+===== run redis_128_5000 =====
+
+[15/24]
+
+===== run redis_128_10000 =====
+
+[16/24]
+
+===== run redis_1024_1000 =====
+
+[17/24]
+
+===== run redis_1024_5000 =====
+
+[18/24]
+
+===== run redis_1024_10000 =====
+
+[19/24]
+
+===== run redis_10240_1000 =====
+
+[20/24]
+
+===== run redis_10240_5000 =====
+
+[21/24]
+
+===== run redis_10240_10000 =====
+
+[22/24]
+
+===== run redis_102400_1000 =====
+
+[23/24]
+
+===== run redis_102400_5000 =====
+
+[24/24]
+
+===== run redis_102400_10000 =====
+
+Aggregated 24 runs -> C:\Users\Daniel\Documents\Study\DatingBot\practice_tasks\task_2\results\summary.csv

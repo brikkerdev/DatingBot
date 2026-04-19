@@ -1,0 +1,11 @@
+{
+  "run_id": "snap_redis",
+  "kind": "redis",
+  "msg_size": 102400,
+  "target_rate": 10000,
+  "duration": 120,
+  "sent": 131339,
+  "send_errors": 104,
+  "actual_rate": 1008.4036628434882,
+  "wall_time": 130.2444693920006
+}

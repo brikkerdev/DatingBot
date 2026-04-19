@@ -1,0 +1,11 @@
+{
+  "run_id": "rabbit_128_5000",
+  "kind": "rabbit",
+  "msg_size": 128,
+  "target_rate": 5000,
+  "duration": 30,
+  "sent": 150001,
+  "send_errors": 0,
+  "actual_rate": 5000.010325952431,
+  "wall_time": 30.000138044000323
+}

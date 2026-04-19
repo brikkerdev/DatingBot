@@ -1,0 +1,11 @@
+{
+  "run_id": "redis_1024_1000",
+  "kind": "redis",
+  "msg_size": 1024,
+  "target_rate": 1000,
+  "duration": 30,
+  "sent": 30001,
+  "send_errors": 0,
+  "actual_rate": 1000.0258864739183,
+  "wall_time": 30.000223399999413
+}

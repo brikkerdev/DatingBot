@@ -1,0 +1,11 @@
+{
+  "run_id": "snap_rabbit",
+  "kind": "rabbit",
+  "msg_size": 10240,
+  "target_rate": 10000,
+  "duration": 120,
+  "sent": 680544,
+  "send_errors": 0,
+  "actual_rate": 5670.5591544213885,
+  "wall_time": 120.0135615320005
+}
