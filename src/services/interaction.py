@@ -86,6 +86,7 @@ async def get_next_profiles(
     session: AsyncSession,
     user_id: int,
     limit: int = 10,
+    exclude_user_ids: set[int] | None = None,
 ) -> list[Profile]:
     """Get profiles the user hasn't seen yet, ordered by combined_score desc."""
     seen_subq = (
@@ -94,12 +95,16 @@ async def get_next_profiles(
         .union_all(select(Pass.to_user_id).where(Pass.from_user_id == user_id))
     ).subquery()
 
+    conditions = [
+        Profile.user_id != user_id,
+        Profile.user_id.notin_(select(seen_subq.c.to_user_id)),
+    ]
+    if exclude_user_ids:
+        conditions.append(Profile.user_id.notin_(list(exclude_user_ids)))
+
     query = (
         select(Profile)
-        .where(
-            Profile.user_id != user_id,
-            Profile.user_id.notin_(select(seen_subq.c.to_user_id)),
-        )
+        .where(*conditions)
         .outerjoin(UserRating, UserRating.user_id == Profile.user_id)
         .order_by(func.coalesce(UserRating.combined_score, 0).desc(), func.random())
         .limit(limit)

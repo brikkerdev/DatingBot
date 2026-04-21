@@ -32,9 +32,12 @@ async def fill_queue(
     redis: Redis,
     session: AsyncSession,
     user_id: int,
+    exclude_user_ids: set[int] | None = None,
 ) -> int:
     """Load next profiles into Redis list. Returns count loaded."""
-    profiles = await get_next_profiles(session, user_id, limit=QUEUE_SIZE)
+    profiles = await get_next_profiles(
+        session, user_id, limit=QUEUE_SIZE, exclude_user_ids=exclude_user_ids
+    )
 
     if not profiles:
         return 0

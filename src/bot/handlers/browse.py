@@ -63,9 +63,12 @@ async def _show_next(
         text = _format_card_from_dict(cached)
         await _send_card(message, text, cached.get("photo", ""), cached["user_id"])
 
-        # If queue is now empty, refill in background for next cycle
+        # If queue is now empty, refill — exclude the just-shown profile since
+        # the like/pass hasn't been recorded yet and it would come back on top.
         if await queue_length(redis, user_id) == 0:
-            await fill_queue(redis, session, user_id)
+            await fill_queue(
+                redis, session, user_id, exclude_user_ids={cached["user_id"]}
+            )
         return
 
     # Cache empty — load from DB (first call or cache expired)
@@ -81,8 +84,9 @@ async def _show_next(
     photo = profile.photos[0].storage_path if profile.photos else ""
     await _send_card(message, text, photo, profile.user_id)
 
-    # Pre-fill queue with next batch
-    await fill_queue(redis, session, user_id)
+    # Pre-fill queue with next batch, excluding the profile we just showed so
+    # it doesn't get served again before the user acts on it.
+    await fill_queue(redis, session, user_id, exclude_user_ids={profile.user_id})
 
 
 @router.message(F.text == "Смотреть анкеты")
