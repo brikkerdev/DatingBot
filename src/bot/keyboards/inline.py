@@ -1,6 +1,80 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
+def main_menu_inline() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Смотреть анкеты", callback_data="menu:browse")],
+            [
+                InlineKeyboardButton(text="Моя анкета", callback_data="menu:profile"),
+                InlineKeyboardButton(text="Мэтчи", callback_data="menu:matches"),
+            ],
+            [InlineKeyboardButton(text="Пригласить друга", callback_data="menu:invite")],
+        ]
+    )
+
+
+def profile_actions_inline() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Редактировать анкету", callback_data="prof:edit")],
+            [
+                InlineKeyboardButton(text="Удалить анкету", callback_data="prof:delete"),
+                InlineKeyboardButton(text="Назад в меню", callback_data="prof:back"),
+            ],
+        ]
+    )
+
+
+def confirm_delete_inline() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Да, удалить", callback_data="del:yes"),
+                InlineKeyboardButton(text="Отмена", callback_data="del:no"),
+            ],
+        ]
+    )
+
+
+def gender_inline() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Мужской", callback_data="gender:male"),
+                InlineKeyboardButton(text="Женский", callback_data="gender:female"),
+            ],
+        ]
+    )
+
+
+def skip_bio_inline() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Пропустить", callback_data="bio:skip")],
+        ]
+    )
+
+
+def photo_done_inline() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Готово", callback_data="reg:photos_done")],
+        ]
+    )
+
+
+def confirm_registration_inline() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Сохранить", callback_data="reg:save"),
+                InlineKeyboardButton(text="Заново", callback_data="reg:restart"),
+            ],
+        ]
+    )
+
+
 def like_pass_keyboard(target_user_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
@@ -42,6 +116,14 @@ def edit_profile_keyboard() -> InlineKeyboardMarkup:
                 InlineKeyboardButton(text="Фото", callback_data="edit:photo"),
             ],
             [InlineKeyboardButton(text="Назад", callback_data="edit:cancel")],
+        ]
+    )
+
+
+def cancel_add_photo_inline() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Готово", callback_data="ph_cancel_add")],
         ]
     )
 

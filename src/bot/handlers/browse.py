@@ -6,9 +6,8 @@ from aiogram.types import CallbackQuery, Message
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.bot.keyboards.inline import like_pass_keyboard
-from src.bot.keyboards.reply import main_menu_keyboard
-from src.bot.utils import cleanup_ui, replace_status, safe_delete_user_message
+from src.bot.keyboards.inline import like_pass_keyboard, main_menu_inline
+from src.bot.utils import cleanup_ui, replace_status
 from src.db.models.profile import Profile
 from src.services.interaction import get_next_profiles, record_like, record_pass
 from src.services.profile import get_profile_by_user_id
@@ -102,7 +101,7 @@ async def _show_next(
             message,
             state,
             "Анкеты закончились. Загляните позже!",
-            reply_markup=main_menu_keyboard(),
+            reply_markup=main_menu_inline(),
         )
         return
 
@@ -114,24 +113,28 @@ async def _show_next(
     await fill_queue(redis, session, user_id, exclude_user_ids={profile.user_id})
 
 
-@router.message(F.text == "Смотреть анкеты")
+@router.callback_query(F.data == "menu:browse")
 async def browse_profiles(
-    message: Message, state: FSMContext, session: AsyncSession, redis: Redis
+    callback: CallbackQuery, state: FSMContext, session: AsyncSession, redis: Redis
 ) -> None:
-    await safe_delete_user_message(message)
-    await cleanup_ui(message.bot, message.chat.id, state)
+    await callback.answer()
+    await cleanup_ui(callback.message.bot, callback.message.chat.id, state)
 
-    user = await get_user_by_telegram_id(session, message.from_user.id)
+    user = await get_user_by_telegram_id(session, callback.from_user.id)
     if not user:
-        await replace_status(message, state, "Используйте /start для регистрации.")
+        await replace_status(
+            callback.message, state, "Используйте /start для регистрации."
+        )
         return
 
     profile = await get_profile_by_user_id(session, user.id)
     if not profile:
-        await replace_status(message, state, "Сначала создайте анкету через /start.")
+        await replace_status(
+            callback.message, state, "Сначала создайте анкету через /start."
+        )
         return
 
-    await _show_next(message, session, redis, user.id, state)
+    await _show_next(callback.message, session, redis, user.id, state)
 
 
 @router.callback_query(F.data.startswith("like:"))
@@ -190,5 +193,5 @@ async def stop_browsing(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer()
     await cleanup_ui(callback.message.bot, callback.message.chat.id, state)
     await replace_status(
-        callback.message, state, "Главное меню", reply_markup=main_menu_keyboard()
+        callback.message, state, "Главное меню", reply_markup=main_menu_inline()
     )

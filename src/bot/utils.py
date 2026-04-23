@@ -38,14 +38,6 @@ async def cleanup_ui(bot: Bot, chat_id: int, state: FSMContext) -> None:
     await state.update_data(**{k: None for k in TRACKED_UI_KEYS})
 
 
-async def safe_delete_user_message(message: Message) -> None:
-    """Remove the user's inbound message (e.g. reply-keyboard tap) to keep chat clean."""
-    try:
-        await message.delete()
-    except Exception:
-        pass
-
-
 async def replace_status(
     message: Message,
     state: FSMContext,

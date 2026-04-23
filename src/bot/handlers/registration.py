@@ -3,19 +3,18 @@ from datetime import date
 
 from aiogram import Bot, F, Router
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
+from aiogram.types import CallbackQuery, Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.bot.keyboards.reply import (
-    confirm_keyboard,
-    gender_keyboard,
-    main_menu_keyboard,
-    photo_done_keyboard,
-    remove_keyboard,
-    skip_keyboard,
+from src.bot.keyboards.inline import (
+    confirm_registration_inline,
+    gender_inline,
+    main_menu_inline,
+    photo_done_inline,
+    skip_bio_inline,
 )
 from src.bot.states.registration import RegistrationState
-from src.bot.utils import replace_status, safe_delete_user_message
+from src.bot.utils import replace_status
 from src.services.profile import add_photo, create_profile
 from src.services.storage import ensure_bucket, upload_photo
 
@@ -66,28 +65,27 @@ async def process_age(message: Message, state: FSMContext) -> None:
 
     await state.update_data(age=age, birth_date=birth_date.isoformat())
     await state.set_state(RegistrationState.waiting_for_gender)
-    await message.answer("Укажите ваш пол:", reply_markup=gender_keyboard())
+    await message.answer("Укажите ваш пол:", reply_markup=gender_inline())
 
 
 # --- Gender ---
 
 
-@router.message(
-    RegistrationState.waiting_for_gender, F.text.in_({"Мужской", "Женский"})
+@router.callback_query(
+    RegistrationState.waiting_for_gender, F.data.startswith("gender:")
 )
-async def process_gender(message: Message, state: FSMContext) -> None:
-    await safe_delete_user_message(message)
-    gender = "male" if message.text == "Мужской" else "female"
+async def process_gender(callback: CallbackQuery, state: FSMContext) -> None:
+    gender = callback.data.split(":")[1]
+    gender_text = "Мужской" if gender == "male" else "Женский"
     await state.update_data(gender=gender)
     await state.set_state(RegistrationState.waiting_for_city)
-    await message.answer("В каком вы городе?", reply_markup=remove_keyboard)
 
-
-@router.message(RegistrationState.waiting_for_gender)
-async def process_gender_invalid(message: Message) -> None:
-    await message.answer(
-        "Выберите один из вариантов на клавиатуре:", reply_markup=gender_keyboard()
-    )
+    await callback.answer()
+    try:
+        await callback.message.edit_text(f"Пол: <b>{gender_text}</b>")
+    except Exception:
+        pass
+    await callback.message.answer("В каком вы городе?")
 
 
 # --- City ---
@@ -103,34 +101,41 @@ async def process_city(message: Message, state: FSMContext) -> None:
     await state.update_data(city=city)
     await state.set_state(RegistrationState.waiting_for_bio)
     await message.answer(
-        'Расскажите о себе (до 500 символов).\nИли нажмите "Пропустить".',
-        reply_markup=skip_keyboard(),
+        "Расскажите о себе (до 500 символов) или нажмите кнопку, чтобы пропустить.",
+        reply_markup=skip_bio_inline(),
     )
 
 
 # --- Bio ---
 
 
-@router.message(RegistrationState.waiting_for_bio, F.text)
-async def process_bio(message: Message, state: FSMContext) -> None:
-    if message.text.strip() == "Пропустить":
-        await safe_delete_user_message(message)
-        await state.update_data(bio=None)
-    else:
-        bio = message.text.strip()
-        if len(bio) > 500:
-            await message.answer(
-                "Описание не должно превышать 500 символов. Попробуйте короче:"
-            )
-            return
-        await state.update_data(bio=bio)
-
+async def _advance_to_photos(message: Message, state: FSMContext) -> None:
     await state.update_data(photos=[])
     await state.set_state(RegistrationState.waiting_for_photo)
-    await message.answer(
-        "Отправьте хотя бы 1 фото (максимум 6).",
-        reply_markup=remove_keyboard,
-    )
+    await message.answer("Отправьте хотя бы 1 фото (максимум 6).")
+
+
+@router.message(RegistrationState.waiting_for_bio, F.text)
+async def process_bio(message: Message, state: FSMContext) -> None:
+    bio = message.text.strip()
+    if len(bio) > 500:
+        await message.answer(
+            "Описание не должно превышать 500 символов. Попробуйте короче:"
+        )
+        return
+    await state.update_data(bio=bio)
+    await _advance_to_photos(message, state)
+
+
+@router.callback_query(RegistrationState.waiting_for_bio, F.data == "bio:skip")
+async def process_bio_skip(callback: CallbackQuery, state: FSMContext) -> None:
+    await state.update_data(bio=None)
+    await callback.answer()
+    try:
+        await callback.message.edit_reply_markup(reply_markup=None)
+    except Exception:
+        pass
+    await _advance_to_photos(callback.message, state)
 
 
 # --- Photos ---
@@ -159,20 +164,27 @@ async def process_photo(message: Message, state: FSMContext, bot: Bot) -> None:
 
     await state.update_data(photos=photos)
     await message.answer(
-        f'Фото добавлено ({len(photos)}/{MAX_PHOTOS}). Когда закончите — нажмите "Готово".',
-        reply_markup=photo_done_keyboard(),
+        f"Фото добавлено ({len(photos)}/{MAX_PHOTOS}). Когда закончите — нажмите кнопку.",
+        reply_markup=photo_done_inline(),
     )
 
 
-@router.message(RegistrationState.waiting_for_photo, F.text == "Готово")
-async def process_photo_done(message: Message, state: FSMContext) -> None:
-    await safe_delete_user_message(message)
+@router.callback_query(
+    RegistrationState.waiting_for_photo, F.data == "reg:photos_done"
+)
+async def process_photo_done(callback: CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
     photos: list[str] = data.get("photos", [])
 
     if not photos:
-        await message.answer("Нужно загрузить хотя бы 1 фото:")
+        await callback.answer("Нужно загрузить хотя бы 1 фото", show_alert=True)
         return
+
+    await callback.answer()
+    try:
+        await callback.message.edit_reply_markup(reply_markup=None)
+    except Exception:
+        pass
 
     await state.set_state(RegistrationState.confirm)
 
@@ -189,7 +201,9 @@ async def process_photo_done(message: Message, state: FSMContext) -> None:
         f"<b>Фото:</b> {len(photos)} шт.\n\n"
         "Всё верно?"
     )
-    sent = await message.answer(summary, reply_markup=confirm_keyboard())
+    sent = await callback.message.answer(
+        summary, reply_markup=confirm_registration_inline()
+    )
     await state.update_data(reg_summary_id=sent.message_id)
 
 
@@ -199,8 +213,8 @@ async def process_photo_invalid(message: Message, state: FSMContext) -> None:
     photos: list[str] = data.get("photos", [])
     if photos:
         await message.answer(
-            'Отправьте фото или нажмите "Готово".',
-            reply_markup=photo_done_keyboard(),
+            "Отправьте фото или нажмите кнопку ниже.",
+            reply_markup=photo_done_inline(),
         )
     else:
         await message.answer("Отправьте фото.")
@@ -209,17 +223,19 @@ async def process_photo_invalid(message: Message, state: FSMContext) -> None:
 # --- Confirm ---
 
 
-@router.message(RegistrationState.confirm, F.text == "Сохранить")
+@router.callback_query(RegistrationState.confirm, F.data == "reg:save")
 async def process_confirm_save(
-    message: Message, state: FSMContext, session: AsyncSession
+    callback: CallbackQuery, state: FSMContext, session: AsyncSession
 ) -> None:
-    await safe_delete_user_message(message)
+    await callback.answer()
     data = await state.get_data()
 
     summary_id = data.get("reg_summary_id")
     if summary_id:
         try:
-            await message.bot.delete_message(message.chat.id, summary_id)
+            await callback.message.bot.delete_message(
+                callback.message.chat.id, summary_id
+            )
         except Exception:
             pass
 
@@ -240,27 +256,31 @@ async def process_confirm_save(
     await state.clear()
 
     await replace_status(
-        message,
+        callback.message,
         state,
         f"Анкета создана, {data['name']}! Добро пожаловать!",
-        reply_markup=main_menu_keyboard(),
+        reply_markup=main_menu_inline(),
     )
 
 
-@router.message(RegistrationState.confirm, F.text == "Заново")
-async def process_confirm_restart(message: Message, state: FSMContext) -> None:
-    await safe_delete_user_message(message)
+@router.callback_query(RegistrationState.confirm, F.data == "reg:restart")
+async def process_confirm_restart(
+    callback: CallbackQuery, state: FSMContext
+) -> None:
+    await callback.answer()
     data = await state.get_data()
     user_id = data["user_id"]
 
     summary_id = data.get("reg_summary_id")
     if summary_id:
         try:
-            await message.bot.delete_message(message.chat.id, summary_id)
+            await callback.message.bot.delete_message(
+                callback.message.chat.id, summary_id
+            )
         except Exception:
             pass
 
     await state.clear()
     await state.update_data(user_id=user_id)
     await state.set_state(RegistrationState.waiting_for_name)
-    await message.answer("Начнём заново. Как вас зовут?", reply_markup=remove_keyboard)
+    await callback.message.answer("Начнём заново. Как вас зовут?")

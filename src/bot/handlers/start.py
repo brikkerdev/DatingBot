@@ -1,10 +1,11 @@
 from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
+from aiogram.types import CallbackQuery, Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.bot.keyboards.reply import main_menu_keyboard, remove_keyboard
+from src.bot.keyboards.inline import main_menu_inline
+from src.bot.keyboards.reply import remove_keyboard
 from src.bot.states.registration import RegistrationState
 from src.bot.utils import cleanup_ui, replace_status
 from src.services.profile import get_profile_by_user_id
@@ -43,7 +44,7 @@ async def cmd_start_deep(
                 message,
                 state,
                 f"С возвращением, {profile.name}!",
-                reply_markup=main_menu_keyboard(),
+                reply_markup=main_menu_inline(),
             )
             return
 
@@ -71,7 +72,7 @@ async def cmd_start(message: Message, state: FSMContext, session: AsyncSession) 
                 message,
                 state,
                 f"С возвращением, {profile.name}!",
-                reply_markup=main_menu_keyboard(),
+                reply_markup=main_menu_inline(),
             )
             return
 
@@ -85,17 +86,20 @@ async def cmd_start(message: Message, state: FSMContext, session: AsyncSession) 
     )
 
 
-async def _show_invite(message: Message, state: FSMContext, session: AsyncSession) -> None:
-    from src.bot.utils import replace_status
-
-    user = await get_user_by_telegram_id(session, message.from_user.id)
+async def _show_invite(
+    message: Message,
+    state: FSMContext,
+    session: AsyncSession,
+    telegram_id: int,
+) -> None:
+    user = await get_user_by_telegram_id(session, telegram_id)
     if not user:
         await replace_status(message, state, "Используйте /start для регистрации.")
         return
 
     count = await get_referral_count(session, user.id)
     bot_info = await message.bot.get_me()
-    link = f"https://t.me/{bot_info.username}?start=ref_{message.from_user.id}"
+    link = f"https://t.me/{bot_info.username}?start=ref_{telegram_id}"
     await replace_status(
         message,
         state,
@@ -105,6 +109,7 @@ async def _show_invite(message: Message, state: FSMContext, session: AsyncSessio
         f"<code>{link}</code>\n\n"
         f"Приглашено друзей: <b>{count}</b>\n"
         "Каждый друг даёт +20 к рейтингу (макс 100).",
+        reply_markup=main_menu_inline(),
     )
 
 
@@ -112,15 +117,13 @@ async def _show_invite(message: Message, state: FSMContext, session: AsyncSessio
 async def cmd_invite(
     message: Message, state: FSMContext, session: AsyncSession
 ) -> None:
-    await _show_invite(message, state, session)
+    await _show_invite(message, state, session, message.from_user.id)
 
 
-@router.message(F.text == "Пригласить друга")
+@router.callback_query(F.data == "menu:invite")
 async def btn_invite(
-    message: Message, state: FSMContext, session: AsyncSession
+    callback: CallbackQuery, state: FSMContext, session: AsyncSession
 ) -> None:
-    from src.bot.utils import cleanup_ui, safe_delete_user_message
-
-    await safe_delete_user_message(message)
-    await cleanup_ui(message.bot, message.chat.id, state)
-    await _show_invite(message, state, session)
+    await callback.answer()
+    await cleanup_ui(callback.message.bot, callback.message.chat.id, state)
+    await _show_invite(callback.message, state, session, callback.from_user.id)

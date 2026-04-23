@@ -1,17 +1,16 @@
 from aiogram import Bot, F, Router
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
+from aiogram.types import CallbackQuery
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.bot.keyboards.reply import (
-    confirm_delete_keyboard,
-    main_menu_keyboard,
-    profile_actions_keyboard,
+from src.bot.keyboards.inline import (
+    confirm_delete_inline,
+    main_menu_inline,
+    profile_actions_inline,
 )
 from src.bot.utils import (
     cleanup_ui,
     replace_status,
-    safe_delete_user_message,
     send_profile_preview,
 )
 from src.db.models.user import User
@@ -24,26 +23,28 @@ from src.services.user import get_user_by_telegram_id
 router = Router()
 
 
-@router.message(F.text == "Моя анкета")
+@router.callback_query(F.data == "menu:profile")
 async def show_my_profile(
-    message: Message, state: FSMContext, session: AsyncSession
+    callback: CallbackQuery, state: FSMContext, session: AsyncSession
 ) -> None:
-    await safe_delete_user_message(message)
-    await cleanup_ui(message.bot, message.chat.id, state)
+    await callback.answer()
+    await cleanup_ui(callback.message.bot, callback.message.chat.id, state)
 
-    user = await get_user_by_telegram_id(session, message.from_user.id)
+    user = await get_user_by_telegram_id(session, callback.from_user.id)
     if not user:
-        await replace_status(message, state, "Используйте /start для регистрации.")
+        await replace_status(
+            callback.message, state, "Используйте /start для регистрации."
+        )
         return
 
     profile = await get_profile_by_user_id(session, user.id)
     if not profile:
         await replace_status(
-            message, state, "У вас ещё нет анкеты. Используйте /start."
+            callback.message, state, "У вас ещё нет анкеты. Используйте /start."
         )
         return
 
-    preview_ids = await send_profile_preview(message, profile)
+    preview_ids = await send_profile_preview(callback.message, profile)
 
     rating = await recalculate_user_rating(session, user.id)
     ref_count = await get_referral_count(session, user.id)
@@ -56,8 +57,8 @@ async def show_my_profile(
         "Рейтинг влияет на то, как часто вашу анкету показывают другим.\n\n"
         "Что хотите сделать?"
     )
-    actions = await message.answer(
-        actions_text, reply_markup=profile_actions_keyboard()
+    actions = await callback.message.answer(
+        actions_text, reply_markup=profile_actions_inline()
     )
     await state.update_data(
         profile_preview_ids=preview_ids,
@@ -65,21 +66,21 @@ async def show_my_profile(
     )
 
 
-@router.message(F.text == "Удалить анкету")
+@router.callback_query(F.data == "prof:delete")
 async def confirm_delete(
-    message: Message, state: FSMContext, session: AsyncSession
+    callback: CallbackQuery, state: FSMContext, session: AsyncSession
 ) -> None:
-    await safe_delete_user_message(message)
+    await callback.answer()
 
-    user = await get_user_by_telegram_id(session, message.from_user.id)
+    user = await get_user_by_telegram_id(session, callback.from_user.id)
     if not user:
         return
 
     profile = await get_profile_by_user_id(session, user.id)
     if not profile:
-        await cleanup_ui(message.bot, message.chat.id, state)
+        await cleanup_ui(callback.message.bot, callback.message.chat.id, state)
         await replace_status(
-            message, state, "У вас нет анкеты.", reply_markup=main_menu_keyboard()
+            callback.message, state, "У вас нет анкеты.", reply_markup=main_menu_inline()
         )
         return
 
@@ -87,13 +88,15 @@ async def confirm_delete(
     actions_id = data.get("profile_actions_id")
     if actions_id:
         try:
-            await message.bot.delete_message(message.chat.id, actions_id)
+            await callback.message.bot.delete_message(
+                callback.message.chat.id, actions_id
+            )
         except Exception:
             pass
 
-    sent = await message.answer(
+    sent = await callback.message.answer(
         "Вы уверены? Анкета и все фото будут удалены безвозвратно.",
-        reply_markup=confirm_delete_keyboard(),
+        reply_markup=confirm_delete_inline(),
     )
     await state.update_data(
         profile_actions_id=None,
@@ -101,13 +104,13 @@ async def confirm_delete(
     )
 
 
-@router.message(F.text == "Да, удалить анкету")
+@router.callback_query(F.data == "del:yes")
 async def do_delete(
-    message: Message, state: FSMContext, session: AsyncSession, bot: Bot
+    callback: CallbackQuery, state: FSMContext, session: AsyncSession, bot: Bot
 ) -> None:
-    await safe_delete_user_message(message)
+    await callback.answer()
 
-    user = await get_user_by_telegram_id(session, message.from_user.id)
+    user = await get_user_by_telegram_id(session, callback.from_user.id)
     if not user:
         return
 
@@ -131,29 +134,29 @@ async def do_delete(
             except Exception:
                 pass
 
-    await cleanup_ui(message.bot, message.chat.id, state)
+    await cleanup_ui(callback.message.bot, callback.message.chat.id, state)
     await replace_status(
-        message,
+        callback.message,
         state,
         "Анкета удалена. Используйте /start чтобы создать новую.",
-        reply_markup=main_menu_keyboard(),
     )
 
 
-@router.message(F.text == "Отмена")
-async def cancel_delete(message: Message, state: FSMContext) -> None:
-    await safe_delete_user_message(message)
-
+@router.callback_query(F.data == "del:no")
+async def cancel_delete(callback: CallbackQuery, state: FSMContext) -> None:
+    await callback.answer()
     data = await state.get_data()
     confirm_id = data.get("profile_confirm_id")
     if confirm_id:
         try:
-            await message.bot.delete_message(message.chat.id, confirm_id)
+            await callback.message.bot.delete_message(
+                callback.message.chat.id, confirm_id
+            )
         except Exception:
             pass
 
-    sent = await message.answer(
-        "Что хотите сделать?", reply_markup=profile_actions_keyboard()
+    sent = await callback.message.answer(
+        "Что хотите сделать?", reply_markup=profile_actions_inline()
     )
     await state.update_data(
         profile_confirm_id=None,
@@ -161,10 +164,10 @@ async def cancel_delete(message: Message, state: FSMContext) -> None:
     )
 
 
-@router.message(F.text == "Назад в меню")
-async def back_to_menu(message: Message, state: FSMContext) -> None:
-    await safe_delete_user_message(message)
-    await cleanup_ui(message.bot, message.chat.id, state)
+@router.callback_query(F.data == "prof:back")
+async def back_to_menu(callback: CallbackQuery, state: FSMContext) -> None:
+    await callback.answer()
+    await cleanup_ui(callback.message.bot, callback.message.chat.id, state)
     await replace_status(
-        message, state, "Главное меню", reply_markup=main_menu_keyboard()
+        callback.message, state, "Главное меню", reply_markup=main_menu_inline()
     )

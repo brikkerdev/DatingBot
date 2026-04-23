@@ -6,13 +6,15 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.bot.keyboards.inline import edit_profile_keyboard, photo_manage_keyboard
-from src.bot.keyboards.reply import (
-    gender_keyboard,
-    main_menu_keyboard,
-    remove_keyboard,
-    skip_keyboard,
+from src.bot.keyboards.inline import (
+    cancel_add_photo_inline,
+    edit_profile_keyboard,
+    gender_inline,
+    main_menu_inline,
+    photo_manage_keyboard,
+    skip_bio_inline,
 )
+from src.bot.keyboards.reply import remove_keyboard
 from src.bot.states.registration import EditProfileState
 from src.services.profile import (
     add_photo,
@@ -26,7 +28,6 @@ from src.services.user import get_user_by_telegram_id
 from src.bot.utils import (
     cleanup_ui,
     format_profile_text,
-    safe_delete_user_message,
     send_profile_preview,
 )
 
@@ -143,27 +144,27 @@ async def _send_photo_editor(
 # --- Entry point ---
 
 
-@router.message(F.text == "Редактировать анкету")
+@router.callback_query(F.data == "prof:edit")
 async def start_edit(
-    message: Message, state: FSMContext, session: AsyncSession
+    callback: CallbackQuery, state: FSMContext, session: AsyncSession
 ) -> None:
-    await safe_delete_user_message(message)
-    await cleanup_ui(message.bot, message.chat.id, state)
+    await callback.answer()
+    await cleanup_ui(callback.message.bot, callback.message.chat.id, state)
 
-    user = await get_user_by_telegram_id(session, message.from_user.id)
+    user = await get_user_by_telegram_id(session, callback.from_user.id)
     if not user:
-        await message.answer("Используйте /start для регистрации.")
+        await callback.message.answer("Используйте /start для регистрации.")
         return
 
     profile = await get_profile_by_user_id(session, user.id)
     if not profile:
-        await message.answer("У вас ещё нет анкеты. Используйте /start.")
+        await callback.message.answer("У вас ещё нет анкеты. Используйте /start.")
         return
 
-    preview_ids = await send_profile_preview(message, profile)
+    preview_ids = await send_profile_preview(callback.message, profile)
 
     await state.set_state(EditProfileState.choosing_field)
-    sent = await message.answer(
+    sent = await callback.message.answer(
         "Что хотите изменить?", reply_markup=edit_profile_keyboard()
     )
     await state.update_data(
@@ -196,7 +197,7 @@ async def edit_age_start(callback: CallbackQuery, state: FSMContext) -> None:
 async def edit_gender_start(callback: CallbackQuery, state: FSMContext) -> None:
     await state.set_state(EditProfileState.editing_gender)
     await callback.answer()
-    await callback.message.answer("Выберите пол:", reply_markup=gender_keyboard())
+    await callback.message.answer("Выберите пол:", reply_markup=gender_inline())
 
 
 @router.callback_query(EditProfileState.choosing_field, F.data == "edit:city")
@@ -211,8 +212,8 @@ async def edit_bio_start(callback: CallbackQuery, state: FSMContext) -> None:
     await state.set_state(EditProfileState.editing_bio)
     await callback.answer()
     await callback.message.answer(
-        'Введите новое описание (до 500 символов) или "Пропустить" чтобы убрать:',
-        reply_markup=skip_keyboard(),
+        "Введите новое описание (до 500 символов) или нажмите кнопку, чтобы убрать:",
+        reply_markup=skip_bio_inline(),
     )
 
 
@@ -251,7 +252,7 @@ async def edit_cancel(
         pass
     await state.clear()
     await callback.answer()
-    await callback.message.answer("Главное меню", reply_markup=main_menu_keyboard())
+    await callback.message.answer("Главное меню", reply_markup=main_menu_inline())
 
 
 # --- Text field editors ---
@@ -306,25 +307,29 @@ async def edit_age_save(
     )
 
 
-@router.message(EditProfileState.editing_gender, F.text.in_({"Мужской", "Женский"}))
+@router.callback_query(EditProfileState.editing_gender, F.data.startswith("gender:"))
 async def edit_gender_save(
-    message: Message, state: FSMContext, session: AsyncSession
+    callback: CallbackQuery, state: FSMContext, session: AsyncSession
 ) -> None:
-    gender = "male" if message.text == "Мужской" else "female"
+    gender = callback.data.split(":")[1]
+    gender_text = "Мужской" if gender == "male" else "Женский"
 
     data = await state.get_data()
     profile = await get_profile_by_user_id(session, data["user_id"])
     await update_profile(session, profile, gender=gender)
 
+    await callback.answer()
+    try:
+        await callback.message.edit_reply_markup(reply_markup=None)
+    except Exception:
+        pass
+
     await state.set_state(EditProfileState.choosing_field)
     await _replace_edit_menu(
-        message, state, f"Пол изменён на <b>{message.text}</b>.\n\nЧто ещё изменить?"
+        callback.message,
+        state,
+        f"Пол изменён на <b>{gender_text}</b>.\n\nЧто ещё изменить?",
     )
-
-
-@router.message(EditProfileState.editing_gender)
-async def edit_gender_invalid(message: Message) -> None:
-    await message.answer("Выберите на клавиатуре:", reply_markup=gender_keyboard())
 
 
 @router.message(EditProfileState.editing_city, F.text)
@@ -350,24 +355,40 @@ async def edit_city_save(
 async def edit_bio_save(
     message: Message, state: FSMContext, session: AsyncSession
 ) -> None:
-    if message.text.strip() == "Пропустить":
-        bio = None
-    else:
-        bio = message.text.strip()
-        if len(bio) > 500:
-            await message.answer("Максимум 500 символов:")
-            return
+    bio = message.text.strip()
+    if len(bio) > 500:
+        await message.answer("Максимум 500 символов:")
+        return
 
     data = await state.get_data()
     profile = await get_profile_by_user_id(session, data["user_id"])
     await update_profile(session, profile, bio=bio)
 
-    display = bio or "убрано"
     await state.set_state(EditProfileState.choosing_field)
     await _replace_edit_menu(
         message,
         state,
-        f"Описание обновлено: <b>{display}</b>.\n\nЧто ещё изменить?",
+        f"Описание обновлено: <b>{bio}</b>.\n\nЧто ещё изменить?",
+    )
+
+
+@router.callback_query(EditProfileState.editing_bio, F.data == "bio:skip")
+async def edit_bio_skip(
+    callback: CallbackQuery, state: FSMContext, session: AsyncSession
+) -> None:
+    data = await state.get_data()
+    profile = await get_profile_by_user_id(session, data["user_id"])
+    await update_profile(session, profile, bio=None)
+
+    await callback.answer()
+    try:
+        await callback.message.edit_reply_markup(reply_markup=None)
+    except Exception:
+        pass
+
+    await state.set_state(EditProfileState.choosing_field)
+    await _replace_edit_menu(
+        callback.message, state, "Описание убрано.\n\nЧто ещё изменить?"
     )
 
 
@@ -468,9 +489,22 @@ async def photo_move_down(
 
 
 @router.callback_query(EditProfileState.editing_photo, F.data == "ph_add")
-async def photo_add_prompt(callback: CallbackQuery) -> None:
+async def photo_add_prompt(callback: CallbackQuery, state: FSMContext) -> None:
     await callback.answer()
-    await callback.message.answer("Отправьте фото:")
+    sent = await callback.message.answer(
+        "Отправьте фото:", reply_markup=cancel_add_photo_inline()
+    )
+    await state.update_data(ph_add_prompt_id=sent.message_id)
+
+
+@router.callback_query(EditProfileState.editing_photo, F.data == "ph_cancel_add")
+async def photo_add_cancel(callback: CallbackQuery, state: FSMContext) -> None:
+    await callback.answer()
+    try:
+        await callback.message.delete()
+    except Exception:
+        pass
+    await state.update_data(ph_add_prompt_id=None)
 
 
 @router.message(EditProfileState.editing_photo, F.photo)
@@ -481,6 +515,14 @@ async def photo_add_receive(
     bot: Bot,
 ) -> None:
     data = await state.get_data()
+    prompt_id = data.get("ph_add_prompt_id")
+    if prompt_id:
+        try:
+            await bot.delete_message(message.chat.id, prompt_id)
+        except Exception:
+            pass
+        await state.update_data(ph_add_prompt_id=None)
+
     profile = await _get_fresh_profile(session, data["user_id"])
     if not profile:
         return

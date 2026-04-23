@@ -107,10 +107,14 @@ CREATE TABLE messages (
     match_id     BIGINT NOT NULL REFERENCES matches (id) ON DELETE CASCADE,
     from_user_id BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     content      TEXT NOT NULL,
+    read_at      TIMESTAMPTZ,
     created_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX idx_messages_match_created ON messages (match_id, created_at);
+CREATE INDEX idx_messages_unread
+    ON messages (match_id, from_user_id)
+    WHERE read_at IS NULL;
 
 -- -----------------------------------------------
 -- Рейтинги (для ранжирования, пересчёт через Celery)
