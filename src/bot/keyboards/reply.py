@@ -33,7 +33,6 @@ def photo_done_keyboard() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         keyboard=[[KeyboardButton(text="Готово")]],
         resize_keyboard=True,
-        one_time_keyboard=True,
     )
 
 
@@ -42,6 +41,7 @@ def main_menu_keyboard() -> ReplyKeyboardMarkup:
         keyboard=[
             [KeyboardButton(text="Смотреть анкеты")],
             [KeyboardButton(text="Моя анкета"), KeyboardButton(text="Мэтчи")],
+            [KeyboardButton(text="Пригласить друга")],
         ],
         resize_keyboard=True,
     )

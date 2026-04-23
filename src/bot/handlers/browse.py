@@ -1,12 +1,14 @@
 from datetime import date
 
 from aiogram import Bot, F, Router
+from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.bot.keyboards.inline import like_pass_keyboard
 from src.bot.keyboards.reply import main_menu_keyboard
+from src.bot.utils import cleanup_ui, replace_status, safe_delete_user_message
 from src.db.models.profile import Profile
 from src.services.interaction import get_next_profiles, record_like, record_pass
 from src.services.profile import get_profile_by_user_id
@@ -41,74 +43,101 @@ def _format_card_from_dict(d: dict) -> str:
     )
 
 
+async def _delete_prev_card(bot: Bot, chat_id: int, state: FSMContext) -> None:
+    data = await state.get_data()
+    prev = data.get("browse_card_id")
+    if prev:
+        try:
+            await bot.delete_message(chat_id, prev)
+        except Exception:
+            pass
+    await state.update_data(browse_card_id=None)
+
+
 async def _send_card(
-    message: Message, text: str, photo: str, target_user_id: int
+    message: Message,
+    text: str,
+    photo: str,
+    target_user_id: int,
+    state: FSMContext,
 ) -> None:
+    await _delete_prev_card(message.bot, message.chat.id, state)
+
     keyboard = like_pass_keyboard(target_user_id)
     if photo:
-        await message.answer_photo(
+        sent = await message.answer_photo(
             photo=await resolve_photo(photo), caption=text, reply_markup=keyboard
         )
     else:
-        await message.answer(text, reply_markup=keyboard)
+        sent = await message.answer(text, reply_markup=keyboard)
+
+    await state.update_data(browse_card_id=sent.message_id)
 
 
 async def _show_next(
-    message: Message, session: AsyncSession, redis: Redis, user_id: int
+    message: Message,
+    session: AsyncSession,
+    redis: Redis,
+    user_id: int,
+    state: FSMContext,
 ) -> None:
     """Show next profile — from Redis queue, or refill from DB."""
-    # Try Redis cache first
     cached = await pop_profile(redis, user_id)
     if cached:
         text = _format_card_from_dict(cached)
-        await _send_card(message, text, cached.get("photo", ""), cached["user_id"])
+        await _send_card(
+            message, text, cached.get("photo", ""), cached["user_id"], state
+        )
 
-        # If queue is now empty, refill — exclude the just-shown profile since
-        # the like/pass hasn't been recorded yet and it would come back on top.
         if await queue_length(redis, user_id) == 0:
             await fill_queue(
                 redis, session, user_id, exclude_user_ids={cached["user_id"]}
             )
         return
 
-    # Cache empty — load from DB (first call or cache expired)
     profiles = await get_next_profiles(session, user_id, limit=1)
     if not profiles:
-        await message.answer(
-            "Анкеты закончились. Загляните позже!", reply_markup=main_menu_keyboard()
+        await _delete_prev_card(message.bot, message.chat.id, state)
+        await replace_status(
+            message,
+            state,
+            "Анкеты закончились. Загляните позже!",
+            reply_markup=main_menu_keyboard(),
         )
         return
 
     profile = profiles[0]
     text = _format_card(profile)
     photo = profile.photos[0].storage_path if profile.photos else ""
-    await _send_card(message, text, photo, profile.user_id)
+    await _send_card(message, text, photo, profile.user_id, state)
 
-    # Pre-fill queue with next batch, excluding the profile we just showed so
-    # it doesn't get served again before the user acts on it.
     await fill_queue(redis, session, user_id, exclude_user_ids={profile.user_id})
 
 
 @router.message(F.text == "Смотреть анкеты")
 async def browse_profiles(
-    message: Message, session: AsyncSession, redis: Redis
+    message: Message, state: FSMContext, session: AsyncSession, redis: Redis
 ) -> None:
+    await safe_delete_user_message(message)
+    await cleanup_ui(message.bot, message.chat.id, state)
+
     user = await get_user_by_telegram_id(session, message.from_user.id)
     if not user:
-        await message.answer("Используйте /start для регистрации.")
+        await replace_status(message, state, "Используйте /start для регистрации.")
         return
 
     profile = await get_profile_by_user_id(session, user.id)
     if not profile:
-        await message.answer("Сначала создайте анкету через /start.")
+        await replace_status(message, state, "Сначала создайте анкету через /start.")
         return
 
-    await _show_next(message, session, redis, user.id)
+    await _show_next(message, session, redis, user.id, state)
 
 
 @router.callback_query(F.data.startswith("like:"))
 async def process_like(
     callback: CallbackQuery,
+    state: FSMContext,
     session: AsyncSession,
     bot: Bot,
     redis: Redis,
@@ -129,23 +158,19 @@ async def process_like(
         await callback.message.answer(
             f"<b>Мэтч!</b> Вы понравились <b>{partner_name}</b>!\n"
             f"Загляните в «Мэтчи», чтобы начать общение.",
-            reply_markup=main_menu_keyboard(),
         )
-        # Partner notification is handled by the notification consumer via MQ
     else:
         await callback.answer("Like!")
 
-    try:
-        await callback.message.edit_reply_markup(reply_markup=None)
-    except Exception:
-        pass
-
-    await _show_next(callback.message, session, redis, user.id)
+    await _show_next(callback.message, session, redis, user.id, state)
 
 
 @router.callback_query(F.data.startswith("pass:"))
 async def process_pass(
-    callback: CallbackQuery, session: AsyncSession, redis: Redis
+    callback: CallbackQuery,
+    state: FSMContext,
+    session: AsyncSession,
+    redis: Redis,
 ) -> None:
     target_user_id = int(callback.data.split(":")[1])
 
@@ -157,9 +182,13 @@ async def process_pass(
     await record_pass(session, user.id, target_user_id)
     await callback.answer("Skip")
 
-    try:
-        await callback.message.edit_reply_markup(reply_markup=None)
-    except Exception:
-        pass
+    await _show_next(callback.message, session, redis, user.id, state)
 
-    await _show_next(callback.message, session, redis, user.id)
+
+@router.callback_query(F.data == "browse_stop")
+async def stop_browsing(callback: CallbackQuery, state: FSMContext) -> None:
+    await callback.answer()
+    await cleanup_ui(callback.message.bot, callback.message.chat.id, state)
+    await replace_status(
+        callback.message, state, "Главное меню", reply_markup=main_menu_keyboard()
+    )

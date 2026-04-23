@@ -7,7 +7,12 @@ def like_pass_keyboard(target_user_id: int) -> InlineKeyboardMarkup:
             [
                 InlineKeyboardButton(text="❤️", callback_data=f"like:{target_user_id}"),
                 InlineKeyboardButton(text="👎", callback_data=f"pass:{target_user_id}"),
-            ]
+            ],
+            [
+                InlineKeyboardButton(
+                    text="⬅️ В меню", callback_data="browse_stop"
+                ),
+            ],
         ]
     )
 

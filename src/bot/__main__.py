@@ -6,6 +6,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.redis import RedisStorage
+from aiogram.types import BotCommand
 from redis.asyncio import Redis
 
 from src.bot.handlers import router
@@ -45,10 +46,20 @@ def create_dispatcher() -> Dispatcher:
     return dp
 
 
+async def set_bot_commands(bot: Bot) -> None:
+    await bot.set_my_commands(
+        [
+            BotCommand(command="start", description="Запустить / вернуться в меню"),
+            BotCommand(command="invite", description="Пригласить друга"),
+        ]
+    )
+
+
 async def run_polling() -> None:
     bot = create_bot()
     dp = create_dispatcher()
     await bot.delete_webhook(drop_pending_updates=True)
+    await set_bot_commands(bot)
     logger.info("Bot started (polling)")
     await dp.start_polling(bot)
 
@@ -64,6 +75,7 @@ async def run_webhook() -> None:
         f"{settings.webhook_url}{settings.webhook_path}",
         drop_pending_updates=True,
     )
+    await set_bot_commands(bot)
 
     app = web.Application()
     SimpleRequestHandler(dispatcher=dp, bot=bot).register(

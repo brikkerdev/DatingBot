@@ -1,4 +1,4 @@
-from aiogram import Router
+from aiogram import F, Router
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.bot.keyboards.reply import main_menu_keyboard, remove_keyboard
 from src.bot.states.registration import RegistrationState
+from src.bot.utils import cleanup_ui, replace_status
 from src.services.profile import get_profile_by_user_id
 from src.services.referral import create_referral, get_referral_count
 from src.services.user import get_or_create_user, get_user_by_telegram_id
@@ -37,7 +38,10 @@ async def cmd_start_deep(
     if not is_new:
         profile = await get_profile_by_user_id(session, user.id)
         if profile:
-            await message.answer(
+            await cleanup_ui(message.bot, message.chat.id, state)
+            await replace_status(
+                message,
+                state,
                 f"С возвращением, {profile.name}!",
                 reply_markup=main_menu_keyboard(),
             )
@@ -62,7 +66,10 @@ async def cmd_start(message: Message, state: FSMContext, session: AsyncSession) 
     if not is_new:
         profile = await get_profile_by_user_id(session, user.id)
         if profile:
-            await message.answer(
+            await cleanup_ui(message.bot, message.chat.id, state)
+            await replace_status(
+                message,
+                state,
                 f"С возвращением, {profile.name}!",
                 reply_markup=main_menu_keyboard(),
             )
@@ -78,19 +85,42 @@ async def cmd_start(message: Message, state: FSMContext, session: AsyncSession) 
     )
 
 
-@router.message(Command("invite"))
-async def cmd_invite(message: Message, session: AsyncSession) -> None:
-    """Generate referral link."""
+async def _show_invite(message: Message, state: FSMContext, session: AsyncSession) -> None:
+    from src.bot.utils import replace_status
+
     user = await get_user_by_telegram_id(session, message.from_user.id)
     if not user:
-        await message.answer("Используйте /start для регистрации.")
+        await replace_status(message, state, "Используйте /start для регистрации.")
         return
 
     count = await get_referral_count(session, user.id)
     bot_info = await message.bot.get_me()
     link = f"https://t.me/{bot_info.username}?start=ref_{message.from_user.id}"
-    await message.answer(
-        f"Ваша реферальная ссылка:\n<code>{link}</code>\n\n"
+    await replace_status(
+        message,
+        state,
+        "<b>Пригласите друга</b>\n\n"
+        "Отправьте эту ссылку — тот, кто перейдёт по ней и создаст анкету впервые, "
+        "будет засчитан как ваш реферал:\n"
+        f"<code>{link}</code>\n\n"
         f"Приглашено друзей: <b>{count}</b>\n"
-        f"Каждый друг даёт +20 к рейтингу (макс 100).",
+        "Каждый друг даёт +20 к рейтингу (макс 100).",
     )
+
+
+@router.message(Command("invite"))
+async def cmd_invite(
+    message: Message, state: FSMContext, session: AsyncSession
+) -> None:
+    await _show_invite(message, state, session)
+
+
+@router.message(F.text == "Пригласить друга")
+async def btn_invite(
+    message: Message, state: FSMContext, session: AsyncSession
+) -> None:
+    from src.bot.utils import cleanup_ui, safe_delete_user_message
+
+    await safe_delete_user_message(message)
+    await cleanup_ui(message.bot, message.chat.id, state)
+    await _show_invite(message, state, session)

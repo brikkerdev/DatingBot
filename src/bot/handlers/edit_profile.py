@@ -23,7 +23,12 @@ from src.services.profile import (
 )
 from src.services.storage import ensure_bucket, resolve_photo, upload_photo
 from src.services.user import get_user_by_telegram_id
-from src.bot.utils import format_profile_text, send_profile_preview
+from src.bot.utils import (
+    cleanup_ui,
+    format_profile_text,
+    safe_delete_user_message,
+    send_profile_preview,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +44,19 @@ async def _get_fresh_profile(session: AsyncSession, user_id: int):
     """Expire cache and get fresh profile with photos."""
     session.expire_all()
     return await get_profile_by_user_id(session, user_id)
+
+
+async def _replace_edit_menu(message: Message, state: FSMContext, text: str) -> None:
+    """Delete the previous edit menu, send a new one, and track it."""
+    data = await state.get_data()
+    prev = data.get("profile_actions_id")
+    if prev:
+        try:
+            await message.bot.delete_message(message.chat.id, prev)
+        except Exception:
+            pass
+    sent = await message.answer(text, reply_markup=edit_profile_keyboard())
+    await state.update_data(profile_actions_id=sent.message_id)
 
 
 async def _delete_old_preview(bot: Bot, chat_id: int, state: FSMContext) -> None:
@@ -129,6 +147,9 @@ async def _send_photo_editor(
 async def start_edit(
     message: Message, state: FSMContext, session: AsyncSession
 ) -> None:
+    await safe_delete_user_message(message)
+    await cleanup_ui(message.bot, message.chat.id, state)
+
     user = await get_user_by_telegram_id(session, message.from_user.id)
     if not user:
         await message.answer("Используйте /start для регистрации.")
@@ -139,12 +160,17 @@ async def start_edit(
         await message.answer("У вас ещё нет анкеты. Используйте /start.")
         return
 
-    # Show current profile preview first
-    await send_profile_preview(message, profile)
+    preview_ids = await send_profile_preview(message, profile)
 
     await state.set_state(EditProfileState.choosing_field)
-    await state.update_data(user_id=user.id)
-    await message.answer("Что хотите изменить?", reply_markup=edit_profile_keyboard())
+    sent = await message.answer(
+        "Что хотите изменить?", reply_markup=edit_profile_keyboard()
+    )
+    await state.update_data(
+        user_id=user.id,
+        profile_preview_ids=preview_ids,
+        profile_actions_id=sent.message_id,
+    )
 
 
 # --- Field selection callbacks ---
@@ -198,12 +224,16 @@ async def edit_photo_start(
     bot: Bot,
 ) -> None:
     data = await state.get_data()
+    user_id = data["user_id"]
+    await cleanup_ui(bot, callback.message.chat.id, state)
     await state.set_state(EditProfileState.editing_photo)
-    await state.update_data(preview_msg_ids=[], photo_mgr_msg_id=None)
+    await state.update_data(
+        user_id=user_id, preview_msg_ids=[], photo_mgr_msg_id=None
+    )
     await callback.answer()
     await _send_photo_editor(
         session,
-        data["user_id"],
+        user_id,
         bot=bot,
         chat_id=callback.message.chat.id,
         state=state,
@@ -211,7 +241,14 @@ async def edit_photo_start(
 
 
 @router.callback_query(EditProfileState.choosing_field, F.data == "edit:cancel")
-async def edit_cancel(callback: CallbackQuery, state: FSMContext) -> None:
+async def edit_cancel(
+    callback: CallbackQuery, state: FSMContext, bot: Bot
+) -> None:
+    await cleanup_ui(bot, callback.message.chat.id, state)
+    try:
+        await callback.message.delete()
+    except Exception:
+        pass
     await state.clear()
     await callback.answer()
     await callback.message.answer("Главное меню", reply_markup=main_menu_keyboard())
@@ -234,9 +271,8 @@ async def edit_name_save(
     await update_profile(session, profile, name=name)
 
     await state.set_state(EditProfileState.choosing_field)
-    await message.answer(
-        f"Имя изменено на <b>{name}</b>.\n\nЧто ещё изменить?",
-        reply_markup=edit_profile_keyboard(),
+    await _replace_edit_menu(
+        message, state, f"Имя изменено на <b>{name}</b>.\n\nЧто ещё изменить?"
     )
 
 
@@ -265,9 +301,8 @@ async def edit_age_save(
     await update_profile(session, profile, birth_date=birth_date)
 
     await state.set_state(EditProfileState.choosing_field)
-    await message.answer(
-        f"Возраст изменён на <b>{age}</b>.\n\nЧто ещё изменить?",
-        reply_markup=edit_profile_keyboard(),
+    await _replace_edit_menu(
+        message, state, f"Возраст изменён на <b>{age}</b>.\n\nЧто ещё изменить?"
     )
 
 
@@ -282,9 +317,8 @@ async def edit_gender_save(
     await update_profile(session, profile, gender=gender)
 
     await state.set_state(EditProfileState.choosing_field)
-    await message.answer(
-        f"Пол изменён на <b>{message.text}</b>.\n\nЧто ещё изменить?",
-        reply_markup=edit_profile_keyboard(),
+    await _replace_edit_menu(
+        message, state, f"Пол изменён на <b>{message.text}</b>.\n\nЧто ещё изменить?"
     )
 
 
@@ -307,9 +341,8 @@ async def edit_city_save(
     await update_profile(session, profile, city=city)
 
     await state.set_state(EditProfileState.choosing_field)
-    await message.answer(
-        f"Город изменён на <b>{city}</b>.\n\nЧто ещё изменить?",
-        reply_markup=edit_profile_keyboard(),
+    await _replace_edit_menu(
+        message, state, f"Город изменён на <b>{city}</b>.\n\nЧто ещё изменить?"
     )
 
 
@@ -331,9 +364,10 @@ async def edit_bio_save(
 
     display = bio or "убрано"
     await state.set_state(EditProfileState.choosing_field)
-    await message.answer(
+    await _replace_edit_menu(
+        message,
+        state,
         f"Описание обновлено: <b>{display}</b>.\n\nЧто ещё изменить?",
-        reply_markup=edit_profile_keyboard(),
     )
 
 
@@ -484,14 +518,10 @@ async def photo_add_receive(
 
 @router.callback_query(EditProfileState.editing_photo, F.data == "ph_done")
 async def photo_done(callback: CallbackQuery, state: FSMContext, bot: Bot) -> None:
-    # Clean up preview + manager messages
     await _delete_old_preview(bot, callback.message.chat.id, state)
     await state.set_state(EditProfileState.choosing_field)
     await callback.answer()
-    await callback.message.answer(
-        "Что ещё изменить?",
-        reply_markup=edit_profile_keyboard(),
-    )
+    await _replace_edit_menu(callback.message, state, "Что ещё изменить?")
 
 
 @router.message(EditProfileState.editing_photo)

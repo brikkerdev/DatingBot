@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.bot.keyboards.reply import main_menu_keyboard
 from src.bot.states.chat import ChatState
+from src.bot.utils import cleanup_ui, safe_delete_user_message
 from src.db.models.user import User
 from src.services.chat import (
     get_match_by_id,
@@ -35,6 +36,8 @@ async def enter_chat(
     if not user:
         await callback.answer("Ошибка")
         return
+
+    await cleanup_ui(callback.message.bot, callback.message.chat.id, state)
 
     match = await get_match_by_id(session, match_id)
     if not match or not await is_user_in_match(match, user.id):
@@ -73,6 +76,7 @@ async def enter_chat(
 
 @router.message(ChatState.in_chat, F.text == "Выйти из чата")
 async def exit_chat(message: Message, state: FSMContext) -> None:
+    await safe_delete_user_message(message)
     await state.clear()
     await message.answer("Вы вышли из чата.", reply_markup=main_menu_keyboard())
 
@@ -87,7 +91,6 @@ async def chat_message(
     data = await state.get_data()
     match_id = data["match_id"]
     partner_tg_id = data["partner_telegram_id"]
-    partner_name = data["partner_name"]
 
     user = await get_user_by_telegram_id(session, message.from_user.id)
     if not user:
@@ -96,13 +99,9 @@ async def chat_message(
     my_profile = await get_profile_by_user_id(session, user.id)
     my_name = my_profile.name if my_profile else "Собеседник"
 
-    # Save to DB (publishes message.created to MQ for ranking recalc)
     await send_message(session, match_id, user.id, message.text)
 
-    # Forward to partner DIRECTLY — chat must be instant, not through MQ
     try:
         await bot.send_message(partner_tg_id, f"<b>{my_name}:</b> {message.text}")
     except Exception:
         pass
-
-    await message.answer(f"<b>Вы → {partner_name}:</b> {message.text}")

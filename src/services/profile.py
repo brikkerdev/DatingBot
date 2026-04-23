@@ -6,6 +6,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from src.db.models.interaction import Like, Match, Pass
 from src.db.models.profile import Profile, ProfilePhoto
 from src.services.events import publish
 
@@ -140,6 +141,22 @@ async def delete_profile(
     session: AsyncSession, profile_id: int, user_id: int = 0
 ) -> None:
     await session.execute(delete(Profile).where(Profile.id == profile_id))
+    if user_id:
+        await session.execute(
+            delete(Like).where(
+                (Like.from_user_id == user_id) | (Like.to_user_id == user_id)
+            )
+        )
+        await session.execute(
+            delete(Pass).where(
+                (Pass.from_user_id == user_id) | (Pass.to_user_id == user_id)
+            )
+        )
+        await session.execute(
+            delete(Match).where(
+                (Match.user1_id == user_id) | (Match.user2_id == user_id)
+            )
+        )
     await session.commit()
     if user_id:
         publish("profile.deleted", {"user_id": user_id})
