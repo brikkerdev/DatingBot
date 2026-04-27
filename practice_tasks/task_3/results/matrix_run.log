@@ -1,0 +1,1052 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 626B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.5s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.21kB done
+#5 DONE 0.0s
+
+#6 [1/5] FROM docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3
+#6 resolve docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3 0.0s done
+#6 DONE 0.0s
+
+#7 [2/5] WORKDIR /app
+#7 CACHED
+
+#8 [3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [5/5] COPY src/ ./
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:7099df39b898fb33430cb0b86951466cbb340d37931deb124ad14e9b646f61ef done
+#11 exporting config sha256:a8eb50e3759e26a8c41e16361142c00239802b3c060e7c6e91c5b27b0e8b6e98 done
+#11 exporting attestation manifest sha256:4fcdf94e37eb7999a35ea87ca14dc598e7e502d62b4028a1f1c86d25accdc7a8 0.0s done
+#11 exporting manifest list sha256:2f1aa1d5c1dafedf4a96104364378aed47ba656ecea0289aaad106dfd25cd53e done
+#11 naming to docker.io/library/cache_bench_cache_aside-runner:latest done
+#11 unpacking to docker.io/library/cache_bench_cache_aside-runner:latest done
+#11 DONE 0.1s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ cache_bench_cache_aside-runner  Built
+ Network cache_bench_cache_aside_default  Creating
+ Network cache_bench_cache_aside_default  Created
+ Container cache_bench_cache_aside-redis-1  Creating
+ Container cache_bench_cache_aside-postgres-1  Creating
+ Container cache_bench_cache_aside-redis-1  Created
+ Container cache_bench_cache_aside-postgres-1  Created
+ Container cache_bench_cache_aside-runner-1  Creating
+ Container cache_bench_cache_aside-runner-1  Created
+ Container cache_bench_cache_aside-postgres-1  Starting
+ Container cache_bench_cache_aside-redis-1  Starting
+ Container cache_bench_cache_aside-postgres-1  Started
+ Container cache_bench_cache_aside-redis-1  Started
+ Container cache_bench_cache_aside-redis-1  Waiting
+ Container cache_bench_cache_aside-postgres-1  Waiting
+ Container cache_bench_cache_aside-postgres-1  Healthy
+ Container cache_bench_cache_aside-redis-1  Healthy
+ Container cache_bench_cache_aside-runner-1  Starting
+ Container cache_bench_cache_aside-runner-1  Started
+0
+runner-1  | [runner] run_id=cache_aside_read_heavy strategy=cache_aside profile=read_heavy read_ratio=0.8 target_rps=2000.0 duration=60s key_space=10000 value_size=256
+runner-1  | [wait_for] postgres ready (attempt 1)
+runner-1  | [wait_for] redis ready (attempt 1)
+runner-1  | [runner] seeding DB...
+runner-1  | [runner] done: {'run_id': 'cache_aside_read_heavy', 'strategy': 'cache_aside', 'profile': 'read_heavy', 'read_ratio': 0.8, 'target_rps': 2000.0, 'duration': 60, 'elapsed': 60.0, 'total_reqs': 120000, 'reads': 96052, 'writes': 23948, 'errors': 0, 'throughput_rps': 2000.0, 'avg_latency_ms': 0.381, 'p50_ms': 0.146, 'p95_ms': 1.112, 'p99_ms': 1.699, 'max_ms': 1159.139, 'cache_hits': 70455, 'cache_misses': 25597, 'hit_rate': 0.7335, 'db_reads': 25597, 'db_writes': 23948, 'wb_flushed_during': 0, 'wb_drained_at_end': 0}
+ Container cache_bench_cache_aside-runner-1  Stopping
+ Container cache_bench_cache_aside-runner-1  Stopped
+ Container cache_bench_cache_aside-runner-1  Removing
+ Container cache_bench_cache_aside-runner-1  Removed
+ Container cache_bench_cache_aside-redis-1  Stopping
+ Container cache_bench_cache_aside-postgres-1  Stopping
+ Container cache_bench_cache_aside-postgres-1  Stopped
+ Container cache_bench_cache_aside-postgres-1  Removing
+ Container cache_bench_cache_aside-postgres-1  Removed
+ Container cache_bench_cache_aside-redis-1  Stopped
+ Container cache_bench_cache_aside-redis-1  Removing
+ Container cache_bench_cache_aside-redis-1  Removed
+ Network cache_bench_cache_aside_default  Removing
+ Network cache_bench_cache_aside_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 626B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 0.9s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.21kB done
+#5 DONE 0.0s
+
+#6 [1/5] FROM docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3
+#6 resolve docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3 0.0s done
+#6 DONE 0.0s
+
+#7 [2/5] WORKDIR /app
+#7 CACHED
+
+#8 [3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [5/5] COPY src/ ./
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:7099df39b898fb33430cb0b86951466cbb340d37931deb124ad14e9b646f61ef done
+#11 exporting config sha256:a8eb50e3759e26a8c41e16361142c00239802b3c060e7c6e91c5b27b0e8b6e98 done
+#11 exporting attestation manifest sha256:68f0adaea0d43a29a9f5126e81313c1640372b17e7f7de7c923d5e20e9e247f3 0.0s done
+#11 exporting manifest list sha256:488665aab1418fabc4514a36ec08243be0ab3e2a2312a5e3373c6542f016eb24 done
+#11 naming to docker.io/library/cache_bench_cache_aside-runner:latest done
+#11 unpacking to docker.io/library/cache_bench_cache_aside-runner:latest
+#11 unpacking to docker.io/library/cache_bench_cache_aside-runner:latest 0.0s done
+#11 DONE 0.1s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ cache_bench_cache_aside-runner  Built
+ Network cache_bench_cache_aside_default  Creating
+ Network cache_bench_cache_aside_default  Created
+ Container cache_bench_cache_aside-redis-1  Creating
+ Container cache_bench_cache_aside-postgres-1  Creating
+ Container cache_bench_cache_aside-redis-1  Created
+ Container cache_bench_cache_aside-postgres-1  Created
+ Container cache_bench_cache_aside-runner-1  Creating
+ Container cache_bench_cache_aside-runner-1  Created
+ Container cache_bench_cache_aside-redis-1  Starting
+ Container cache_bench_cache_aside-postgres-1  Starting
+ Container cache_bench_cache_aside-postgres-1  Started
+ Container cache_bench_cache_aside-redis-1  Started
+ Container cache_bench_cache_aside-postgres-1  Waiting
+ Container cache_bench_cache_aside-redis-1  Waiting
+ Container cache_bench_cache_aside-redis-1  Healthy
+ Container cache_bench_cache_aside-postgres-1  Healthy
+ Container cache_bench_cache_aside-runner-1  Starting
+ Container cache_bench_cache_aside-runner-1  Started
+0
+runner-1  | [runner] run_id=cache_aside_balanced strategy=cache_aside profile=balanced read_ratio=0.5 target_rps=2000.0 duration=60s key_space=10000 value_size=256
+runner-1  | [wait_for] postgres ready (attempt 1)
+runner-1  | [wait_for] redis ready (attempt 1)
+runner-1  | [runner] seeding DB...
+runner-1  | [runner] done: {'run_id': 'cache_aside_balanced', 'strategy': 'cache_aside', 'profile': 'balanced', 'read_ratio': 0.5, 'target_rps': 2000.0, 'duration': 60, 'elapsed': 60.0, 'total_reqs': 108949, 'reads': 54780, 'writes': 54169, 'errors': 0, 'throughput_rps': 1815.81, 'avg_latency_ms': 0.547, 'p50_ms': 0.666, 'p95_ms': 1.021, 'p99_ms': 1.405, 'max_ms': 28.995, 'cache_hits': 25019, 'cache_misses': 29761, 'hit_rate': 0.4567, 'db_reads': 29761, 'db_writes': 54169, 'wb_flushed_during': 0, 'wb_drained_at_end': 0}
+ Container cache_bench_cache_aside-runner-1  Stopping
+ Container cache_bench_cache_aside-runner-1  Stopped
+ Container cache_bench_cache_aside-runner-1  Removing
+ Container cache_bench_cache_aside-runner-1  Removed
+ Container cache_bench_cache_aside-redis-1  Stopping
+ Container cache_bench_cache_aside-postgres-1  Stopping
+ Container cache_bench_cache_aside-postgres-1  Stopped
+ Container cache_bench_cache_aside-postgres-1  Removing
+ Container cache_bench_cache_aside-postgres-1  Removed
+ Container cache_bench_cache_aside-redis-1  Stopped
+ Container cache_bench_cache_aside-redis-1  Removing
+ Container cache_bench_cache_aside-redis-1  Removed
+ Network cache_bench_cache_aside_default  Removing
+ Network cache_bench_cache_aside_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 626B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.21kB 0.0s done
+#5 DONE 0.0s
+
+#6 [1/5] FROM docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3
+#6 resolve docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3 0.0s done
+#6 DONE 0.0s
+
+#7 [4/5] RUN pip install --no-cache-dir -r requirements.txt
+#7 CACHED
+
+#8 [2/5] WORKDIR /app
+#8 CACHED
+
+#9 [3/5] COPY requirements.txt .
+#9 CACHED
+
+#10 [5/5] COPY src/ ./
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:7099df39b898fb33430cb0b86951466cbb340d37931deb124ad14e9b646f61ef done
+#11 exporting config sha256:a8eb50e3759e26a8c41e16361142c00239802b3c060e7c6e91c5b27b0e8b6e98 done
+#11 exporting attestation manifest sha256:bd7dc825b94ab6923e014793962b7bf26a4fadd9d4579095192011ec000a6461 0.0s done
+#11 exporting manifest list sha256:fe5538b63a61371640f18a4cdcd4244f7ec5e56e086d17ec54a8b017a4825f78 done
+#11 naming to docker.io/library/cache_bench_cache_aside-runner:latest done
+#11 unpacking to docker.io/library/cache_bench_cache_aside-runner:latest done
+#11 DONE 0.1s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ cache_bench_cache_aside-runner  Built
+ Network cache_bench_cache_aside_default  Creating
+ Network cache_bench_cache_aside_default  Created
+ Container cache_bench_cache_aside-redis-1  Creating
+ Container cache_bench_cache_aside-postgres-1  Creating
+ Container cache_bench_cache_aside-postgres-1  Created
+ Container cache_bench_cache_aside-redis-1  Created
+ Container cache_bench_cache_aside-runner-1  Creating
+ Container cache_bench_cache_aside-runner-1  Created
+ Container cache_bench_cache_aside-redis-1  Starting
+ Container cache_bench_cache_aside-postgres-1  Starting
+ Container cache_bench_cache_aside-redis-1  Started
+ Container cache_bench_cache_aside-postgres-1  Started
+ Container cache_bench_cache_aside-postgres-1  Waiting
+ Container cache_bench_cache_aside-redis-1  Waiting
+ Container cache_bench_cache_aside-postgres-1  Healthy
+ Container cache_bench_cache_aside-redis-1  Healthy
+ Container cache_bench_cache_aside-runner-1  Starting
+ Container cache_bench_cache_aside-runner-1  Started
+0
+runner-1  | [runner] run_id=cache_aside_write_heavy strategy=cache_aside profile=write_heavy read_ratio=0.2 target_rps=2000.0 duration=60s key_space=10000 value_size=256
+runner-1  | [wait_for] postgres ready (attempt 1)
+runner-1  | [wait_for] redis ready (attempt 1)
+runner-1  | [runner] seeding DB...
+runner-1  | [runner] done: {'run_id': 'cache_aside_write_heavy', 'strategy': 'cache_aside', 'profile': 'write_heavy', 'read_ratio': 0.2, 'target_rps': 2000.0, 'duration': 60, 'elapsed': 60.001, 'total_reqs': 85888, 'reads': 17291, 'writes': 68597, 'errors': 0, 'throughput_rps': 1431.45, 'avg_latency_ms': 0.695, 'p50_ms': 0.739, 'p95_ms': 0.952, 'p99_ms': 1.312, 'max_ms': 23.936, 'cache_hits': 3152, 'cache_misses': 14139, 'hit_rate': 0.1823, 'db_reads': 14139, 'db_writes': 68597, 'wb_flushed_during': 0, 'wb_drained_at_end': 0}
+ Container cache_bench_cache_aside-runner-1  Stopping
+ Container cache_bench_cache_aside-runner-1  Stopped
+ Container cache_bench_cache_aside-runner-1  Removing
+ Container cache_bench_cache_aside-runner-1  Removed
+ Container cache_bench_cache_aside-redis-1  Stopping
+ Container cache_bench_cache_aside-postgres-1  Stopping
+ Container cache_bench_cache_aside-postgres-1  Stopped
+ Container cache_bench_cache_aside-postgres-1  Removing
+ Container cache_bench_cache_aside-postgres-1  Removed
+ Container cache_bench_cache_aside-redis-1  Stopped
+ Container cache_bench_cache_aside-redis-1  Removing
+ Container cache_bench_cache_aside-redis-1  Removed
+ Network cache_bench_cache_aside_default  Removing
+ Network cache_bench_cache_aside_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 630B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 0.9s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.21kB done
+#5 DONE 0.0s
+
+#6 [1/5] FROM docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3
+#6 resolve docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3 0.0s done
+#6 DONE 0.0s
+
+#7 [3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [2/5] WORKDIR /app
+#9 CACHED
+
+#10 [5/5] COPY src/ ./
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:5fbf31ff5b6601419f3fadacaf9833b9a826309ccee66ba7ecffeb0d1aa9a4fa done
+#11 exporting config sha256:71bf95585df143944cef596b976cc1c1d7d31a79e8f0f58a78e6836a27b5e182 done
+#11 exporting attestation manifest sha256:b6fc1f22ad1123bc07c97cfd0e09493aabd02bf3554d2ec0ad401d228005667c 0.0s done
+#11 exporting manifest list sha256:f9cdf8d8afa550d913cef527334f83d2a69b5ad516339ad53028e9830203c4ba done
+#11 naming to docker.io/library/cache_bench_write_through-runner:latest done
+#11 unpacking to docker.io/library/cache_bench_write_through-runner:latest done
+#11 DONE 0.1s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ cache_bench_write_through-runner  Built
+ Network cache_bench_write_through_default  Creating
+ Network cache_bench_write_through_default  Created
+ Container cache_bench_write_through-postgres-1  Creating
+ Container cache_bench_write_through-redis-1  Creating
+ Container cache_bench_write_through-postgres-1  Created
+ Container cache_bench_write_through-redis-1  Created
+ Container cache_bench_write_through-runner-1  Creating
+ Container cache_bench_write_through-runner-1  Created
+ Container cache_bench_write_through-redis-1  Starting
+ Container cache_bench_write_through-postgres-1  Starting
+ Container cache_bench_write_through-redis-1  Started
+ Container cache_bench_write_through-postgres-1  Started
+ Container cache_bench_write_through-redis-1  Waiting
+ Container cache_bench_write_through-postgres-1  Waiting
+ Container cache_bench_write_through-redis-1  Healthy
+ Container cache_bench_write_through-postgres-1  Healthy
+ Container cache_bench_write_through-runner-1  Starting
+ Container cache_bench_write_through-runner-1  Started
+0
+runner-1  | [runner] run_id=write_through_read_heavy strategy=write_through profile=read_heavy read_ratio=0.8 target_rps=2000.0 duration=60s key_space=10000 value_size=256
+runner-1  | [wait_for] postgres ready (attempt 1)
+runner-1  | [wait_for] redis ready (attempt 1)
+runner-1  | [runner] seeding DB...
+runner-1  | [runner] done: {'run_id': 'write_through_read_heavy', 'strategy': 'write_through', 'profile': 'read_heavy', 'read_ratio': 0.8, 'target_rps': 2000.0, 'duration': 60, 'elapsed': 60.0, 'total_reqs': 120001, 'reads': 96053, 'writes': 23948, 'errors': 0, 'throughput_rps': 2000.01, 'avg_latency_ms': 0.288, 'p50_ms': 0.113, 'p95_ms': 0.984, 'p99_ms': 1.292, 'max_ms': 34.357, 'cache_hits': 88020, 'cache_misses': 8033, 'hit_rate': 0.9164, 'db_reads': 8033, 'db_writes': 23948, 'wb_flushed_during': 0, 'wb_drained_at_end': 0}
+ Container cache_bench_write_through-runner-1  Stopping
+ Container cache_bench_write_through-runner-1  Stopped
+ Container cache_bench_write_through-runner-1  Removing
+ Container cache_bench_write_through-runner-1  Removed
+ Container cache_bench_write_through-redis-1  Stopping
+ Container cache_bench_write_through-postgres-1  Stopping
+ Container cache_bench_write_through-postgres-1  Stopped
+ Container cache_bench_write_through-postgres-1  Removing
+ Container cache_bench_write_through-postgres-1  Removed
+ Container cache_bench_write_through-redis-1  Stopped
+ Container cache_bench_write_through-redis-1  Removing
+ Container cache_bench_write_through-redis-1  Removed
+ Network cache_bench_write_through_default  Removing
+ Network cache_bench_write_through_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 630B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.6s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.21kB done
+#5 DONE 0.0s
+
+#6 [1/5] FROM docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3
+#6 resolve docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3 0.0s done
+#6 DONE 0.0s
+
+#7 [2/5] WORKDIR /app
+#7 CACHED
+
+#8 [3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [5/5] COPY src/ ./
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:5fbf31ff5b6601419f3fadacaf9833b9a826309ccee66ba7ecffeb0d1aa9a4fa done
+#11 exporting config sha256:71bf95585df143944cef596b976cc1c1d7d31a79e8f0f58a78e6836a27b5e182 done
+#11 exporting attestation manifest sha256:112ffd3bed41610aeb9e8eb5f773fe9d35894a0eed40b95885baf8b64fb55977 0.0s done
+#11 exporting manifest list sha256:ede44818fd991bcdbc4af3d3882a9b314a358e0989148d1369f485b4719f5b1f done
+#11 naming to docker.io/library/cache_bench_write_through-runner:latest
+#11 naming to docker.io/library/cache_bench_write_through-runner:latest done
+#11 unpacking to docker.io/library/cache_bench_write_through-runner:latest done
+#11 DONE 0.1s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ cache_bench_write_through-runner  Built
+ Network cache_bench_write_through_default  Creating
+ Network cache_bench_write_through_default  Created
+ Container cache_bench_write_through-redis-1  Creating
+ Container cache_bench_write_through-postgres-1  Creating
+ Container cache_bench_write_through-redis-1  Created
+ Container cache_bench_write_through-postgres-1  Created
+ Container cache_bench_write_through-runner-1  Creating
+ Container cache_bench_write_through-runner-1  Created
+ Container cache_bench_write_through-redis-1  Starting
+ Container cache_bench_write_through-postgres-1  Starting
+ Container cache_bench_write_through-redis-1  Started
+ Container cache_bench_write_through-postgres-1  Started
+ Container cache_bench_write_through-postgres-1  Waiting
+ Container cache_bench_write_through-redis-1  Waiting
+ Container cache_bench_write_through-redis-1  Healthy
+ Container cache_bench_write_through-postgres-1  Healthy
+ Container cache_bench_write_through-runner-1  Starting
+ Container cache_bench_write_through-runner-1  Started
+0
+runner-1  | [runner] run_id=write_through_balanced strategy=write_through profile=balanced read_ratio=0.5 target_rps=2000.0 duration=60s key_space=10000 value_size=256
+runner-1  | [wait_for] postgres ready (attempt 1)
+runner-1  | [wait_for] redis ready (attempt 1)
+runner-1  | [runner] seeding DB...
+runner-1  | [runner] done: {'run_id': 'write_through_balanced', 'strategy': 'write_through', 'profile': 'balanced', 'read_ratio': 0.5, 'target_rps': 2000.0, 'duration': 60, 'elapsed': 60.0, 'total_reqs': 119786, 'reads': 60219, 'writes': 59567, 'errors': 0, 'throughput_rps': 1996.42, 'avg_latency_ms': 0.462, 'p50_ms': 0.45, 'p95_ms': 0.922, 'p99_ms': 1.238, 'max_ms': 34.601, 'cache_hits': 55191, 'cache_misses': 5028, 'hit_rate': 0.9165, 'db_reads': 5028, 'db_writes': 59567, 'wb_flushed_during': 0, 'wb_drained_at_end': 0}
+ Container cache_bench_write_through-runner-1  Stopping
+ Container cache_bench_write_through-runner-1  Stopped
+ Container cache_bench_write_through-runner-1  Removing
+ Container cache_bench_write_through-runner-1  Removed
+ Container cache_bench_write_through-postgres-1  Stopping
+ Container cache_bench_write_through-redis-1  Stopping
+ Container cache_bench_write_through-postgres-1  Stopped
+ Container cache_bench_write_through-postgres-1  Removing
+ Container cache_bench_write_through-postgres-1  Removed
+ Container cache_bench_write_through-redis-1  Stopped
+ Container cache_bench_write_through-redis-1  Removing
+ Container cache_bench_write_through-redis-1  Removed
+ Network cache_bench_write_through_default  Removing
+ Network cache_bench_write_through_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 630B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.21kB done
+#5 DONE 0.0s
+
+#6 [1/5] FROM docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3
+#6 resolve docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3 0.0s done
+#6 DONE 0.0s
+
+#7 [3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [2/5] WORKDIR /app
+#9 CACHED
+
+#10 [5/5] COPY src/ ./
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:5fbf31ff5b6601419f3fadacaf9833b9a826309ccee66ba7ecffeb0d1aa9a4fa done
+#11 exporting config sha256:71bf95585df143944cef596b976cc1c1d7d31a79e8f0f58a78e6836a27b5e182 done
+#11 exporting attestation manifest sha256:3dbc85f50b75d673f9d67796e6ce1718f75772dc5cec011cbe5a20a89cdd5d82 0.0s done
+#11 exporting manifest list sha256:c5cbf309be61cd42b20e75d13fb8f544a68372e89595582473cf507d25fbce00 done
+#11 naming to docker.io/library/cache_bench_write_through-runner:latest done
+#11 unpacking to docker.io/library/cache_bench_write_through-runner:latest done
+#11 DONE 0.1s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ cache_bench_write_through-runner  Built
+ Network cache_bench_write_through_default  Creating
+ Network cache_bench_write_through_default  Created
+ Container cache_bench_write_through-redis-1  Creating
+ Container cache_bench_write_through-postgres-1  Creating
+ Container cache_bench_write_through-postgres-1  Created
+ Container cache_bench_write_through-redis-1  Created
+ Container cache_bench_write_through-runner-1  Creating
+ Container cache_bench_write_through-runner-1  Created
+ Container cache_bench_write_through-redis-1  Starting
+ Container cache_bench_write_through-postgres-1  Starting
+ Container cache_bench_write_through-postgres-1  Started
+ Container cache_bench_write_through-redis-1  Started
+ Container cache_bench_write_through-redis-1  Waiting
+ Container cache_bench_write_through-postgres-1  Waiting
+ Container cache_bench_write_through-postgres-1  Healthy
+ Container cache_bench_write_through-redis-1  Healthy
+ Container cache_bench_write_through-runner-1  Starting
+ Container cache_bench_write_through-runner-1  Started
+0
+runner-1  | [runner] run_id=write_through_write_heavy strategy=write_through profile=write_heavy read_ratio=0.2 target_rps=2000.0 duration=60s key_space=10000 value_size=256
+runner-1  | [wait_for] postgres ready (attempt 1)
+runner-1  | [wait_for] redis ready (attempt 1)
+runner-1  | [runner] seeding DB...
+runner-1  | [runner] done: {'run_id': 'write_through_write_heavy', 'strategy': 'write_through', 'profile': 'write_heavy', 'read_ratio': 0.2, 'target_rps': 2000.0, 'duration': 60, 'elapsed': 60.0, 'total_reqs': 86565, 'reads': 17443, 'writes': 69122, 'errors': 0, 'throughput_rps': 1442.75, 'avg_latency_ms': 0.689, 'p50_ms': 0.758, 'p95_ms': 1.067, 'p99_ms': 1.489, 'max_ms': 17.75, 'cache_hits': 15474, 'cache_misses': 1969, 'hit_rate': 0.8871, 'db_reads': 1969, 'db_writes': 69122, 'wb_flushed_during': 0, 'wb_drained_at_end': 0}
+ Container cache_bench_write_through-runner-1  Stopping
+ Container cache_bench_write_through-runner-1  Stopped
+ Container cache_bench_write_through-runner-1  Removing
+ Container cache_bench_write_through-runner-1  Removed
+ Container cache_bench_write_through-redis-1  Stopping
+ Container cache_bench_write_through-postgres-1  Stopping
+ Container cache_bench_write_through-redis-1  Stopped
+ Container cache_bench_write_through-redis-1  Removing
+ Container cache_bench_write_through-redis-1  Removed
+ Container cache_bench_write_through-postgres-1  Stopped
+ Container cache_bench_write_through-postgres-1  Removing
+ Container cache_bench_write_through-postgres-1  Removed
+ Network cache_bench_write_through_default  Removing
+ Network cache_bench_write_through_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 624B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 0.9s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.21kB done
+#5 DONE 0.0s
+
+#6 [1/5] FROM docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3
+#6 resolve docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3 0.0s done
+#6 DONE 0.0s
+
+#7 [2/5] WORKDIR /app
+#7 CACHED
+
+#8 [3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [5/5] COPY src/ ./
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:41ec1d36ac873310abc86d56f14a5c4ea7852e1078881b6ca409c31f41808779 done
+#11 exporting config sha256:cf3995924045d4d2987a5f52208693b9470779f9fbad7f1500c3621a35f4941d done
+#11 exporting attestation manifest sha256:3fa9e7bb8b3b39328c00e9d8b5c77707a2ea3e6b825143af2248efd3a0dd3706 0.0s done
+#11 exporting manifest list sha256:80a11ce31e6677377ed77ac88a02e92c8e51ac43e8b11e68bc1796b3d3b894b3 done
+#11 naming to docker.io/library/cache_bench_write_back-runner:latest done
+#11 unpacking to docker.io/library/cache_bench_write_back-runner:latest done
+#11 DONE 0.1s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ cache_bench_write_back-runner  Built
+ Network cache_bench_write_back_default  Creating
+ Network cache_bench_write_back_default  Created
+ Container cache_bench_write_back-postgres-1  Creating
+ Container cache_bench_write_back-redis-1  Creating
+ Container cache_bench_write_back-redis-1  Created
+ Container cache_bench_write_back-postgres-1  Created
+ Container cache_bench_write_back-runner-1  Creating
+ Container cache_bench_write_back-runner-1  Created
+ Container cache_bench_write_back-postgres-1  Starting
+ Container cache_bench_write_back-redis-1  Starting
+ Container cache_bench_write_back-redis-1  Started
+ Container cache_bench_write_back-postgres-1  Started
+ Container cache_bench_write_back-postgres-1  Waiting
+ Container cache_bench_write_back-redis-1  Waiting
+ Container cache_bench_write_back-redis-1  Healthy
+ Container cache_bench_write_back-postgres-1  Healthy
+ Container cache_bench_write_back-runner-1  Starting
+ Container cache_bench_write_back-runner-1  Started
+1
+runner-1  |   File "/app/strategies/write_back.py", line 59, in drain
+runner-1  |     n = self._flush_once()
+runner-1  |         ^^^^^^^^^^^^^^^^^^
+runner-1  |   File "/app/strategies/write_back.py", line 44, in _flush_once
+runner-1  |     n = self.db.upsert_many(items)
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+runner-1  |   File "/app/db.py", line 58, in upsert_many
+runner-1  |     cur.executemany(
+runner-1  |   File "/usr/local/lib/python3.12/site-packages/psycopg/cursor.py", line 128, in executemany
+runner-1  |     raise ex.with_traceback(None)
+runner-1  | psycopg.OperationalError: failed to enter pipeline mode
+ Container cache_bench_write_back-runner-1  Stopping
+ Container cache_bench_write_back-runner-1  Stopped
+ Container cache_bench_write_back-runner-1  Removing
+ Container cache_bench_write_back-runner-1  Removed
+ Container cache_bench_write_back-redis-1  Stopping
+ Container cache_bench_write_back-postgres-1  Stopping
+ Container cache_bench_write_back-postgres-1  Stopped
+ Container cache_bench_write_back-postgres-1  Removing
+ Container cache_bench_write_back-postgres-1  Removed
+ Container cache_bench_write_back-redis-1  Stopped
+ Container cache_bench_write_back-redis-1  Removing
+ Container cache_bench_write_back-redis-1  Removed
+ Network cache_bench_write_back_default  Removing
+ Network cache_bench_write_back_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 624B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 0.9s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.21kB done
+#5 DONE 0.0s
+
+#6 [1/5] FROM docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3
+#6 resolve docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3 0.0s done
+#6 DONE 0.0s
+
+#7 [2/5] WORKDIR /app
+#7 CACHED
+
+#8 [4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [3/5] COPY requirements.txt .
+#9 CACHED
+
+#10 [5/5] COPY src/ ./
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:41ec1d36ac873310abc86d56f14a5c4ea7852e1078881b6ca409c31f41808779 done
+#11 exporting config sha256:cf3995924045d4d2987a5f52208693b9470779f9fbad7f1500c3621a35f4941d done
+#11 exporting attestation manifest sha256:b6b0d6a069468348832381334f319b1f42f6ac3efc2e7737080bf9c200f0523e 0.0s done
+#11 exporting manifest list sha256:358dd368bd4c4b63f33bd9356232b1054a289379ae2223f2e017b8eb1b626111 done
+#11 naming to docker.io/library/cache_bench_write_back-runner:latest done
+#11 unpacking to docker.io/library/cache_bench_write_back-runner:latest
+#11 unpacking to docker.io/library/cache_bench_write_back-runner:latest done
+#11 DONE 0.1s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ cache_bench_write_back-runner  Built
+ Network cache_bench_write_back_default  Creating
+ Network cache_bench_write_back_default  Created
+ Container cache_bench_write_back-redis-1  Creating
+ Container cache_bench_write_back-postgres-1  Creating
+ Container cache_bench_write_back-redis-1  Created
+ Container cache_bench_write_back-postgres-1  Created
+ Container cache_bench_write_back-runner-1  Creating
+ Container cache_bench_write_back-runner-1  Created
+ Container cache_bench_write_back-redis-1  Starting
+ Container cache_bench_write_back-postgres-1  Starting
+ Container cache_bench_write_back-postgres-1  Started
+ Container cache_bench_write_back-redis-1  Started
+ Container cache_bench_write_back-postgres-1  Waiting
+ Container cache_bench_write_back-redis-1  Waiting
+ Container cache_bench_write_back-redis-1  Healthy
+ Container cache_bench_write_back-postgres-1  Healthy
+ Container cache_bench_write_back-runner-1  Starting
+ Container cache_bench_write_back-runner-1  Started
+0
+runner-1  | [runner] run_id=write_back_balanced strategy=write_back profile=balanced read_ratio=0.5 target_rps=2000.0 duration=60s key_space=10000 value_size=256
+runner-1  | [wait_for] postgres ready (attempt 1)
+runner-1  | [wait_for] redis ready (attempt 1)
+runner-1  | [runner] seeding DB...
+runner-1  | [runner] done: {'run_id': 'write_back_balanced', 'strategy': 'write_back', 'profile': 'balanced', 'read_ratio': 0.5, 'target_rps': 2000.0, 'duration': 60, 'elapsed': 60.0, 'total_reqs': 120001, 'reads': 60338, 'writes': 59663, 'errors': 0, 'throughput_rps': 2000.01, 'avg_latency_ms': 0.184, 'p50_ms': 0.186, 'p95_ms': 0.36, 'p99_ms': 0.542, 'max_ms': 58.893, 'cache_hits': 55310, 'cache_misses': 5028, 'hit_rate': 0.9167, 'db_reads': 5028, 'db_writes': 33787, 'wb_flushed_during': 28500, 'wb_drained_at_end': 5287}
+ Container cache_bench_write_back-runner-1  Stopping
+ Container cache_bench_write_back-runner-1  Stopped
+ Container cache_bench_write_back-runner-1  Removing
+ Container cache_bench_write_back-runner-1  Removed
+ Container cache_bench_write_back-postgres-1  Stopping
+ Container cache_bench_write_back-redis-1  Stopping
+ Container cache_bench_write_back-postgres-1  Stopped
+ Container cache_bench_write_back-postgres-1  Removing
+ Container cache_bench_write_back-postgres-1  Removed
+ Container cache_bench_write_back-redis-1  Stopped
+ Container cache_bench_write_back-redis-1  Removing
+ Container cache_bench_write_back-redis-1  Removed
+ Network cache_bench_write_back_default  Removing
+ Network cache_bench_write_back_default  Removed
+#1 [internal] load local bake definitions
+#1 reading from stdin 624B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 1.5s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.21kB done
+#5 DONE 0.0s
+
+#6 [1/5] FROM docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3
+#6 resolve docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3 0.0s done
+#6 DONE 0.0s
+
+#7 [2/5] WORKDIR /app
+#7 CACHED
+
+#8 [3/5] COPY requirements.txt .
+#8 CACHED
+
+#9 [4/5] RUN pip install --no-cache-dir -r requirements.txt
+#9 CACHED
+
+#10 [5/5] COPY src/ ./
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:41ec1d36ac873310abc86d56f14a5c4ea7852e1078881b6ca409c31f41808779 done
+#11 exporting config sha256:cf3995924045d4d2987a5f52208693b9470779f9fbad7f1500c3621a35f4941d done
+#11 exporting attestation manifest sha256:c7a817720a41c26dd6be0d0a190bfda04b4dc84ad36b70e9899db319b0bb508a 0.0s done
+#11 exporting manifest list sha256:2313f7aa366db37caf851764970803be201f96e3e63927d6215bf3b3ab2279ce done
+#11 naming to docker.io/library/cache_bench_write_back-runner:latest done
+#11 unpacking to docker.io/library/cache_bench_write_back-runner:latest 0.0s done
+#11 DONE 0.1s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ cache_bench_write_back-runner  Built
+ Network cache_bench_write_back_default  Creating
+ Network cache_bench_write_back_default  Created
+ Container cache_bench_write_back-redis-1  Creating
+ Container cache_bench_write_back-postgres-1  Creating
+ Container cache_bench_write_back-postgres-1  Created
+ Container cache_bench_write_back-redis-1  Created
+ Container cache_bench_write_back-runner-1  Creating
+ Container cache_bench_write_back-runner-1  Created
+ Container cache_bench_write_back-redis-1  Starting
+ Container cache_bench_write_back-postgres-1  Starting
+ Container cache_bench_write_back-redis-1  Started
+ Container cache_bench_write_back-postgres-1  Started
+ Container cache_bench_write_back-redis-1  Waiting
+ Container cache_bench_write_back-postgres-1  Waiting
+ Container cache_bench_write_back-redis-1  Healthy
+ Container cache_bench_write_back-postgres-1  Healthy
+ Container cache_bench_write_back-runner-1  Starting
+ Container cache_bench_write_back-runner-1  Started
+0
+runner-1  | [runner] run_id=write_back_write_heavy strategy=write_back profile=write_heavy read_ratio=0.2 target_rps=2000.0 duration=60s key_space=10000 value_size=256
+runner-1  | [wait_for] postgres ready (attempt 1)
+runner-1  | [wait_for] redis ready (attempt 1)
+runner-1  | [runner] seeding DB...
+runner-1  | [runner] done: {'run_id': 'write_back_write_heavy', 'strategy': 'write_back', 'profile': 'write_heavy', 'read_ratio': 0.2, 'target_rps': 2000.0, 'duration': 60, 'elapsed': 60.0, 'total_reqs': 120001, 'reads': 24154, 'writes': 95847, 'errors': 0, 'throughput_rps': 2000.01, 'avg_latency_ms': 0.205, 'p50_ms': 0.193, 'p95_ms': 0.373, 'p99_ms': 0.529, 'max_ms': 59.733, 'cache_hits': 22185, 'cache_misses': 1969, 'hit_rate': 0.9185, 'db_reads': 1969, 'db_writes': 35688, 'wb_flushed_during': 28500, 'wb_drained_at_end': 6688}
+ Container cache_bench_write_back-runner-1  Stopping
+ Container cache_bench_write_back-runner-1  Stopped
+ Container cache_bench_write_back-runner-1  Removing
+ Container cache_bench_write_back-runner-1  Removed
+ Container cache_bench_write_back-postgres-1  Stopping
+ Container cache_bench_write_back-redis-1  Stopping
+ Container cache_bench_write_back-postgres-1  Stopped
+ Container cache_bench_write_back-postgres-1  Removing
+ Container cache_bench_write_back-postgres-1  Removed
+ Container cache_bench_write_back-redis-1  Stopped
+ Container cache_bench_write_back-redis-1  Removing
+ Container cache_bench_write_back-redis-1  Removed
+ Network cache_bench_write_back_default  Removing
+ Network cache_bench_write_back_default  Removed
+Matrix: strategies=['cache_aside', 'write_through', 'write_back'] profiles=['read_heavy', 'balanced', 'write_heavy'] duration=60s rps=2000 key_space=10000
+
+[1/9]
+
+===== cache_aside_read_heavy =====
+
+[2/9]
+
+===== cache_aside_balanced =====
+
+[3/9]
+
+===== cache_aside_write_heavy =====
+
+[4/9]
+
+===== write_through_read_heavy =====
+
+[5/9]
+
+===== write_through_balanced =====
+
+[6/9]
+
+===== write_through_write_heavy =====
+
+[7/9]
+
+===== write_back_read_heavy =====
+
+[8/9]
+
+===== write_back_balanced =====
+
+[9/9]
+
+===== write_back_write_heavy =====
+
+Aggregated 8 runs -> C:\Users\Daniel\Documents\Study\DatingBot\practice_tasks\task_3\results\summary.csv
+
+===== RESULTS =====
+strategy       | profile      | rps       | avg ms   | p95 ms   | p99 ms   | hit    | db_reads  | db_writes  | wb_flush  | wb_drain 
+---------------+--------------+-----------+----------+----------+----------+--------+-----------+------------+-----------+----------
+cache_aside    | read_heavy   | 2000.00   | 0.38     | 1.11     | 1.70     | 0.73   | 25597     | 23948      | 0         | 0        
+cache_aside    | balanced     | 1815.81   | 0.55     | 1.02     | 1.41     | 0.46   | 29761     | 54169      | 0         | 0        
+cache_aside    | write_heavy  | 1431.45   | 0.69     | 0.95     | 1.31     | 0.18   | 14139     | 68597      | 0         | 0        
+---------------+--------------+-----------+----------+----------+----------+--------+-----------+------------+-----------+----------
+write_back     | balanced     | 2000.01   | 0.18     | 0.36     | 0.54     | 0.92   | 5028      | 33787      | 28500     | 5287     
+write_back     | write_heavy  | 2000.01   | 0.20     | 0.37     | 0.53     | 0.92   | 1969      | 35688      | 28500     | 6688     
+---------------+--------------+-----------+----------+----------+----------+--------+-----------+------------+-----------+----------
+write_through  | read_heavy   | 2000.01   | 0.29     | 0.98     | 1.29     | 0.92   | 8033      | 23948      | 0         | 0        
+write_through  | balanced     | 1996.42   | 0.46     | 0.92     | 1.24     | 0.92   | 5028      | 59567      | 0         | 0        
+write_through  | write_heavy  | 1442.75   | 0.69     | 1.07     | 1.49     | 0.89   | 1969      | 69122      | 0         | 0        
+
+#1 [internal] load local bake definitions
+#1 reading from stdin 624B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 192B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12-slim
+#3 DONE 0.9s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.21kB done
+#5 DONE 0.0s
+
+#6 [1/5] FROM docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3
+#6 resolve docker.io/library/python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3 0.0s done
+#6 DONE 0.0s
+
+#7 [4/5] RUN pip install --no-cache-dir -r requirements.txt
+#7 CACHED
+
+#8 [2/5] WORKDIR /app
+#8 CACHED
+
+#9 [3/5] COPY requirements.txt .
+#9 CACHED
+
+#10 [5/5] COPY src/ ./
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers done
+#11 exporting manifest sha256:41ec1d36ac873310abc86d56f14a5c4ea7852e1078881b6ca409c31f41808779 done
+#11 exporting config sha256:cf3995924045d4d2987a5f52208693b9470779f9fbad7f1500c3621a35f4941d done
+#11 exporting attestation manifest sha256:eeed61ff324325992919626a62fb695392e0e417bec5181883d67b94542767b0 0.0s done
+#11 exporting manifest list sha256:2671e33b5be2853adf9367420c0ce4b079cd464515a75967c096e07daf649030 0.0s done
+#11 naming to docker.io/library/cache_bench_write_back-runner:latest done
+#11 unpacking to docker.io/library/cache_bench_write_back-runner:latest done
+#11 DONE 0.1s
+
+#12 resolving provenance for metadata file
+#12 DONE 0.0s
+ cache_bench_write_back-runner  Built
+ Network cache_bench_write_back_default  Creating
+ Network cache_bench_write_back_default  Created
+ Container cache_bench_write_back-redis-1  Creating
+ Container cache_bench_write_back-postgres-1  Creating
+ Container cache_bench_write_back-redis-1  Created
+ Container cache_bench_write_back-postgres-1  Created
+ Container cache_bench_write_back-runner-1  Creating
+ Container cache_bench_write_back-runner-1  Created
+ Container cache_bench_write_back-redis-1  Starting
+ Container cache_bench_write_back-postgres-1  Starting
+ Container cache_bench_write_back-postgres-1  Started
+ Container cache_bench_write_back-redis-1  Started
+ Container cache_bench_write_back-redis-1  Waiting
+ Container cache_bench_write_back-postgres-1  Waiting
+ Container cache_bench_write_back-postgres-1  Healthy
+ Container cache_bench_write_back-redis-1  Healthy
+ Container cache_bench_write_back-runner-1  Starting
+ Container cache_bench_write_back-runner-1  Started
+1
+runner-1  | another command is already in progress
+runner-1  | [runner] op error: sending prepared query failed: another command is already in progress
+runner-1  | another command is already in progress
+runner-1  | another command is already in progress
+runner-1  | [runner] op error: sending prepared query failed: another command is already in progress
+runner-1  | another command is already in progress
+runner-1  | another command is already in progress
+runner-1  | another command is already in progress
+runner-1  | [runner] op error: sending prepared query failed: another command is already in progress
+runner-1  | another command is already in progress
+runner-1  | another command is already in progress
+runner-1  | another command is already in progress
+runner-1  | another command is already in progress
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  | [write_back] flush error: failed to enter pipeline mode
+runner-1  |     cur.executemany(
+runner-1  |   File "/usr/local/lib/python3.12/site-packages/psycopg/cursor.py", line 128, in executemany
+runner-1  |     raise ex.with_traceback(None)
+runner-1  | psycopg.OperationalError: failed to enter pipeline mode
+ Container cache_bench_write_back-runner-1  Stopping
+ Container cache_bench_write_back-runner-1  Stopped
+ Container cache_bench_write_back-runner-1  Removing
+ Container cache_bench_write_back-runner-1  Removed
+ Container cache_bench_write_back-redis-1  Stopping
+ Container cache_bench_write_back-postgres-1  Stopping
+ Container cache_bench_write_back-postgres-1  Stopped
+ Container cache_bench_write_back-postgres-1  Removing
+ Container cache_bench_write_back-postgres-1  Removed
+ Container cache_bench_write_back-redis-1  Stopped
+ Container cache_bench_write_back-redis-1  Removing
+ Container cache_bench_write_back-redis-1  Removed
+ Network cache_bench_write_back_default  Removing
+ Network cache_bench_write_back_default  Removed
+Matrix: strategies=['write_back'] profiles=['read_heavy'] duration=60s rps=2000 key_space=10000
+
+[1/1]
+
+===== write_back_read_heavy =====
+
+Aggregated 8 runs -> C:\Users\Daniel\Documents\Study\DatingBot\practice_tasks\task_3\results\summary.csv
+
+===== RESULTS =====
+strategy       | profile      | rps       | avg ms   | p95 ms   | p99 ms   | hit    | db_reads  | db_writes  | wb_flush  | wb_drain 
+---------------+--------------+-----------+----------+----------+----------+--------+-----------+------------+-----------+----------
+cache_aside    | read_heavy   | 2000.00   | 0.38     | 1.11     | 1.70     | 0.73   | 25597     | 23948      | 0         | 0        
+cache_aside    | balanced     | 1815.81   | 0.55     | 1.02     | 1.41     | 0.46   | 29761     | 54169      | 0         | 0        
+cache_aside    | write_heavy  | 1431.45   | 0.69     | 0.95     | 1.31     | 0.18   | 14139     | 68597      | 0         | 0        
+---------------+--------------+-----------+----------+----------+----------+--------+-----------+------------+-----------+----------
+write_back     | balanced     | 2000.01   | 0.18     | 0.36     | 0.54     | 0.92   | 5028      | 33787      | 28500     | 5287     
+write_back     | write_heavy  | 2000.01   | 0.20     | 0.37     | 0.53     | 0.92   | 1969      | 35688      | 28500     | 6688     
+---------------+--------------+-----------+----------+----------+----------+--------+-----------+------------+-----------+----------
+write_through  | read_heavy   | 2000.01   | 0.29     | 0.98     | 1.29     | 0.92   | 8033      | 23948      | 0         | 0        
+write_through  | balanced     | 1996.42   | 0.46     | 0.92     | 1.24     | 0.92   | 5028      | 59567      | 0         | 0        
+write_through  | write_heavy  | 1442.75   | 0.69     | 1.07     | 1.49     | 0.89   | 1969      | 69122      | 0         | 0        
+

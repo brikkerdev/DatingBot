@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    hostname: postgres
+    environment:
+      POSTGRES_USER: bench
+      POSTGRES_PASSWORD: bench
+      POSTGRES_DB: bench
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bench -d bench"]
+      interval: 3s
+      timeout: 3s
+      retries: 15
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+  redis:
+    image: redis:7.4-alpine
+    hostname: redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+  runner:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      PG_DSN: postgresql://bench:bench@postgres:5432/bench
+      REDIS_URL: redis://redis:6379/0
+      STRATEGY: ${STRATEGY:-cache_aside}
+      RUN_ID: ${RUN_ID:-smoke}
+      READ_RATIO: ${READ_RATIO:-0.8}
+      PROFILE: ${PROFILE:-read_heavy}
+      TARGET_RPS: ${TARGET_RPS:-2000}
+      DURATION_SEC: ${DURATION_SEC:-60}
+      KEY_SPACE: ${KEY_SPACE:-10000}
+      VALUE_SIZE: ${VALUE_SIZE:-256}
+      CACHE_TTL_SEC: ${CACHE_TTL_SEC:-300}
+      FLUSH_INTERVAL_SEC: ${FLUSH_INTERVAL_SEC:-1.0}
+      FLUSH_BATCH_SIZE: ${FLUSH_BATCH_SIZE:-500}
+      DIRTY_SAMPLE_INTERVAL_SEC: ${DIRTY_SAMPLE_INTERVAL_SEC:-0.2}
+    volumes:
+      - ./results:/app/results
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
