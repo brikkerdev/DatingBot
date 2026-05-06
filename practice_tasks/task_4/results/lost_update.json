@@ -1,0 +1,9 @@
+{
+  "anomaly": "lost_update",
+  "tx1_initial": "1000.0",
+  "tx2_initial": "1000.0",
+  "tx2_final": "1200.0",
+  "tx1_final": "1100.0",
+  "final_balance": "1100.00",
+  "outcome": "LOST_UPDATE occurred - update from TX1 was lost"
+}

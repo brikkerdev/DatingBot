@@ -1,0 +1,764 @@
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - PRACTICE TASK
+============================================================
+
+Database is ready.
+
+============================================================
+Running: DIRTY_READ
+============================================================
+[Dirty Read] Starting test...
+[Dirty Read] Initial: Alice=1000, Bob=500
+[TX2] UPDATE: Alice's balance = 2000 (NOT COMMITTED)
+[TX1] READ: Alice's balance = 1000.00
+[TX2] ROLLBACK - changes reverted
+[TX1] READ after commit: Alice's balance = 1000.00
+[Dirty Read] Test complete.
+Results saved to: /app/results/dirty_read.json
+
+============================================================
+Running: NON_REPEATABLE_READ
+============================================================
+[Non-Repeatable Read] Starting test...
+[Non-Repeatable Read] Initial: Alice=1000
+[TX2] UPDATE: Alice's balance = 1500
+[TX2] COMMIT
+[TX1] First READ: Alice's balance = 1500.00
+[TX1] Second READ: Alice's balance = 1500.00
+[Non-Repeatable Read] Test complete.
+Results saved to: /app/results/non_repeatable_read.json
+
+============================================================
+Running: PHANTOM_READ
+============================================================
+[Phantom Read] Starting test...
+[TX2] INSERT: Monitor added
+[TX2] COMMIT
+[TX1] First READ: 4 products
+[TX1] Second READ: 4 products
+[Phantom Read] Test complete.
+Results saved to: /app/results/phantom_read.json
+
+============================================================
+Running: LOST_UPDATE
+============================================================
+[Lost Update] Starting test...
+[Lost Update] Initial: Alice=1000
+[TX1] READ: Alice's balance = 1000.0
+[TX2] READ: Alice's balance = 1000.0
+[TX2] UPDATE: SET balance = 1200.0 (was 1000.0 + 200)
+[TX2] COMMIT
+[TX1] UPDATE: SET balance = 1100.0 (was 1000.0 + 100)
+[TX1] COMMIT
+[Final] Alice's balance = 1100.00
+[Lost Update] RESULT: Balance is 1100.00
+[Lost Update] Test complete.
+Results saved to: /app/results/lost_update.json
+
+============================================================
+All tests complete!
+============================================================
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - PRACTICE TASK
+============================================================
+
+Database is ready.
+
+============================================================
+Running: DIRTY_READ
+============================================================
+[Dirty Read] Starting test...
+[Dirty Read] Initial: Alice=1000, Bob=500
+[TX1] READ: Alice's balance = 1000.00
+[TX2] UPDATE: Alice's balance = 2000 (NOT COMMITTED)
+[TX2] ROLLBACK - changes reverted
+[TX1] READ after commit: Alice's balance = 1000.00
+[Dirty Read] Test complete.
+Results saved to: /app/results/dirty_read.json
+
+============================================================
+Running: NON_REPEATABLE_READ
+============================================================
+[Non-Repeatable Read] Starting test...
+[Non-Repeatable Read] Initial: Alice=1000
+[TX2] UPDATE: Alice's balance = 1500
+[TX2] COMMIT
+[TX1] First READ: Alice's balance = 1500.00
+[TX1] Second READ: Alice's balance = 1500.00
+[Non-Repeatable Read] Test complete.
+Results saved to: /app/results/non_repeatable_read.json
+
+============================================================
+Running: PHANTOM_READ
+============================================================
+[Phantom Read] Starting test...
+[TX2] INSERT: Monitor added
+[TX2] COMMIT
+[TX1] First READ: 4 products
+[TX1] Second READ: 4 products
+[Phantom Read] Test complete.
+Results saved to: /app/results/phantom_read.json
+
+============================================================
+Running: LOST_UPDATE
+============================================================
+[Lost Update] Starting test...
+[Lost Update] Initial: Alice=1000
+[TX1] READ: Alice's balance = 1000.0
+[TX2] READ: Alice's balance = 1000.0
+[TX2] UPDATE: SET balance = 1200.0 (was 1000.0 + 200)
+[TX2] COMMIT
+[TX1] UPDATE: SET balance = 1100.0 (was 1000.0 + 100)
+[TX1] COMMIT
+[Final] Alice's balance = 1100.00
+[Lost Update] RESULT: Balance is 1100.00
+[Lost Update] Test complete.
+Results saved to: /app/results/lost_update.json
+
+============================================================
+All tests complete!
+============================================================
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - PRACTICE TASK
+============================================================
+
+Database is ready.
+
+============================================================
+Running: DIRTY_READ
+============================================================
+[Dirty Read] Starting test...
+[Dirty Read] Initial: Oleg=1000, Konstantin=500
+[TX1] READ: Oleg's balance = 1000.00
+[TX2] UPDATE: Oleg's balance = 2000 (NOT COMMITTED)
+[TX2] ROLLBACK - changes reverted
+[TX1] READ after commit: Oleg's balance = 1000.00
+[Dirty Read] Test complete.
+Results saved to: /app/results/dirty_read.json
+
+============================================================
+Running: NON_REPEATABLE_READ
+============================================================
+[Non-Repeatable Read] Starting test...
+[Non-Repeatable Read] Initial: Oleg=1000
+[TX2] UPDATE: Oleg's balance = 1500
+[TX2] COMMIT
+[TX1] First READ: Oleg's balance = 1500.00
+[TX1] Second READ: Oleg's balance = 1500.00
+[Non-Repeatable Read] Test complete.
+Results saved to: /app/results/non_repeatable_read.json
+
+============================================================
+Running: PHANTOM_READ
+============================================================
+[Phantom Read] Starting test...
+[TX2] INSERT: Monitor added
+[TX2] COMMIT
+[TX1] First READ: 4 products
+[TX1] Second READ: 4 products
+[Phantom Read] Test complete.
+Results saved to: /app/results/phantom_read.json
+
+============================================================
+Running: LOST_UPDATE
+============================================================
+[Lost Update] Starting test...
+[Lost Update] Initial: Oleg=1000
+[TX1] READ: Oleg's balance = 1000.0
+[TX2] READ: Oleg's balance = 1000.0
+[TX2] UPDATE: SET balance = 1200.0 (was 1000.0 + 200)
+[TX2] COMMIT
+[TX1] UPDATE: SET balance = 1100.0 (was 1000.0 + 100)
+[TX1] COMMIT
+[Final] Oleg's balance = 1100.00
+[Lost Update] RESULT: Balance is 1100.00
+[Lost Update] Test complete.
+Results saved to: /app/results/lost_update.json
+
+============================================================
+All tests complete!
+============================================================
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - PRACTICE TASK
+============================================================
+
+Database is ready.
+
+============================================================
+Running: DIRTY_READ
+============================================================
+[Dirty Read] Starting test...
+[Dirty Read] Initial: Oleg=1000, Konstantin=500
+[TX1] READ: Oleg's balance = 1000.00
+[TX2] UPDATE: Oleg's balance = 2000 (NOT COMMITTED)
+[TX2] ROLLBACK - changes reverted
+[TX1] READ after commit: Oleg's balance = 1000.00
+[Dirty Read] Test complete.
+Results saved to: /app/results/dirty_read.json
+
+============================================================
+Running: NON_REPEATABLE_READ
+============================================================
+[Non-Repeatable Read] Starting test...
+[Non-Repeatable Read] Initial: Oleg=1000
+[TX2] UPDATE: Oleg's balance = 1500
+[TX2] COMMIT
+[TX1] First READ: Oleg's balance = 1500.00
+[TX1] Second READ: Oleg's balance = 1500.00
+[Non-Repeatable Read] Test complete.
+Results saved to: /app/results/non_repeatable_read.json
+
+============================================================
+Running: PHANTOM_READ
+============================================================
+[Phantom Read] Starting test...
+[TX2] INSERT: Monitor added
+[TX2] COMMIT
+[TX1] First READ: 4 products
+[TX1] Second READ: 4 products
+[Phantom Read] Test complete.
+Results saved to: /app/results/phantom_read.json
+
+============================================================
+Running: LOST_UPDATE
+============================================================
+[Lost Update] Starting test...
+[Lost Update] Initial: Oleg=1000
+[TX1] READ: Oleg's balance = 1000.0
+[TX2] READ: Oleg's balance = 1000.0
+[TX2] UPDATE: SET balance = 1200.0 (was 1000.0 + 200)
+[TX2] COMMIT
+[TX1] UPDATE: SET balance = 1100.0 (was 1000.0 + 100)
+[TX1] COMMIT
+[Final] Oleg's balance = 1100.00
+[Lost Update] RESULT: Balance is 1100.00
+[Lost Update] Test complete.
+Results saved to: /app/results/lost_update.json
+
+============================================================
+All tests complete!
+============================================================
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - PRACTICE TASK
+============================================================
+
+Database is ready.
+Tables created.
+Accounts: Oleg=1000, Konstantin=500
+Products: Laptop, Mouse, Keyboard
+
+============================================================
+Running: DIRTY_READ
+============================================================
+[Dirty Read] Starting test...
+[Dirty Read] Initial: Oleg=1000, Konstantin=500
+[TX1] READ: Oleg's balance = 1000.00
+[TX2] UPDATE: Oleg's balance = 2000 (NOT COMMITTED)
+[TX2] ROLLBACK - changes reverted
+[TX1] READ after commit: Oleg's balance = 1000.00
+[Dirty Read] Test complete.
+Results saved to: /app/results/dirty_read.json
+
+============================================================
+Running: NON_REPEATABLE_READ
+============================================================
+[Non-Repeatable Read] Starting test...
+[Non-Repeatable Read] Initial: Oleg=1000
+[TX1] First READ: Oleg's balance = 1500.00
+[TX2] UPDATE: Oleg's balance = 1500
+[TX2] COMMIT
+[TX1] Second READ: Oleg's balance = 1500.00
+[Non-Repeatable Read] Test complete.
+Results saved to: /app/results/non_repeatable_read.json
+
+============================================================
+Running: PHANTOM_READ
+============================================================
+[Phantom Read] Starting test...
+[TX2] INSERT: Monitor added
+[TX2] COMMIT
+[TX1] First READ: 4 products
+[TX1] Second READ: 4 products
+[Phantom Read] Test complete.
+Results saved to: /app/results/phantom_read.json
+
+============================================================
+Running: LOST_UPDATE
+============================================================
+[Lost Update] Starting test...
+[Lost Update] Initial: Oleg=1000
+[TX1] READ: Oleg's balance = 1000.0
+[TX2] READ: Oleg's balance = 1000.0
+[TX2] UPDATE: SET balance = 1200.0 (was 1000.0 + 200)
+[TX2] COMMIT
+[TX1] UPDATE: SET balance = 1100.0 (was 1000.0 + 100)
+[TX1] COMMIT
+[Final] Oleg's balance = 1100.00
+[Lost Update] RESULT: Balance is 1100.00
+[Lost Update] Test complete.
+Results saved to: /app/results/lost_update.json
+
+============================================================
+All tests complete!
+============================================================
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - PRACTICE TASK
+============================================================
+
+Database is ready.
+Tables created.
+Accounts: Oleg=1000, Konstantin=500
+Products: Laptop, Mouse, Keyboard
+
+============================================================
+Running: DIRTY_READ
+============================================================
+[Dirty Read] Starting test...
+[Dirty Read] Initial: Oleg=1000, Konstantin=500
+[TX1] READ: Oleg's balance = 1000.00
+[TX2] UPDATE: Oleg's balance = 2000 (NOT COMMITTED)
+[TX2] ROLLBACK - changes reverted
+[TX1] READ after commit: Oleg's balance = 1000.00
+[Dirty Read] Test complete.
+Results saved to: /app/results/dirty_read.json
+
+============================================================
+Running: NON_REPEATABLE_READ
+============================================================
+[Non-Repeatable Read] Starting test...
+[Non-Repeatable Read] Initial: Oleg=1000
+[TX1] First READ: Oleg's balance = 1000.00
+[TX2] UPDATE: Oleg's balance = 1500
+[TX2] COMMIT
+[TX1] Second READ: Oleg's balance = 1500.00
+[Non-Repeatable Read] Test complete.
+Results saved to: /app/results/non_repeatable_read.json
+
+============================================================
+Running: PHANTOM_READ
+============================================================
+[Phantom Read] Starting test...
+[TX1] First READ: 3 products
+[TX2] INSERT: Monitor added
+[TX2] COMMIT
+[TX1] Second READ: 4 products
+[Phantom Read] Test complete.
+Results saved to: /app/results/phantom_read.json
+
+============================================================
+Running: LOST_UPDATE
+============================================================
+[Lost Update] Starting test...
+[Lost Update] Initial: Oleg=1000
+[TX1] READ: Oleg's balance = 1000.0
+[TX2] READ: Oleg's balance = 1000.0
+[TX2] UPDATE: SET balance = 1200.0 (was 1000.0 + 200)
+[TX2] COMMIT
+[TX1] UPDATE: SET balance = 1100.0 (was 1000.0 + 100)
+[TX1] COMMIT
+[Final] Oleg's balance = 1100.00
+[Lost Update] RESULT: Balance is 1100.00
+[Lost Update] Test complete.
+Results saved to: /app/results/lost_update.json
+
+============================================================
+All tests complete!
+============================================================
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - PRACTICE TASK
+============================================================
+
+Database is ready.
+Tables created.
+Accounts: Oleg=1000, Konstantin=500
+Products: Laptop, Mouse, Keyboard
+
+============================================================
+Running: DIRTY_READ
+============================================================
+[Dirty Read] Starting test...
+[Dirty Read] Initial: Oleg=1000, Konstantin=500
+[TX2] UPDATE: Oleg's balance = 2000 (NOT COMMITTED)
+[TX1] READ: Oleg's balance = 1000.00
+[TX2] ROLLBACK - changes reverted
+[TX1] READ after rollback: Oleg's balance = 1000.00
+[Dirty Read] Test complete.
+Results saved to: /app/results/dirty_read.json
+
+============================================================
+Running: NON_REPEATABLE_READ
+============================================================
+[Non-Repeatable Read] Starting test...
+[Non-Repeatable Read] Initial: Oleg=1000
+[TX1] First READ: Oleg's balance = 1000.00
+[TX2] UPDATE: Oleg's balance = 1500
+[TX2] COMMIT
+[TX1] Second READ: Oleg's balance = 1500.00
+[Non-Repeatable Read] Test complete.
+Results saved to: /app/results/non_repeatable_read.json
+
+============================================================
+Running: PHANTOM_READ
+============================================================
+[Phantom Read] Starting test...
+[TX1] First READ: 3 products
+[TX2] INSERT: Monitor added
+[TX2] COMMIT
+[TX1] Second READ: 4 products
+[Phantom Read] Test complete.
+Results saved to: /app/results/phantom_read.json
+
+============================================================
+Running: LOST_UPDATE
+============================================================
+[Lost Update] Starting test...
+[Lost Update] Initial: Oleg=1000
+[TX1] READ: Oleg's balance = 1000.0
+[TX2] READ: Oleg's balance = 1000.0
+[TX2] UPDATE: SET balance = 1200.0 (was 1000.0 + 200)
+[TX2] COMMIT
+[TX1] UPDATE: SET balance = 1100.0 (was 1000.0 + 100)
+[TX1] COMMIT
+[Final] Oleg's balance = 1100.00
+[Lost Update] RESULT: Balance is 1100.00
+[Lost Update] Test complete.
+Results saved to: /app/results/lost_update.json
+
+============================================================
+All tests complete!
+============================================================
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - MYSQL
+============================================================
+
+Waiting for database... attempt 1/20: (2003, "Can't connect to MySQL server on 'db'")
+Waiting for database... attempt 2/20: (2003, "Can't connect to MySQL server on 'db'")
+Waiting for database... attempt 3/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 4/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 5/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 6/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 7/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 8/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 9/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 10/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 11/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 12/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 13/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 14/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 15/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 16/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 17/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 18/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 19/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Waiting for database... attempt 20/20: 'cryptography' package is required for sha256_password or caching_sha2_password auth methods
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - MYSQL
+============================================================
+
+Waiting for database... attempt 1/20: (2003, "Can't connect to MySQL server on 'db'")
+Waiting for database... attempt 2/20: (2003, "Can't connect to MySQL server on 'db'")
+Database is ready.
+
+============================================================
+Running: DIRTY_READ
+============================================================
+[Dirty Read] Starting test...
+[Dirty Read] Initial: Oleg=1000, Konstantin=500
+[TX2] UPDATE: Oleg's balance = 2000 (NOT COMMITTED)
+[TX1] READ: Oleg's balance = 1000.00
+[TX2] ROLLBACK - changes reverted
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - MYSQL
+============================================================
+
+Database is ready.
+
+============================================================
+Running: DIRTY_READ
+============================================================
+[Dirty Read] Starting test...
+[Dirty Read] Initial: Oleg=1000, Konstantin=500
+[TX2] UPDATE: Oleg's balance = 2000 (NOT COMMITTED)
+[TX1] READ: Oleg's balance = 1000.00
+[TX2] ROLLBACK - changes reverted
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - MYSQL
+============================================================
+
+Database is ready.
+
+============================================================
+Running: DIRTY_READ
+============================================================
+[Dirty Read] Starting test...
+[Dirty Read] Initial: Oleg=1000, Konstantin=500
+[TX2] UPDATE: Oleg's balance = 2000 (NOT COMMITTED)
+[TX1] READ: Oleg's balance = 1000.00
+[TX2] ROLLBACK - changes reverted
+[TX1] READ after rollback: Oleg's balance = 1000.00
+Results saved to: /app/results/dirty_read.json
+
+============================================================
+Running: NON_REPEATABLE_READ
+============================================================
+[Non-Repeatable Read] Starting test...
+[Non-Repeatable Read] Initial: Oleg=1000
+[TX1] First READ: Oleg's balance = 1000.00
+[TX2] UPDATE: Oleg's balance = 1500
+[TX2] COMMIT
+[TX1] Second READ: Oleg's balance = 1000.00
+Results saved to: /app/results/non_repeatable_read.json
+
+============================================================
+Running: PHANTOM_READ
+============================================================
+[Phantom Read] Starting test...
+[TX1] First READ: 3 products
+[TX2] INSERT: Monitor added
+[TX2] COMMIT
+[TX1] Second READ: 3 products
+Results saved to: /app/results/phantom_read.json
+
+============================================================
+Running: LOST_UPDATE
+============================================================
+[Lost Update] Starting test...
+[Lost Update] Initial: Oleg=1000
+[TX1] READ: Oleg's balance = 1000.0
+[TX2] READ: Oleg's balance = 1000.0
+[TX2] UPDATE: SET balance = 1200.0 (was 1000.0 + 200)
+[TX2] COMMIT
+[TX1] UPDATE: SET balance = 1100.0 (was 1000.0 + 100)
+[TX1] COMMIT
+[Final] Oleg's balance = 1100.00
+Results saved to: /app/results/lost_update.json
+
+============================================================
+All tests complete!
+============================================================
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - MYSQL
+READ UNCOMMITTED level for dirty read demonstration
+============================================================
+
+Database is ready.
+
+============================================================
+Running: DIRTY_READ
+============================================================
+[Dirty Read] Starting test with READ UNCOMMITTED...
+[Dirty Read] Initial: Oleg=1000, Konstantin=500
+[TX2] UPDATE: Oleg's balance = 2000 (NOT COMMITTED)
+[TX1] READ (dirty): Oleg's balance = 1000.00
+[TX2] ROLLBACK - changes reverted
+[TX1] READ after rollback: Oleg's balance = 1000.00
+[Dirty Read] RESULT: Not detected - MySQL may prevent this in some scenarios
+Results saved to: /app/results/dirty_read.json
+
+============================================================
+Running: NON_REPEATABLE_READ
+============================================================
+[Non-Repeatable Read] Starting test with REPEATABLE READ...
+[Non-Repeatable Read] Initial: Oleg=1000
+[TX1] First READ: Oleg's balance = 1000.00
+[TX2] UPDATE: Oleg's balance = 1500
+[TX2] COMMIT
+[TX1] Second READ: Oleg's balance = 1000.00
+[Non-Repeatable Read] RESULT: Not detected (REPEATABLE READ protects)
+Results saved to: /app/results/non_repeatable_read.json
+
+============================================================
+Running: PHANTOM_READ
+============================================================
+[Phantom Read] Starting test with REPEATABLE READ...
+[TX1] First READ: 3 products
+[TX2] INSERT: Monitor added
+[TX2] COMMIT
+[TX1] Second READ: 3 products
+[Phantom Read] RESULT: Not detected (REPEATABLE READ with gap locking protects)
+Results saved to: /app/results/phantom_read.json
+
+============================================================
+Running: LOST_UPDATE
+============================================================
+[Lost Update] Starting test...
+[Lost Update] Initial: Oleg=1000
+[TX1] READ: Oleg's balance = 1000.0
+[TX2] READ: Oleg's balance = 1000.0
+[TX2] UPDATE: SET balance = 1200.0 (was 1000.0 + 200)
+[TX2] COMMIT
+[TX1] UPDATE: SET balance = 1100.0 (was 1000.0 + 100)
+[TX1] COMMIT
+[Final] Oleg's balance = 1100.00
+[Lost Update] RESULT: Lost update detected! Expected 1200, got 1100
+Results saved to: /app/results/lost_update.json
+
+============================================================
+All tests complete!
+============================================================
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - MYSQL
+Demonstrating 4 transaction anomalies
+============================================================
+
+Database is ready.
+
+============================================================
+Running: DIRTY_READ
+============================================================
+[Dirty Read] Starting test with READ UNCOMMITTED...
+[Dirty Read] Initial: Oleg=1000, Konstantin=500
+[TX2] UPDATE: Oleg's balance = 2000 (NOT COMMITTED)
+[TX1] READ (dirty): Oleg's balance = 2000.00
+[TX2] ROLLBACK - changes reverted
+[TX1] READ after rollback: Oleg's balance = 1000.00
+[Dirty Read] RESULT: Dirty read detected!
+Results saved to: /app/results/dirty_read.json
+
+============================================================
+Running: NON_REPEATABLE_READ
+============================================================
+[Non-Repeatable Read] Starting test with REPEATABLE READ...
+[Non-Repeatable Read] Initial: Oleg=1000
+[TX1] First READ: Oleg's balance = 1000.00
+[TX2] UPDATE: Oleg's balance = 1500
+[TX2] COMMIT
+[TX1] Second READ: Oleg's balance = 1000.00
+[Non-Repeatable Read] RESULT: Not detected
+Results saved to: /app/results/non_repeatable_read.json
+
+============================================================
+Running: PHANTOM_READ
+============================================================
+[Phantom Read] Starting test with REPEATABLE READ...
+[TX1] First READ: 3 products
+[TX2] INSERT: Monitor added
+[TX2] COMMIT
+[TX1] Second READ: 3 products
+[Phantom Read] RESULT: Not detected
+Results saved to: /app/results/phantom_read.json
+
+============================================================
+Running: LOST_UPDATE
+============================================================
+[Lost Update] Starting test...
+[Lost Update] Initial: Oleg=1000
+[TX1] READ: Oleg's balance = 1000.0
+[TX2] READ: Oleg's balance = 1000.0
+[TX2] UPDATE: SET balance = 1200.0 (was 1000.0 + 200)
+[TX2] COMMIT
+[TX1] UPDATE: SET balance = 1100.0 (was 1000.0 + 100)
+[TX1] COMMIT
+[Final] Oleg's balance = 1100.00
+[Lost Update] RESULT: Lost update detected! Expected 1200, got 1100
+Results saved to: /app/results/lost_update.json
+
+============================================================
+All tests complete!
+============================================================
+Python: 3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]
+CWD: /app
+
+============================================================
+SQL ISOLATION ANOMALIES - MYSQL
+Demonstrating 4 transaction anomalies
+============================================================
+
+Database is ready.
+
+============================================================
+Running: DIRTY_READ
+============================================================
+[Dirty Read] Starting test with READ UNCOMMITTED...
+[Dirty Read] Initial: Oleg=1000, Konstantin=500
+[TX2] UPDATE: Oleg's balance = 2000 (NOT COMMITTED)
+[TX1] READ (dirty): Oleg's balance = 2000.00
+[TX2] ROLLBACK - changes reverted
+[TX1] READ after rollback: Oleg's balance = 1000.00
+[Dirty Read] RESULT: Dirty read detected!
+Results saved to: /app/results/dirty_read.json
+
+============================================================
+Running: NON_REPEATABLE_READ
+============================================================
+[Non-Repeatable Read] Starting test with READ COMMITTED (weaker level)...
+[Non-Repeatable Read] Initial: Oleg=1000
+[TX1] First READ: Oleg's balance = 1000.00
+[TX2] UPDATE: Oleg's balance = 1500
+[TX2] COMMIT
+[TX1] Second READ: Oleg's balance = 1500.00
+[Non-Repeatable Read] RESULT: Detected!
+Results saved to: /app/results/non_repeatable_read.json
+
+============================================================
+Running: PHANTOM_READ
+============================================================
+[Phantom Read] Starting test with READ COMMITTED...
+[TX1] First READ: 3 products
+[TX2] INSERT: Monitor added
+[TX2] COMMIT
+[TX1] Second READ: 4 products
+[Phantom Read] RESULT: Detected!
+Results saved to: /app/results/phantom_read.json
+
+============================================================
+Running: LOST_UPDATE
+============================================================
+[Lost Update] Starting test...
+[Lost Update] Initial: Oleg=1000
+[TX1] READ: Oleg's balance = 1000.0
+[TX2] READ: Oleg's balance = 1000.0
+[TX2] UPDATE: SET balance = 1200.0 (was 1000.0 + 200)
+[TX2] COMMIT
+[TX1] UPDATE: SET balance = 1100.0 (was 1000.0 + 100)
+[TX1] COMMIT
+[Final] Oleg's balance = 1100.00
+[Lost Update] RESULT: Lost update detected! Expected 1200, got 1100
+Results saved to: /app/results/lost_update.json
+
+============================================================
+All tests complete!
+============================================================

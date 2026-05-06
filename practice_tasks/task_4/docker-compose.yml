@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8
+    container_name: isolation_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: isolation_db
+      MYSQL_USER: isolation_user
+      MYSQL_PASSWORD: isolation_pass
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+
+  runner:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: mysql+aiomysql://isolation_user:isolation_pass@db:3306/isolation_db
+    volumes:
+      - ./results:/app/results
+    command: ["python", "scripts/run_all.py"]

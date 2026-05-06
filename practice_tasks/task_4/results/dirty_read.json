@@ -1,0 +1,6 @@
+{
+  "anomaly": "dirty_read",
+  "tx1_first_read": "2000.00",
+  "tx1_second_read": "1000.00",
+  "outcome": "DIRTY_READ occurred - TX1 read uncommitted data"
+}

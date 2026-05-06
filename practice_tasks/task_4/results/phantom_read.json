@@ -1,0 +1,6 @@
+{
+  "anomaly": "phantom_read",
+  "tx1_first_count": "3",
+  "tx1_second_count": "4",
+  "outcome": "PHANTOM_READ occurred"
+}
