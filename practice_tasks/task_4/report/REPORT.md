@@ -150,7 +150,7 @@ MySQL поддерживает READ UNCOMMITTED, что позволяет ви�
 **Вывод:** Lost update detected! Ожидалось 1200, получили 1100.
 
 ### Как избежать
-- REPEATABLE READ или SERIALIZABLE
+- SERIALIZABLE
 - `SELECT ... FOR UPDATE`
 - Использовать транзакционные блокировки
 
