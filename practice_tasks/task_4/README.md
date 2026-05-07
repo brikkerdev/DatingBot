@@ -6,20 +6,24 @@
 - Phantom Read
 - Lost Update
 
-## Требования
+## Стек
 
 - Python 3.12+
-- PostgreSQL 14+
-- Docker (опционально)
+- MySQL 8
+- Docker Compose
+- aiomysql
 
 ## Быстрый старт
 
 ```bash
-# 1. Запустить PostgreSQL
-docker compose up -d db
+# Запустить БД и тесты
+docker compose up --build
+```
 
-# 2. Собрать и запустить тесты
-docker compose up --build runner
+После прогона runner завершится, БД продолжит работать. Остановить:
+
+```bash
+docker compose down
 ```
 
 ## Ручной запуск без Docker
@@ -28,24 +32,25 @@ docker compose up --build runner
 # Установить зависимости
 pip install -r requirements.txt
 
-# Создать БД
-createdb isolation_db -U postgres
+# Поднять MySQL 8 локально и создать БД isolation_db
+# с пользователем isolation_user / isolation_pass
 
 # Запустить тесты
-python -m src.isolated_tx
+python scripts/run_all.py
 ```
 
 ## Результаты
 
-- `results/<anomaly>.json` - логи и результаты каждой аномалии
-- `report/REPORT.md` - отчёт
+- `results/<anomaly>.json` — итог по каждой аномалии
+- `results/run.log` — общий лог
+- `report/REPORT.md` — отчёт со скриншотами
 
 ## Аномалии
 
 ### Dirty Read
 Чтение неподтверждённых данных другой транзакцией.
 
-### Non-Repeatable Read  
+### Non-Repeatable Read
 Повторное чтение той же строки даёт разные результаты.
 
 ### Phantom Read

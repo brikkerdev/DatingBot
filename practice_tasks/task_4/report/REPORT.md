@@ -50,7 +50,7 @@ MySQL поддерживает READ UNCOMMITTED, что позволяет ви�
 **Вывод:** MySQL с READ UNCOMMITTED позволяет читать неподтверждённые данные (dirty read).
 
 ### Как избежать
-- Использовать уровень изоляции READ COMMITTED (по умолчанию в MySQL) или выше
+- Использовать уровень изоляции READ COMMITTED или выше (в MySQL InnoDB по умолчанию REPEATABLE READ, что также защищает; READ UNCOMMITTED нужно явно включать)
 
 ---
 
@@ -82,7 +82,8 @@ MySQL поддерживает READ UNCOMMITTED, что позволяет ви�
 
 ### Как избежать
 - REPEATABLE READ или SERIALIZABLE
-- `SELECT ... FOR UPDATE`
+- Блокирующее чтение `SELECT ... FOR UPDATE` / `LOCK IN SHARE MODE`
+- Оптимистичная блокировка через колонку-версию
 
 ---
 
@@ -113,8 +114,9 @@ MySQL поддерживает READ UNCOMMITTED, что позволяет ви�
 ```
 
 ### Как избежать
-- REPEATABLE READ с gap locks
-- SERIALIZABLE
+- SERIALIZABLE — гарантия по стандарту SQL
+- В MySQL InnoDB REPEATABLE READ предотвращает фантомы за счёт gap locks (для блокирующих чтений) и MVCC-снапшота (для обычных SELECT). В PostgreSQL фантомы предотвращает только SERIALIZABLE
+- `SELECT ... FOR UPDATE` по диапазону
 
 ---
 
@@ -147,12 +149,13 @@ MySQL поддерживает READ UNCOMMITTED, что позволяет ви�
 }
 ```
 
-**Вывод:** Lost update detected! Ожидалось 1200, получили 1100.
+**Вывод:** Lost update произошел. Ожидалось 1200, а получили 1100.
 
 ### Как избежать
-- SERIALIZABLE
-- `SELECT ... FOR UPDATE`
-- Использовать транзакционные блокировки
+- Атомарный апдейт без чтения в приложение: `UPDATE accounts SET balance = balance + 100 WHERE name = 'Oleg'`
+- Пессимистичная блокировка: `SELECT ... FOR UPDATE` перед апдейтом
+- Оптимистичная блокировка: `UPDATE ... WHERE id = ? AND version = ?` с инкрементом версии
+- Уровень изоляции SERIALIZABLE (даёт ошибку сериализации при конфликте)
 
 ---
 
